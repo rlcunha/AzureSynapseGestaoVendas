@@ -1,0 +1,51 @@
+{
+	"name": "pp_copy_delivery_to_raw",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_binary",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems",
+						"itemName",
+						"lastModified",
+						"itemType"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "BinaryReadSettings"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"p_data_ingestion": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "SourceLandingPDV"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-05-11T15:03:52Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

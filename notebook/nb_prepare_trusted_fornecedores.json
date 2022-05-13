@@ -1,0 +1,347 @@
+{
+	"name": "nb_prepare_trusted_fornecedores",
+	"properties": {
+		"folder": {
+			"name": "GestaoVendas/raw"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "GestaoPoolSpark",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "49321d38-581a-4acb-9f29-c4141b2498c3"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/e63e4e78-7bcc-4a13-b746-41dc90a24486/resourceGroups/rg-mibitech/providers/Microsoft.Synapse/workspaces/wkssyngestao/bigDataPools/GestaoPoolSpark",
+				"name": "GestaoPoolSpark",
+				"type": "Spark",
+				"endpoint": "https://wkssyngestao.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/GestaoPoolSpark",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%run GestaoVendas/base/import/nb_import_base"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%run GestaoVendas/base/parameter/nb_parameter_base"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%run GestaoVendas/raw/nb_config_raw"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**BIBLIOTECAS IMPORTADAS DE USO LOCAL**"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import shutil\r\n",
+					"import codecs\r\n",
+					"from datetime import datetime\r\n",
+					"\r\n",
+					"import pandas as pd\r\n",
+					"\r\n",
+					"from pyspark.sql import *\r\n",
+					"from pyspark.sql.types import *\r\n",
+					"import pyspark.sql.functions as f"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**PARAMETROS LOCAIS**"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#Clientes\r\n",
+					"file_path_read = '/Fornecedores.xlsx/dtIngestao=**'\r\n",
+					"file_path_write = '/fornecedores'"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**LER DADOS EM FORMATO PARQUET**"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"parquet_path = adls_path + file_path_read\r\n",
+					"df_raw = spark.read.parquet(parquet_path,header=\"false\",inferSchema=False) \r\n",
+					"df_raw.cache()\r\n",
+					"print(f'Fornecedores CARREGADOS : {df_raw.cache().count()}')"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**FORMATA OS DADOS LIDOS DA ORIGEM**"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df_raw = df_raw.select(df_raw.Prop_0.cast(\"integer\").alias('CODIGO'),\\\r\n",
+					"                        df_raw.Prop_1.cast(\"string\").alias('ORIGEM'),\\\r\n",
+					"                        df_raw.Prop_2.cast(\"string\").alias('TIPO'),\\\r\n",
+					"                        df_raw.Prop_3.cast(\"integer\").alias('QTITEM'),\\\r\n",
+					"                        f.regexp_replace(f.regexp_replace(df_raw.Prop_4,'[R$]',''), ',', '.').cast('double').alias('VLFINAL'),\\\r\n",
+					"                        df_raw.Prop_5.cast(\"string\").alias('STATUS'),\\\r\n",
+					"                        f.substring(df_raw.Prop_6,1,2).cast(\"int\").alias('DIA'),\\\r\n",
+					"                        f.substring(df_raw.Prop_6,4,2).cast(\"int\").alias('MES'),\\\r\n",
+					"                        f.substring(df_raw.Prop_6,7,4).cast(\"int\").alias('ANO'),\\\r\n",
+					"                        f.substring(df_raw.Prop_6,12,2).cast(\"int\").alias('HORA'),\\\r\n",
+					"                        f.substring(df_raw.Prop_6,15,2).cast(\"int\").alias('MINUTO'),\\\r\n",
+					"                        df_raw.Prop_7.cast(\"string\").alias('TEMPO'),\\\r\n",
+					"                        df_raw.Prop_8.cast(\"string\").alias('UNIDADE'),\\\r\n",
+					"                        df_raw.Prop_9.cast(\"string\").alias('EXCLUSAO')).withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
+					"print(f'Fornecedores Formatados : {df_raw.count()}')"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**LIMPAR OS DADOS IMPORTADOS**"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Ler e filtrar e gravar dataframe - Cliente\r\n",
+					"# df_raw = df_raw.dropna(how='all', subset='CODIGO')\r\n",
+					"# df_raw = df_raw.dropna(how='all', subset='IDADE')\r\n",
+					"print(f'Fornecedores Higienizado : {df_raw.count()}')"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**GRAVAR OS DADOS NA TRUSTED**"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"adls_path_write = 'abfss://%s@%s.dfs.core.windows.net' % ('trusted', account_name)\r\n",
+					"#df_q_lctctb_01 = spark.range(5,10) \r\n",
+					"print(adls_path_write + file_path_write)\r\n",
+					"df_raw.repartition(1).write.format(\"parquet\").mode(\"overwrite\").partitionBy(\"ANO\",\"MES\").save(adls_path_write + file_path_write)"
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}
