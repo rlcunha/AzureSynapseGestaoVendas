@@ -1018,7 +1018,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b3c31ae6-ef40-4f44-bde2-5faed9922b89"
+						"spark.autotune.trackingId": "6a9e1254-0c37-4ae6-91b2-2f35becd70d1"
 					}
 				},
 				"metadata": {
@@ -1073,7 +1073,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -1086,13 +1086,17 @@
 								"transient": {
 									"deleting": false
 								}
-							}
+							},
+							"collapsed": false
 						},
 						"source": [
-							"print df.name"
+							"\r\n",
+							"\r\n",
+							"# display(df.select(\"name\"))\r\n",
+							"u = substr(df.select(\"name\"))"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 10
 					}
 				]
 			},
@@ -1491,7 +1495,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "fc38e70e-13d3-4ffb-8480-a18052f0e605"
+						"spark.autotune.trackingId": "dd824ae9-da3a-4ce9-abe8-feb8d5f7ad74"
 					}
 				},
 				"metadata": {
@@ -1648,7 +1652,7 @@
 						"source": [
 							"#Clientes\r\n",
 							"file_path_read_clientes = '/pdv/Clientes/dtIngestao='+p_dt_ingestion[:6]+\"**\"\r\n",
-							"file_path_write_clientes = '/clientes/'+substr(p_dt_ingestion,1,4)+'/'+substring(p_dt_ingestion(5,2)"
+							"file_path_write_clientes = '/clientes/ANO='+substr(p_dt_ingestion,1,4)+'/MES='+substr(p_dt_ingestion,5,2)"
 						],
 						"outputs": [],
 						"execution_count": null
