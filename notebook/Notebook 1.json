@@ -1,5 +1,5 @@
 {
-	"name": "nb_prepare_trusted_clientes",
+	"name": "Notebook 1",
 	"properties": {
 		"folder": {
 			"name": "GestaoVendas/raw"
@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1bfb9a08-fa2c-4ecf-a821-70ddddc153a8"
+				"spark.autotune.trackingId": "b8b32dc5-669b-47e6-b945-7984d260c10e"
 			}
 		},
 		"metadata": {
@@ -65,9 +65,13 @@
 					}
 				},
 				"source": [
-					"%run GestaoVendas/base/import/nb_import_base"
+					"# DBTITLE 1,Complex Types\r\n",
+					"import pyspark.sql.functions as F\r\n",
+					"from pyspark.sql.types import ArrayType, DoubleType, IntegerType, LongType, StringType, StructType, StructField, BooleanType, MapType\r\n",
+					"from pyspark.sql import Row\r\n",
+					""
 				],
-				"execution_count": null
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -83,79 +87,42 @@
 					}
 				},
 				"source": [
-					"%run GestaoVendas/base/parameter/nb_parameter_base"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"%run GestaoVendas/raw/nb_config_raw"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"**BIBLIOTECAS IMPORTADAS DE USO LOCAL**"
-				]
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"import shutil\r\n",
-					"import codecs\r\n",
-					"from datetime import datetime\r\n",
+					"# DBTITLE 1,Criação do DataFrame para o exemplo\r\n",
+					"data = [Row(\"Kenny\",\"\",10,[50,90,80],{\"status\":\"Active\"}), \r\n",
+					"        Row(\"Elis\",\"Robert\",20,[10,56,43,20],{\"status\":\"Inactive\"}), \r\n",
+					"        Row(\"Myck\",\"Mendes\",30,[18,50,32],{\"status\":\"Active\"}), \r\n",
+					"        Row(\"Edson\",\"Eliot\",40,[60,87,3],{\"status\":\"Active\"}) \r\n",
+					"      ]\r\n",
 					"\r\n",
-					"import pandas as pd\r\n",
+					"rdd = spark.sparkContext.parallelize(data)"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"\r\n",
-					"from pyspark.sql import *\r\n",
-					"from pyspark.sql.types import *\r\n",
-					"import pyspark.sql.functions as f"
+					"# DBTITLE 1,Criação do Esquema\r\n",
+					"scheme = StructType([\r\n",
+					"         StructField('firstname', StringType(), True),\r\n",
+					"         StructField('middlename', StringType(), True),\r\n",
+					"         StructField('age', IntegerType(), True),\r\n",
+					"         StructField(\"points\", ArrayType(StringType()), True),\r\n",
+					"         StructField(\"user_state\", MapType(StringType(),StringType()), True)        \r\n",
+					"         ])"
 				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"**PARAMETROS LOCAIS**"
-				]
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -171,11 +138,9 @@
 					}
 				},
 				"source": [
-					"#Clientes\r\n",
-					"file_path_read_clientes = '/pdv/Clientes/dtIngestao='+p_dt_ingestion[:6]+\"**\"\r\n",
-					"file_path_write_clientes = '/clientes/'+substr(p_dt_ingestion,1,4)+'/'+substring(p_dt_ingestion(5,2)"
+					"print select(\"firstname\")"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -191,24 +156,13 @@
 					}
 				},
 				"source": [
+					"# DBTITLE 1,Conversão de RDD para DataFrame\r\n",
+					"df = rdd.toDF(schema=scheme)\r\n",
 					""
 				],
 				"execution_count": null
 			},
 			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"**LER DADOS EM FORMATO PARQUET**"
-				]
-			},
-			{
 				"cell_type": "code",
 				"metadata": {
 					"jupyter": {
@@ -222,118 +176,9 @@
 					}
 				},
 				"source": [
-					"parquet_path = adls_path + file_path_read_clientes\r\n",
-					"df_clientes = spark.read.parquet(parquet_path,header=\"false\",inferSchema=False) \r\n",
-					"df_clientes.cache()"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"**FORMATA OS DADOS LIDOS DA ORIGEM**"
-				]
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"df_clientes = df_clientes.select(df_clientes.Prop_0.cast(\"integer\").alias('CODIGO'),\\\r\n",
-					"                        df_clientes.Prop_1.cast(\"string\").alias('NOME'),\\\r\n",
-					"                        df_clientes.Prop_2.cast(\"string\").alias('TELEFONE'),\\\r\n",
-					"                        df_clientes.Prop_3.cast(\"string\").alias('EMAIL'),\\\r\n",
-					"                        df_clientes.Prop_4.cast(\"string\").alias('NASCIMENTO'),\\\r\n",
-					"                        df_clientes.Prop_5.cast(\"string\").alias('ANIVERSARIANTE'),\\\r\n",
-					"                        df_clientes.Prop_6.cast(\"integer\").alias('IDADE'),\\\r\n",
-					"                        df_clientes.Prop_7.cast(\"string\").alias('SEXO'),\\\r\n",
-					"                        df_clientes.Prop_8.cast(\"string\").alias('ORIGEM'),\\\r\n",
-					"                        df_clientes.Prop_9.cast(\"string\").alias('CADASTRO'),\\\r\n",
-					"                        df_clientes.Prop_10.cast(\"string\").alias('UNIDADE')).withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
-					"print(f'Clientes Formatados : {df_clientes.count()}')"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"**LIMPAR OS DADOS IMPORTADOS**"
-				]
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# # Ler e filtrar e gravar dataframe - Cliente\r\n",
-					"# df_clientes = df_clientes.dropna(how='all', subset='CODIGO')\r\n",
-					"# # df_clientes = df_clientes.dropna(how='all', subset='IDADE')\r\n",
-					"# print(f'Clientes Higienizado : {df_clientes.count()}')"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"**GRAVAR OS DADOS NA TRUSTED**"
-				]
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"adls_path_write = 'abfss://%s@%s.dfs.core.windows.net' % ('trusted', account_name)\r\n",
-					"#df_q_lctctb_01 = spark.range(5,10) \r\n",
-					"df_clientes.repartition(1).write.format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write_clientes)"
+					"# COMMAND ----------\r\n",
+					"\r\n",
+					"df.printSchema()"
 				],
 				"execution_count": null
 			},
@@ -351,7 +196,154 @@
 					}
 				},
 				"source": [
-					"mssparkutils.notebook.exit(adls_path_write + file_path_write_clientes)"
+					"# DBTITLE 1,Display do DataFrame\r\n",
+					"display(df)\r\n",
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df.show(truncate=False)\r\n",
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"# DBTITLE 1,Criação de uma nova coluna e explode em uma coluna com o valor array\r\n",
+					"df02 = (df.withColumn(\"point\", F.explode(\"points\"))\r\n",
+					"  .select(\"firstname\",\"point\",\"user_state.status\")  \r\n",
+					"\r\n",
+					"display(df02)\r\n",
+					"  "
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# DBTITLE 1,Filtro por valores de uma coluna array e criação de uma coluna com o segundo valor do array\r\n",
+					"df03 = (df.filter(F.array_contains(F.col(\"points\"), \"50\")).withColumn(\"get_point\", F.element_at(F.col(\"points\"), 2)))      \r\n",
+					"display(df03)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# DBTITLE 1,Criação de uma coluna com o primeiro valor do array\r\n",
+					"df04 = df.withColumn(\"get_point\", F.element_at(F.col(\"points\"), 1))\r\n",
+					"display(df04)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# DBTITLE 1,Agrupamento por status e agregação por pontos\r\n",
+					"df05 = (df04.groupBy(\"user_state.status\")\r\n",
+					"  .agg(F.collect_set(\"get_point\").alias(\"Points\"))\r\n",
+					")\r\n",
+					"display(df05)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# DBTITLE 1,Renomear coluna\r\n",
+					"df05 = df05.withColumnRenamed(\"Points\",\"New_Points\")\r\n",
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"df05.show(truncate=False)\r\n",
+					""
 				],
 				"execution_count": null
 			}
