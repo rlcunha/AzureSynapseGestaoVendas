@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1bfb9a08-fa2c-4ecf-a821-70ddddc153a8"
+				"spark.autotune.trackingId": "3b5d726a-279c-4e0c-94c4-eaf09b47f27c"
 			}
 		},
 		"metadata": {
@@ -173,7 +173,7 @@
 				"source": [
 					"#Clientes\r\n",
 					"file_path_read_clientes = '/pdv/Clientes/dtIngestao='+p_dt_ingestion[:6]+\"**\"\r\n",
-					"file_path_write_clientes = '/clientes/'+substr(p_dt_ingestion,1,4)+'/'+substring(p_dt_ingestion(5,2)"
+					"file_path_write_clientes = '/clientes/ANO='+substr(p_dt_ingestion,1,4)+'/MES='+substr(p_dt_ingestion,5,2)"
 				],
 				"execution_count": null
 			},
