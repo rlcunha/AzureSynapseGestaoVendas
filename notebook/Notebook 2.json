@@ -1,0 +1,106 @@
+{
+	"name": "Notebook 2",
+	"properties": {
+		"folder": {
+			"name": "GestaoVendas/raw"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "GestaoPoolSpark",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "6a9e1254-0c37-4ae6-91b2-2f35becd70d1"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/e63e4e78-7bcc-4a13-b746-41dc90a24486/resourceGroups/rg-mibitech/providers/Microsoft.Synapse/workspaces/wkssyngestao/bigDataPools/GestaoPoolSpark",
+				"name": "GestaoPoolSpark",
+				"type": "Spark",
+				"endpoint": "https://wkssyngestao.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/GestaoPoolSpark",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"import pyspark.sql.functions as F\r\n",
+					"from pyspark.sql.window import Window\r\n",
+					"\r\n",
+					"data = [(\"Anderson\",\"Sales\",\"NY\",90000),\r\n",
+					"    (\"Kenedy\",\"Sales\",\"CA\",86000),\r\n",
+					"    (\"Kenny\",\"Sales\",\"CA\",86000),\r\n",
+					"    (\"Billy\",\"Sales\",\"NY\",81000),\r\n",
+					"    (\"Andy\",\"Finance\",\"CA\",90000),\r\n",
+					"    (\"Mary\",\"Finance\",\"NY\",99000),\r\n",
+					"    (\"Eduardo\",\"Finance\",\"NY\",83000),\r\n",
+					"    (\"Mendes\",\"Finance\",\"CA\",79000),\r\n",
+					"    (\"Keyth\",\"Marketing\",\"CA\",80000),\r\n",
+					"    (\"Truman\",\"Marketing\",\"NY\",91000)\r\n",
+					"  ]\r\n",
+					"\r\n",
+					"schema = [\"name\",\"dep_name\",\"state\",\"salary\"]\r\n",
+					"df = spark.createDataFrame(data=data, schema = schema)\r\n",
+					"df.printSchema()\r\n",
+					"df.show(truncate=False)\r\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"\r\n",
+					"\r\n",
+					"# display(df.select(\"name\"))\r\n",
+					"u = substr(df.select(\"name\"))"
+				],
+				"attachments": null,
+				"execution_count": 10
+			}
+		]
+	}
+}

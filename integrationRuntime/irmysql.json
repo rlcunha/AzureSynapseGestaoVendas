@@ -1,0 +1,6 @@
+{
+	"name": "irmysql",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}

@@ -1,0 +1,132 @@
+{
+	"name": "pp_copy_pdv_to_raw",
+	"properties": {
+		"activities": [
+			{
+				"name": "act_copy_excel_to_parquet",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_excel",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_container": "landing",
+							"p_file_name": {
+								"value": "@pipeline().parameters.p_file_name",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_parquet",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_container_name": "raw",
+							"p_directory_name": {
+								"value": "pdv/@{split(pipeline().parameters.p_file_name,'.')[0]}/dtingestion=@{pipeline().parameters.p_dt_ingestion}\n",
+								"type": "Expression"
+							},
+							"p_file_name": {
+								"value": "split(pipeline().parameters.p_file_name,'.')[0].parquet",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "nb_prepare_trusted_clientes",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "act_copy_excel_to_parquet",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "nb_prepare_trusted_clientes",
+						"type": "NotebookReference"
+					},
+					"parameters": {
+						"p_dt_ingestion": {
+							"value": {
+								"value": "@pipeline().parameters.p_dt_ingestion",
+								"type": "Expression"
+							},
+							"type": "string"
+						}
+					},
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": "GestaoPoolSpark",
+						"type": "BigDataPoolReference"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"p_dt_ingestion": {
+				"type": "string"
+			},
+			"p_file_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "SourceLandingPDV"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-06-10T19:21:50Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}
