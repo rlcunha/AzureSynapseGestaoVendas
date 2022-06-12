@@ -1,0 +1,6 @@
+{
+	"name": "ir-mongo",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
