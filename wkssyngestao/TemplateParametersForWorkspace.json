@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "wkssyngestao"
+		},
+		"ls_sagestaoloja_accountKey": {
+			"value": ""
+		},
+		"ls_sql_noserver_connectionString": {
+			"value": ""
+		},
+		"wkssyngestao-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"ls_sagestaoloja_properties_typeProperties_url": {
+			"value": "https://sagestaoloja.dfs.core.windows.net"
+		},
+		"wkssyngestao-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://sagestaoloja.dfs.core.windows.net"
+		}
+	}
+}
