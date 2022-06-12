@@ -1,0 +1,6 @@
+{
+	"name": "ir-mysql",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
