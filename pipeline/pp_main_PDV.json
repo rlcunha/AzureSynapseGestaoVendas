@@ -52,32 +52,7 @@
 						"value": "@activity('Get Metadata1').output.childItems",
 						"type": "Expression"
 					},
-					"isSequential": true,
-					"activities": [
-						{
-							"name": "expp_copiar_pdv_para_raw",
-							"type": "ExecutePipeline",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "pp_copy_pdv_to_raw",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"p_dt_ingestion": {
-										"value": "@pipeline().parameters.p_data_ingestion",
-										"type": "Expression"
-									},
-									"p_file_name": {
-										"value": "@item().name",
-										"type": "Expression"
-									}
-								}
-							}
-						}
-					]
+					"isSequential": true
 				}
 			}
 		],
