@@ -1,0 +1,18 @@
+{
+	"name": "ds_binary_landing",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sagestaoloja",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "landing"
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}
