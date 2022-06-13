@@ -93,7 +93,7 @@
 										"typeProperties": {
 											"variableName": "v_file_name",
 											"value": {
-												"value": "@pipeline().parameters.p_file_ingestion",
+												"value": "@replace(pipeline().parameters.p_file_ingestion,' ','')\n",
 												"type": "Expression"
 											}
 										}
@@ -198,7 +198,7 @@
 										"typeProperties": {
 											"variableName": "v_file_name",
 											"value": {
-												"value": "@item().name",
+												"value": "@replace(item().name,' ','')",
 												"type": "Expression"
 											}
 										}
