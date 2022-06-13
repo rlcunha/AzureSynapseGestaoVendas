@@ -125,7 +125,7 @@
 							"typeProperties": {
 								"variableName": "v_file_name",
 								"value": {
-									"value": "@if(greater(length(pipeline().parameters.p_file_ingestion),0),pipeline().parameters.p_file_ingestion,item().name)",
+									"value": "@if(greaterOrEquals(length(pipeline().parameters.p_file_ingestion),0),pipeline().parameters.p_file_ingestion,item().name)",
 									"type": "Expression"
 								}
 							}
@@ -138,7 +138,7 @@
 							"typeProperties": {
 								"variableName": "v_dt_intestion",
 								"value": {
-									"value": "@if(greater(length(pipeline().parameters.p_data_ingestion),0),pipeline().parameters.p_data_ingestion,utcNow('yyyyMddd'))",
+									"value": "@if(greaterOrEquals(length(pipeline().parameters.p_data_ingestion),0),pipeline().parameters.p_data_ingestion,utcNow('yyyyMddd'))",
 									"type": "Expression"
 								}
 							}
@@ -149,8 +149,7 @@
 		],
 		"parameters": {
 			"p_data_ingestion": {
-				"type": "string",
-				"defaultValue": "20220613"
+				"type": "string"
 			},
 			"p_file_ingestion": {
 				"type": "string"
