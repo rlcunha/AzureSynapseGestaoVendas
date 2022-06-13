@@ -225,7 +225,7 @@
 									"parameters": {
 										"p_container_name": "raw",
 										"p_directory_name": {
-											"value": "pdv/@{split(variables('v_file_name'),'.')[0]}/dtingestao=@{variables('v_dt_intestion')}",
+											"value": "pdv/@{split(replace(variables('v_file_name'),' ',''),'.')[0]}/dtIngestao=@{variables('v_dt_intestion')}",
 											"type": "Expression"
 										},
 										"p_file_name": {
