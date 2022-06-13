@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Metadata1",
+				"name": "GetAllLandingFile",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "ds_binary",
+						"referenceName": "ds_binary_landing",
 						"type": "DatasetReference"
 					},
 					"fieldList": [
@@ -40,7 +40,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Get Metadata1",
+						"activity": "GetAllLandingFile",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -49,35 +49,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Get Metadata1').output.childItems",
+						"value": "@activity('GetAllLandingFile').output.childItems\n\n",
 						"type": "Expression"
 					},
-					"isSequential": true,
-					"activities": [
-						{
-							"name": "expp_copiar_pdv_para_raw",
-							"type": "ExecutePipeline",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"pipeline": {
-									"referenceName": "pp_copy_pdv_to_raw",
-									"type": "PipelineReference"
-								},
-								"waitOnCompletion": true,
-								"parameters": {
-									"p_dt_ingestion": {
-										"value": "@pipeline().parameters.p_data_ingestion",
-										"type": "Expression"
-									},
-									"p_file_name": {
-										"value": "@item().name",
-										"type": "Expression"
-									}
-								}
-							}
-						}
-					]
+					"isSequential": true
 				}
 			}
 		],
@@ -85,6 +60,9 @@
 			"p_data_ingestion": {
 				"type": "string",
 				"defaultValue": "yyyyMMdd"
+			},
+			"p_file_ingestion": {
+				"type": "string"
 			}
 		},
 		"folder": {
