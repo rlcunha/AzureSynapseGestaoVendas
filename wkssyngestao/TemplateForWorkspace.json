@@ -896,6 +896,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 8')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/clientes/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/sc_external_table_clientes')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -1805,7 +1825,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "21fe5d71-1ad3-487f-8604-f3ea39a46184"
+						"spark.autotune.trackingId": "15b50418-a040-409a-9095-411f48ce8cac"
 					}
 				},
 				"metadata": {
@@ -1830,7 +1850,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2056,6 +2077,9 @@
 							"                        df_clientes.Prop_7.cast(\"string\").alias('SEXO'),\\\r\n",
 							"                        df_clientes.Prop_8.cast(\"string\").alias('ORIGEM'),\\\r\n",
 							"                        df_clientes.Prop_9.cast(\"string\").alias('CADASTRO'),\\\r\n",
+							"                        f.substring(Prop_9,1,2).cast(\"int\").alias('DIA_CAD'),\\\r\n",
+							"                        f.substring(Prop_9,4,2).cast(\"int\").alias('MES_CAD'),\\\r\n",
+							"                        f.substring(Prop_9,7,4).cast(\"int\").alias('ANO_CAD'),\\\r\n",
 							"                        df_clientes.Prop_10.cast(\"string\").alias('UNIDADE')).withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
 							"print(f'Clientes Formatados : {df_clientes.count()}')"
 						],
@@ -2126,7 +2150,7 @@
 						"source": [
 							"adls_path_write = 'abfss://%s@%s.dfs.core.windows.net' % ('trusted', account_name)\r\n",
 							"#df_q_lctctb_01 = spark.range(5,10) \r\n",
-							"df_clientes.write.format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write_clientes)"
+							"df_clientes.write.partitionBy('ANO_CAD','MES_CAD').format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write_clientes)"
 						],
 						"outputs": [],
 						"execution_count": null
