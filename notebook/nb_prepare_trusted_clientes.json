@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "dd824ae9-da3a-4ce9-abe8-feb8d5f7ad74"
+				"spark.autotune.trackingId": "df7c4917-3791-405f-b168-3266dfdff1ed"
 			}
 		},
 		"metadata": {
@@ -46,7 +46,7 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -67,7 +67,6 @@
 				"source": [
 					"%run GestaoVendas/base/import/nb_import_base"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -86,7 +85,6 @@
 				"source": [
 					"%run GestaoVendas/base/parameter/nb_parameter_base"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -105,7 +103,6 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_config_raw"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -119,8 +116,7 @@
 				},
 				"source": [
 					"**BIBLIOTECAS IMPORTADAS DE USO LOCAL**"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -146,7 +142,6 @@
 					"from pyspark.sql.types import *\r\n",
 					"import pyspark.sql.functions as f"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -160,8 +155,7 @@
 				},
 				"source": [
 					"**PARAMETROS LOCAIS**"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -179,9 +173,8 @@
 				"source": [
 					"#Clientes\r\n",
 					"file_path_read_clientes = '/pdv/Clientes/dtIngestao='+p_dt_ingestion[:6]+\"**\"\r\n",
-					"file_path_write_clientes = '/clientes/ANO='+substr(p_dt_ingestion,1,4)+'/MES='+substr(p_dt_ingestion,5,2)"
+					"file_path_write_clientes = '/clientes"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -200,7 +193,6 @@
 				"source": [
 					""
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -214,8 +206,7 @@
 				},
 				"source": [
 					"**LER DADOS EM FORMATO PARQUET**"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -235,7 +226,6 @@
 					"df_clientes = spark.read.parquet(parquet_path,header=\"false\",inferSchema=False) \r\n",
 					"df_clientes.cache()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -249,8 +239,7 @@
 				},
 				"source": [
 					"**FORMATA OS DADOS LIDOS DA ORIGEM**"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -279,7 +268,6 @@
 					"                        df_clientes.Prop_10.cast(\"string\").alias('UNIDADE')).withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
 					"print(f'Clientes Formatados : {df_clientes.count()}')"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -293,8 +281,7 @@
 				},
 				"source": [
 					"**LIMPAR OS DADOS IMPORTADOS**"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -315,7 +302,6 @@
 					"# # df_clientes = df_clientes.dropna(how='all', subset='IDADE')\r\n",
 					"# print(f'Clientes Higienizado : {df_clientes.count()}')"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -329,8 +315,7 @@
 				},
 				"source": [
 					"**GRAVAR OS DADOS NA TRUSTED**"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -348,9 +333,8 @@
 				"source": [
 					"adls_path_write = 'abfss://%s@%s.dfs.core.windows.net' % ('trusted', account_name)\r\n",
 					"#df_q_lctctb_01 = spark.range(5,10) \r\n",
-					"df_clientes.repartition(1).write.format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write_clientes)"
+					"df_clientes.write.format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write_clientes)"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -369,7 +353,6 @@
 				"source": [
 					"mssparkutils.notebook.exit(adls_path_write + file_path_write_clientes)"
 				],
-				"attachments": null,
 				"execution_count": null
 			}
 		]
