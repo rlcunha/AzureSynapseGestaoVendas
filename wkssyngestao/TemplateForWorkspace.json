@@ -334,7 +334,7 @@
 									"typeProperties": {
 										"variableName": "v_file_name",
 										"value": {
-											"value": "@replace(item().name,' ','')",
+											"value": "@item().name",
 											"type": "Expression"
 										}
 									}
@@ -402,7 +402,7 @@
 													"type": "Expression"
 												},
 												"p_file_name": {
-													"value": "@{split(variables('v_file_name'),'.')[0]}@{split(variables('v_file_name'),'.')[1]}.parquet",
+													"value": "@{split(replace(variables('v_file_name'),' ',''),'.')[0]}@{split(variables('v_file_name'),'.')[1]}.parquet",
 													"type": "Expression"
 												}
 											}
@@ -1805,7 +1805,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "df7c4917-3791-405f-b168-3266dfdff1ed"
+						"spark.autotune.trackingId": "0d50681b-d504-460b-9cf3-08d632c973c6"
 					}
 				},
 				"metadata": {
@@ -1830,7 +1830,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1960,8 +1961,8 @@
 						},
 						"source": [
 							"#Clientes\r\n",
-							"file_path_read_clientes = '/pdv/Clientes/dtIngestao='+p_dt_ingestion[:6]+\"**\"\r\n",
-							"file_path_write_clientes = '/clientes"
+							"file_path_read_clientes = '/pdv/Clientes/dtIngestao='+p_dt_ingestion\r\n",
+							"file_path_write_clientes = '/clientes'"
 						],
 						"outputs": [],
 						"execution_count": null
