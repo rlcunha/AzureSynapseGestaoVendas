@@ -342,7 +342,7 @@
 												]
 											},
 											{
-												"name": "Fail1",
+												"name": "Finish for after find file",
 												"type": "Fail",
 												"dependsOn": [
 													{
@@ -448,6 +448,65 @@
 											}
 										]
 									}
+								},
+								{
+									"name": "transform file",
+									"type": "Switch",
+									"dependsOn": [
+										{
+											"activity": "If file_name empty",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"on": {
+											"value": "@split(toLower(variables('v_file_name')),'.')[0]",
+											"type": "Expression"
+										},
+										"cases": [
+											{
+												"value": "clientes",
+												"activities": [
+													{
+														"name": "nb_prepare_trusted_clientes",
+														"type": "SynapseNotebook",
+														"dependsOn": [],
+														"policy": {
+															"timeout": "7.00:00:00",
+															"retry": 0,
+															"retryIntervalInSeconds": 30,
+															"secureOutput": false,
+															"secureInput": false
+														},
+														"userProperties": [],
+														"typeProperties": {
+															"notebook": {
+																"referenceName": "nb_prepare_trusted_clientes",
+																"type": "NotebookReference"
+															},
+															"parameters": {
+																"p_dt_ingestion": {
+																	"value": {
+																		"value": "@variables('v_dt_intestion')",
+																		"type": "Expression"
+																	},
+																	"type": "string"
+																}
+															},
+															"snapshot": true,
+															"sparkPool": {
+																"referenceName": "GestaoPoolSpark",
+																"type": "BigDataPoolReference"
+															}
+														}
+													}
+												]
+											}
+										]
+									}
 								}
 							]
 						}
@@ -482,7 +541,9 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/ds_binary_landing')]",
 				"[concat(variables('workspaceId'), '/datasets/ds_excel')]",
-				"[concat(variables('workspaceId'), '/datasets/ds_parquet')]"
+				"[concat(variables('workspaceId'), '/datasets/ds_parquet')]",
+				"[concat(variables('workspaceId'), '/notebooks/nb_prepare_trusted_clientes')]",
+				"[concat(variables('workspaceId'), '/bigDataPools/GestaoPoolSpark')]"
 			]
 		},
 		{
