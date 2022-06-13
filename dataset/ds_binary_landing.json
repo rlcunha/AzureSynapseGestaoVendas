@@ -5,6 +5,11 @@
 			"referenceName": "ls_sagestaoloja",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"p_file_binary": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {

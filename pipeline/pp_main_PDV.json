@@ -68,11 +68,13 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "ExcelSource",
+									"type": "BinarySource",
 									"storeSettings": {
 										"type": "AzureBlobFSReadSettings",
-										"recursive": true,
-										"enablePartitionDiscovery": false
+										"recursive": true
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
 									}
 								},
 								"sink": {
@@ -84,24 +86,15 @@
 										"type": "ParquetWriteSettings"
 									}
 								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
+								"enableStaging": false
 							},
 							"inputs": [
 								{
-									"referenceName": "ds_excel",
+									"referenceName": "ds_binary_landing",
 									"type": "DatasetReference",
 									"parameters": {
-										"p_container": "landing",
-										"p_file_name": {
-											"value": "@item().name",
+										"p_file_binary": {
+											"value": "@{item().name}",
 											"type": "Expression"
 										}
 									}
