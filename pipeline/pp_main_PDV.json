@@ -72,7 +72,7 @@
 							"type": "Switch",
 							"dependsOn": [
 								{
-									"activity": "act_copy_excel_to_parquet_copy2",
+									"activity": "act_copy_excel_to_parquet",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -147,7 +147,7 @@
 							}
 						},
 						{
-							"name": "var_file_name_copy2",
+							"name": "var_file_name",
 							"type": "SetVariable",
 							"dependsOn": [
 								{
@@ -167,11 +167,11 @@
 							}
 						},
 						{
-							"name": "act_copy_excel_to_parquet_copy2",
+							"name": "act_copy_excel_to_parquet",
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "var_file_name_copy2",
+									"activity": "var_file_name",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -237,7 +237,7 @@
 							]
 						},
 						{
-							"name": "If Condition1",
+							"name": "run only one time",
 							"type": "IfCondition",
 							"dependsOn": [
 								{
