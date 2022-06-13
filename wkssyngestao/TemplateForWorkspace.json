@@ -286,11 +286,11 @@
 											"parameters": {
 												"p_container_name": "raw",
 												"p_directory_name": {
-													"value": "@{split(item().name,'.')[1]}/@{split(item().name,'.')[0]}/dtingestion=@{pipeline().parameters.p_data_ingestion}\n",
+													"value": "@{split(item().name,'.')[1]}/@{split(item().name,'.')[0]}/dtingestao=@{pipeline().parameters.p_data_ingestion}\n",
 													"type": "Expression"
 												},
 												"p_file_name": {
-													"value": "@split(item().name,'.')[0]",
+													"value": "@{split(item().name,'.')[0]}.parquet",
 													"type": "Expression"
 												}
 											}
@@ -308,7 +308,7 @@
 				"parameters": {
 					"p_data_ingestion": {
 						"type": "string",
-						"defaultValue": "yyyyMMdd"
+						"defaultValue": "20220613"
 					},
 					"p_file_ingestion": {
 						"type": "string"
