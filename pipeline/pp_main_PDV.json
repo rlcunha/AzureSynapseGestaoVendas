@@ -86,77 +86,7 @@
 								},
 								"cases": [
 									{
-										"value": "clientes",
-										"activities": [
-											{
-												"name": "nb_prepare_trusted_clientes",
-												"type": "SynapseNotebook",
-												"dependsOn": [
-													{
-														"activity": "Set variable1",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"notebook": {
-														"referenceName": "nb_prepare_trusted_clientes",
-														"type": "NotebookReference"
-													},
-													"parameters": {
-														"p_dt_ingestion": {
-															"value": {
-																"value": "@variables('v_dt_intestion')",
-																"type": "Expression"
-															},
-															"type": "string"
-														}
-													},
-													"snapshot": true,
-													"sparkPool": {
-														"referenceName": "GestaoPoolSpark",
-														"type": "BigDataPoolReference"
-													}
-												}
-											},
-											{
-												"name": "Set variable1",
-												"type": "SetVariable",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"variableName": "v_msq",
-													"value": {
-														"value": "@concat(variables('v_file_name'),'The transformation has begun!!')",
-														"type": "Expression"
-													}
-												}
-											}
-										]
-									},
-									{
-										"value": "listapedidos"
-									},
-									{
-										"value": "contasapagar"
-									},
-									{
-										"value": "recebimentos"
-									},
-									{
-										"value": "fornecedores"
-									},
-									{
-										"value": "historicopedidos"
+										"value": "clientes"
 									}
 								]
 							}
