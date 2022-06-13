@@ -473,7 +473,14 @@
 													{
 														"name": "nb_prepare_trusted_clientes",
 														"type": "SynapseNotebook",
-														"dependsOn": [],
+														"dependsOn": [
+															{
+																"activity": "Set variable1",
+																"dependencyConditions": [
+																	"Succeeded"
+																]
+															}
+														],
 														"policy": {
 															"timeout": "7.00:00:00",
 															"retry": 0,
@@ -500,6 +507,19 @@
 															"sparkPool": {
 																"referenceName": "GestaoPoolSpark",
 																"type": "BigDataPoolReference"
+															}
+														}
+													},
+													{
+														"name": "Set variable1",
+														"type": "SetVariable",
+														"dependsOn": [],
+														"userProperties": [],
+														"typeProperties": {
+															"variableName": "v_msq",
+															"value": {
+																"value": "@concat(variables('v_file_name'),'Begin step transformation!!')",
+																"type": "Expression"
 															}
 														}
 													}
@@ -529,6 +549,9 @@
 						"type": "String"
 					},
 					"v_dt_intestion": {
+						"type": "String"
+					},
+					"v_msq": {
 						"type": "String"
 					}
 				},
