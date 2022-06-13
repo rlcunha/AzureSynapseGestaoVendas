@@ -68,13 +68,11 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "BinarySource",
+									"type": "ExcelSource",
 									"storeSettings": {
 										"type": "AzureBlobFSReadSettings",
-										"recursive": true
-									},
-									"formatSettings": {
-										"type": "BinaryReadSettings"
+										"recursive": true,
+										"enablePartitionDiscovery": false
 									}
 								},
 								"sink": {
@@ -90,11 +88,12 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "ds_binary_landing",
+									"referenceName": "ds_excel",
 									"type": "DatasetReference",
 									"parameters": {
-										"p_file_binary": {
-											"value": "@{item().name}",
+										"p_container": "landing",
+										"p_file_name": {
+											"value": "@item().name",
 											"type": "Expression"
 										}
 									}
