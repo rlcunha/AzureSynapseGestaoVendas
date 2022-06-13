@@ -216,7 +216,7 @@
 						}
 					},
 					{
-						"name": "ForEach",
+						"name": "ForEachLandingFile",
 						"type": "ForEach",
 						"dependsOn": [
 							{
@@ -281,7 +281,7 @@
 											"parameters": {
 												"p_container": "landing",
 												"p_file_name": {
-													"value": "@item()",
+													"value": "@item()[0]",
 													"type": "Expression"
 												}
 											}
