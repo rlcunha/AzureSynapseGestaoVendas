@@ -72,6 +72,39 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "nb_prepare_trusted_clientes",
+				"type": "SynapseNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "nb_prepare_trusted_clientes",
+						"type": "NotebookReference"
+					},
+					"parameters": {
+						"p_dt_ingestion": {
+							"value": {
+								"value": "@pipeline().parameters.p_dt_ingestion",
+								"type": "Expression"
+							},
+							"type": "string"
+						}
+					},
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": "GestaoPoolSpark",
+						"type": "BigDataPoolReference"
+					}
+				}
 			}
 		],
 		"parameters": {
