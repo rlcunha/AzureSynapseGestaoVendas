@@ -118,14 +118,60 @@
 							]
 						},
 						{
-							"name": "Set variable1",
+							"name": "var_file_name",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "v_file_name",
 								"value": {
-									"value": "@split(item().name,'.')[1]",
+									"value": "@if(greater(length(pipeline().parameters.p_file_ingestion),0),pipeline().parameters.p_file_ingestion,item().name)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "nb_prepare_trusted_clientes",
+							"type": "SynapseNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebook": {
+									"referenceName": "nb_prepare_trusted_clientes",
+									"type": "NotebookReference"
+								},
+								"parameters": {
+									"p_dt_ingestion": {
+										"value": {
+											"value": "@pipeline().parameters.p_dt_ingestion",
+											"type": "Expression"
+										},
+										"type": "string"
+									}
+								},
+								"snapshot": true,
+								"sparkPool": {
+									"referenceName": "GestaoPoolSpark",
+									"type": "BigDataPoolReference"
+								}
+							}
+						},
+						{
+							"name": "var_data_ingestion",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "v_dt_intestion",
+								"value": {
+									"value": "@if(greater(length(pipeline().parameters.p_data_ingestion),0),pipeline().parameters.p_data_ingestion,utcNow('yyyyMddd'))",
 									"type": "Expression"
 								}
 							}
@@ -145,6 +191,9 @@
 		},
 		"variables": {
 			"v_file_name": {
+				"type": "String"
+			},
+			"v_dt_intestion": {
 				"type": "String"
 			}
 		},

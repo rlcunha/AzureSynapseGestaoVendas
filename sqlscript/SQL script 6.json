@@ -2,7 +2,7 @@
 	"name": "SQL script 6",
 	"properties": {
 		"content": {
-			"query": "\nIF EXISTS (SELECT * FROM sys.views WHERE name = 'vwClientes') \n\tDROP VIEW [dbo].[vwClientes]\nGO\nCREATE VIEW [dbo].[vwClientes]\n\tAS SELECT [Prop_0] as codigo\n\t\t\t,[Prop_1] as nome\n\t\t\t,[Prop_2] as telefone\n\t\t\t,[Prop_3] as email\n\t\t\t,[Prop_4] as dtNascimento\n\t\t\t,[Prop_5] as dtAneversario\n\t\t\t,[Prop_6] as dtIdade\n\t\t\t,[Prop_7] as sexo\n\t\t\t,[Prop_8] as origem\n\t\t\t,[Prop_9] as dtCadastro\n\t\t\t,[Prop_10] as unidade \n\t\tFROM [tbClientes]\n",
+			"query": "IF EXISTS (SELECT * FROM sys.views WHERE name = 'vwClientes') \n\tDROP VIEW [dbo].[vwClientes]\nGO\nCREATE VIEW [dbo].[vwClientes]\n\tAS SELECT \n\t         ROW_NUMBER() OVER(ORDER BY Prop_1 ASC) AS Row#\n\t\t\t,Prop_1 as nome \n\t\t\t,cast(Prop_0 as int) as codigo\n\t\t\t,[Prop_2] as telefone\n\t\t\t,[Prop_3] as email\n\t\t\t,[Prop_4] as dtNascimento\n\t\t\t,[Prop_5] as dtAneversario\n\t\t\t,[Prop_6] as dtIdade\n\t\t\t,[Prop_7] as sexo\n\t\t\t,[Prop_8] as origem\n\t\t\t,[Prop_9] as dtCadastro\n\t\t\t,[Prop_10] as unidade\n\t\tFROM [tbClientes]\n\t\twhere ISNUMERIC(Prop_0) > 0\n",
 			"metadata": {
 				"language": "sql"
 			},

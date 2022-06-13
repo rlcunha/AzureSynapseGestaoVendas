@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 5",
+	"properties": {
+		"content": {
+			"query": "SELECT [Prop_0]\n,[Prop_1]\n,[Prop_2]\n,[Prop_3]\n,[Prop_4]\n,[Prop_5]\n,[Prop_6]\n,[Prop_7]\n,[Prop_8]\n,[Prop_9]\n,[Prop_10]\n FROM [dbo].[tbClientes]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "dbGestao",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
