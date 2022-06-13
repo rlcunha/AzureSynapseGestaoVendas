@@ -110,7 +110,7 @@
 											"type": "Expression"
 										},
 										"p_file_name": {
-											"value": "@{split(item().name,'.')[0]}.parquet",
+											"value": "@split(item().name,'.')[0]",
 											"type": "Expression"
 										}
 									}
