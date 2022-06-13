@@ -286,7 +286,7 @@
 											"parameters": {
 												"p_container_name": "raw",
 												"p_directory_name": {
-													"value": "@{split(item().name,'.')[1]}/dtingestao=@{pipeline().parameters.p_data_ingestion}",
+													"value": "@{split(item().name,'.')[1]}/dtingestion=@{pipeline().parameters.p_data_ingestion}",
 													"type": "Expression"
 												},
 												"p_file_name": {
