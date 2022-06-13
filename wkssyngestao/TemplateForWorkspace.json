@@ -398,7 +398,7 @@
 											"parameters": {
 												"p_container_name": "raw",
 												"p_directory_name": {
-													"value": "pdv/@{split(variables('v_file_name'),'.')[0]}/dtingestao=@{variables('v_dt_intestion')}",
+													"value": "pdv/@{split(replace(variables('v_file_name'),' ',''),'.')[0]}/dtIngestao=@{variables('v_dt_intestion')}",
 													"type": "Expression"
 												},
 												"p_file_name": {
@@ -1805,7 +1805,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "0d50681b-d504-460b-9cf3-08d632c973c6"
+						"spark.autotune.trackingId": "21fe5d71-1ad3-487f-8604-f3ea39a46184"
 					}
 				},
 				"metadata": {
@@ -1830,8 +1830,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
