@@ -228,96 +228,6 @@
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "act_copy_excel_to_parquet",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "var_file_name",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "ExcelSource",
-											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											}
-										},
-										"sink": {
-											"type": "ParquetSink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "ParquetWriteSettings"
-											}
-										},
-										"enableStaging": false
-									},
-									"inputs": [
-										{
-											"referenceName": "ds_excel",
-											"type": "DatasetReference",
-											"parameters": {
-												"p_container": "landing",
-												"p_file_name": {
-													"value": "@variables('v_file_name')",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "ds_parquet",
-											"type": "DatasetReference",
-											"parameters": {
-												"p_container_name": "raw",
-												"p_directory_name": {
-													"value": "pdv/@{split(variables('v_file_name'),'.')[0]}/dtingestao=@{variables('v_dt_intestion')}",
-													"type": "Expression"
-												},
-												"p_file_name": {
-													"value": "@{split(variables('v_file_name'),'.')[0]}@{split(variables('v_file_name'),'.')[1]}.parquet",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								},
-								{
-									"name": "var_file_name",
-									"type": "SetVariable",
-									"dependsOn": [
-										{
-											"activity": "var_data_ingestion",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "v_file_name",
-										"value": {
-											"value": "@if(empty(pipeline().parameters.p_file_ingestion),item().name,pipeline().parameters.p_file_ingestion)",
-											"type": "Expression"
-										}
-									}
-								},
-								{
 									"name": "var_data_ingestion",
 									"type": "SetVariable",
 									"dependsOn": [],
@@ -328,6 +238,215 @@
 											"value": "@if(empty(pipeline().parameters.p_data_ingestion),utcNow('yyyyMMdd'),pipeline().parameters.p_data_ingestion)",
 											"type": "Expression"
 										}
+									}
+								},
+								{
+									"name": "If file_name empty",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "var_data_ingestion",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@empty(pipeline().parameters.p_file_ingestion)",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "var_file_name_copy1",
+												"type": "SetVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "v_file_name",
+													"value": {
+														"value": "@pipeline().parameters.p_file_ingestion",
+														"type": "Expression"
+													}
+												}
+											},
+											{
+												"name": "act_copy_excel_to_parquet_copy1",
+												"type": "Copy",
+												"dependsOn": [
+													{
+														"activity": "var_file_name_copy1",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "ExcelSource",
+														"storeSettings": {
+															"type": "AzureBlobFSReadSettings",
+															"recursive": true,
+															"enablePartitionDiscovery": false
+														}
+													},
+													"sink": {
+														"type": "ParquetSink",
+														"storeSettings": {
+															"type": "AzureBlobFSWriteSettings"
+														},
+														"formatSettings": {
+															"type": "ParquetWriteSettings"
+														}
+													},
+													"enableStaging": false
+												},
+												"inputs": [
+													{
+														"referenceName": "ds_excel",
+														"type": "DatasetReference",
+														"parameters": {
+															"p_container": "landing",
+															"p_file_name": {
+																"value": "@variables('v_file_name')",
+																"type": "Expression"
+															}
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "ds_parquet",
+														"type": "DatasetReference",
+														"parameters": {
+															"p_container_name": "raw",
+															"p_directory_name": {
+																"value": "pdv/@{split(variables('v_file_name'),'.')[0]}/dtingestao=@{variables('v_dt_intestion')}",
+																"type": "Expression"
+															},
+															"p_file_name": {
+																"value": "@{split(variables('v_file_name'),'.')[0]}@{split(variables('v_file_name'),'.')[1]}.parquet",
+																"type": "Expression"
+															}
+														}
+													}
+												]
+											},
+											{
+												"name": "Fail1",
+												"type": "Fail",
+												"dependsOn": [
+													{
+														"activity": "act_copy_excel_to_parquet_copy1",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"userProperties": [],
+												"typeProperties": {
+													"message": {
+														"value": "@concat(variables('v_file_name'), ' was copied with sucessful(Exit forced')",
+														"type": "Expression"
+													},
+													"errorCode": "0001"
+												}
+											}
+										],
+										"ifTrueActivities": [
+											{
+												"name": "var_file_name",
+												"type": "SetVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "v_file_name",
+													"value": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											},
+											{
+												"name": "act_copy_excel_to_parquet",
+												"type": "Copy",
+												"dependsOn": [
+													{
+														"activity": "var_file_name",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "ExcelSource",
+														"storeSettings": {
+															"type": "AzureBlobFSReadSettings",
+															"recursive": true,
+															"enablePartitionDiscovery": false
+														}
+													},
+													"sink": {
+														"type": "ParquetSink",
+														"storeSettings": {
+															"type": "AzureBlobFSWriteSettings"
+														},
+														"formatSettings": {
+															"type": "ParquetWriteSettings"
+														}
+													},
+													"enableStaging": false
+												},
+												"inputs": [
+													{
+														"referenceName": "ds_excel",
+														"type": "DatasetReference",
+														"parameters": {
+															"p_container": "landing",
+															"p_file_name": {
+																"value": "@variables('v_file_name')",
+																"type": "Expression"
+															}
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "ds_parquet",
+														"type": "DatasetReference",
+														"parameters": {
+															"p_container_name": "raw",
+															"p_directory_name": {
+																"value": "pdv/@{split(variables('v_file_name'),'.')[0]}/dtingestao=@{variables('v_dt_intestion')}",
+																"type": "Expression"
+															},
+															"p_file_name": {
+																"value": "@{split(variables('v_file_name'),'.')[0]}@{split(variables('v_file_name'),'.')[1]}.parquet",
+																"type": "Expression"
+															}
+														}
+													}
+												]
+											}
+										]
 									}
 								}
 							]
