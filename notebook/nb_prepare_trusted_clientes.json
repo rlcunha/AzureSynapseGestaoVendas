@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "21fe5d71-1ad3-487f-8604-f3ea39a46184"
+				"spark.autotune.trackingId": "4bb934d0-d48c-4807-94f1-bb88042686ab"
 			}
 		},
 		"metadata": {
@@ -265,6 +265,9 @@
 					"                        df_clientes.Prop_7.cast(\"string\").alias('SEXO'),\\\r\n",
 					"                        df_clientes.Prop_8.cast(\"string\").alias('ORIGEM'),\\\r\n",
 					"                        df_clientes.Prop_9.cast(\"string\").alias('CADASTRO'),\\\r\n",
+					"                        f.substring(Prop_9,1,2).cast(\"int\").alias('DIA_CAD'),\\\r\n",
+					"                        f.substring(Prop_9,4,2).cast(\"int\").alias('MES_CAD'),\\\r\n",
+					"                        f.substring(Prop_9,7,4).cast(\"int\").alias('ANO_CAD'),\\\r\n",
 					"                        df_clientes.Prop_10.cast(\"string\").alias('UNIDADE')).withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
 					"print(f'Clientes Formatados : {df_clientes.count()}')"
 				],
@@ -333,7 +336,7 @@
 				"source": [
 					"adls_path_write = 'abfss://%s@%s.dfs.core.windows.net' % ('trusted', account_name)\r\n",
 					"#df_q_lctctb_01 = spark.range(5,10) \r\n",
-					"df_clientes.write.format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write_clientes)"
+					"df_clientes.write.partitionBy('ANO_CAD','MES_CAD').format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write_clientes)"
 				],
 				"execution_count": null
 			},
