@@ -286,7 +286,7 @@
 											"parameters": {
 												"p_container_name": "raw",
 												"p_directory_name": {
-													"value": "@{split(item().name,'.')[1]}/@{split(item().name,'.')[0]}/dtingestao=@{pipeline().parameters.p_data_ingestion}\n",
+													"value": "@{split(item().name,'.')[1]}/dtingestao=@{pipeline().parameters.p_data_ingestion}",
 													"type": "Expression"
 												},
 												"p_file_name": {
@@ -296,6 +296,19 @@
 											}
 										}
 									]
+								},
+								{
+									"name": "Set variable1",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "v_file_name",
+										"value": {
+											"value": "@split(item().name,'.')[1]",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
@@ -312,6 +325,11 @@
 					},
 					"p_file_ingestion": {
 						"type": "string"
+					}
+				},
+				"variables": {
+					"v_file_name": {
+						"type": "String"
 					}
 				},
 				"folder": {
