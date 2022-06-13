@@ -518,7 +518,7 @@
 														"typeProperties": {
 															"variableName": "v_msq",
 															"value": {
-																"value": "@concat(variables('v_file_name'),'Begin step transformation!!')",
+																"value": "@concat(variables('v_file_name'),'The transformation has begun!!')",
 																"type": "Expression"
 															}
 														}
