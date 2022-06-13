@@ -141,7 +141,7 @@
 							"typeProperties": {
 								"variableName": "v_only_one_time",
 								"value": {
-									"value": "@if(empty(pipeline().parameters.p_file_ingestion),0,1)",
+									"value": "@if(empty(pipeline().parameters.p_file_ingestion),'0','1')",
 									"type": "Expression"
 								}
 							}
@@ -250,7 +250,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@equals(variables('v_only_one_time'),1)",
+									"value": "@equals(variables('v_only_one_time'),'1')",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
