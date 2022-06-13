@@ -266,7 +266,7 @@
 												"typeProperties": {
 													"variableName": "v_file_name",
 													"value": {
-														"value": "@pipeline().parameters.p_file_ingestion",
+														"value": "@replace(pipeline().parameters.p_file_ingestion,' ','')\n",
 														"type": "Expression"
 													}
 												}
@@ -371,7 +371,7 @@
 												"typeProperties": {
 													"variableName": "v_file_name",
 													"value": {
-														"value": "@item().name",
+														"value": "@replace(item().name,' ','')",
 														"type": "Expression"
 													}
 												}
@@ -1872,7 +1872,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "8c45db6c-b3d2-42fa-afbf-0b379b720a0b"
+						"spark.autotune.trackingId": "df7c4917-3791-405f-b168-3266dfdff1ed"
 					}
 				},
 				"metadata": {
@@ -1897,8 +1897,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
