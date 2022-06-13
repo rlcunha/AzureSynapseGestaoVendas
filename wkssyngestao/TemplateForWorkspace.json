@@ -241,220 +241,11 @@
 									}
 								},
 								{
-									"name": "If file_name empty",
-									"type": "IfCondition",
-									"dependsOn": [
-										{
-											"activity": "var_data_ingestion",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@empty(pipeline().parameters.p_file_ingestion)",
-											"type": "Expression"
-										},
-										"ifFalseActivities": [
-											{
-												"name": "var_file_name_copy1",
-												"type": "SetVariable",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"variableName": "v_file_name",
-													"value": {
-														"value": "@replace(pipeline().parameters.p_file_ingestion,' ','')\n",
-														"type": "Expression"
-													}
-												}
-											},
-											{
-												"name": "act_copy_excel_to_parquet_copy1",
-												"type": "Copy",
-												"dependsOn": [
-													{
-														"activity": "var_file_name_copy1",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"source": {
-														"type": "ExcelSource",
-														"storeSettings": {
-															"type": "AzureBlobFSReadSettings",
-															"recursive": true,
-															"enablePartitionDiscovery": false
-														}
-													},
-													"sink": {
-														"type": "ParquetSink",
-														"storeSettings": {
-															"type": "AzureBlobFSWriteSettings"
-														},
-														"formatSettings": {
-															"type": "ParquetWriteSettings"
-														}
-													},
-													"enableStaging": false
-												},
-												"inputs": [
-													{
-														"referenceName": "ds_excel",
-														"type": "DatasetReference",
-														"parameters": {
-															"p_container": "landing",
-															"p_file_name": {
-																"value": "@variables('v_file_name')",
-																"type": "Expression"
-															}
-														}
-													}
-												],
-												"outputs": [
-													{
-														"referenceName": "ds_parquet",
-														"type": "DatasetReference",
-														"parameters": {
-															"p_container_name": "raw",
-															"p_directory_name": {
-																"value": "pdv/@{split(variables('v_file_name'),'.')[0]}/dtingestao=@{variables('v_dt_intestion')}",
-																"type": "Expression"
-															},
-															"p_file_name": {
-																"value": "@{split(variables('v_file_name'),'.')[0]}@{split(variables('v_file_name'),'.')[1]}.parquet",
-																"type": "Expression"
-															}
-														}
-													}
-												]
-											},
-											{
-												"name": "Finish for after find file",
-												"type": "Fail",
-												"dependsOn": [
-													{
-														"activity": "act_copy_excel_to_parquet_copy1",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"userProperties": [],
-												"typeProperties": {
-													"message": {
-														"value": "@concat(variables('v_file_name'), ' was copied with sucessful(Exit forced')",
-														"type": "Expression"
-													},
-													"errorCode": "0001"
-												}
-											}
-										],
-										"ifTrueActivities": [
-											{
-												"name": "var_file_name",
-												"type": "SetVariable",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"variableName": "v_file_name",
-													"value": {
-														"value": "@replace(item().name,' ','')",
-														"type": "Expression"
-													}
-												}
-											},
-											{
-												"name": "act_copy_excel_to_parquet",
-												"type": "Copy",
-												"dependsOn": [
-													{
-														"activity": "var_file_name",
-														"dependencyConditions": [
-															"Succeeded"
-														]
-													}
-												],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"source": {
-														"type": "ExcelSource",
-														"storeSettings": {
-															"type": "AzureBlobFSReadSettings",
-															"recursive": true,
-															"enablePartitionDiscovery": false
-														}
-													},
-													"sink": {
-														"type": "ParquetSink",
-														"storeSettings": {
-															"type": "AzureBlobFSWriteSettings"
-														},
-														"formatSettings": {
-															"type": "ParquetWriteSettings"
-														}
-													},
-													"enableStaging": false
-												},
-												"inputs": [
-													{
-														"referenceName": "ds_excel",
-														"type": "DatasetReference",
-														"parameters": {
-															"p_container": "landing",
-															"p_file_name": {
-																"value": "@variables('v_file_name')",
-																"type": "Expression"
-															}
-														}
-													}
-												],
-												"outputs": [
-													{
-														"referenceName": "ds_parquet",
-														"type": "DatasetReference",
-														"parameters": {
-															"p_container_name": "raw",
-															"p_directory_name": {
-																"value": "pdv/@{split(variables('v_file_name'),'.')[0]}/dtingestao=@{variables('v_dt_intestion')}",
-																"type": "Expression"
-															},
-															"p_file_name": {
-																"value": "@{split(variables('v_file_name'),'.')[0]}@{split(variables('v_file_name'),'.')[1]}.parquet",
-																"type": "Expression"
-															}
-														}
-													}
-												]
-											}
-										]
-									}
-								},
-								{
 									"name": "transform file",
 									"type": "Switch",
 									"dependsOn": [
 										{
-											"activity": "If file_name empty",
+											"activity": "act_copy_excel_to_parquet_copy2",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -473,14 +264,7 @@
 													{
 														"name": "nb_prepare_trusted_clientes",
 														"type": "SynapseNotebook",
-														"dependsOn": [
-															{
-																"activity": "Set variable1",
-																"dependencyConditions": [
-																	"Succeeded"
-																]
-															}
-														],
+														"dependsOn": [],
 														"policy": {
 															"timeout": "7.00:00:00",
 															"retry": 0,
@@ -509,21 +293,167 @@
 																"type": "BigDataPoolReference"
 															}
 														}
-													},
-													{
-														"name": "Set variable1",
-														"type": "SetVariable",
-														"dependsOn": [],
-														"userProperties": [],
-														"typeProperties": {
-															"variableName": "v_msq",
-															"value": {
-																"value": "@concat(variables('v_file_name'),'The transformation has begun!!')",
-																"type": "Expression"
-															}
-														}
 													}
 												]
+											}
+										]
+									}
+								},
+								{
+									"name": "var_only_one_time",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "var_data_ingestion",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "v_only_one_time",
+										"value": {
+											"value": "@if(empty(pipeline().parameters.p_file_ingestion),0,1)",
+											"type": "Expression"
+										}
+									}
+								},
+								{
+									"name": "var_file_name_copy2",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "var_only_one_time",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "v_file_name",
+										"value": {
+											"value": "@replace(item().name,' ','')",
+											"type": "Expression"
+										}
+									}
+								},
+								{
+									"name": "act_copy_excel_to_parquet_copy2",
+									"type": "Copy",
+									"dependsOn": [
+										{
+											"activity": "var_file_name_copy2",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "ExcelSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											}
+										},
+										"sink": {
+											"type": "ParquetSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "ParquetWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_excel",
+											"type": "DatasetReference",
+											"parameters": {
+												"p_container": "landing",
+												"p_file_name": {
+													"value": "@variables('v_file_name')",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ds_parquet",
+											"type": "DatasetReference",
+											"parameters": {
+												"p_container_name": "raw",
+												"p_directory_name": {
+													"value": "pdv/@{split(variables('v_file_name'),'.')[0]}/dtingestao=@{variables('v_dt_intestion')}",
+													"type": "Expression"
+												},
+												"p_file_name": {
+													"value": "@{split(variables('v_file_name'),'.')[0]}@{split(variables('v_file_name'),'.')[1]}.parquet",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "If Condition1",
+									"type": "IfCondition",
+									"dependsOn": [
+										{
+											"activity": "transform file",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@equals(variables('v_only_one_time'),1)",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "var_msg",
+												"type": "SetVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": "v_msq",
+													"value": {
+														"value": "'Go to the next file'",
+														"type": "Expression"
+													}
+												}
+											}
+										],
+										"ifTrueActivities": [
+											{
+												"name": "Fail1",
+												"type": "Fail",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"message": {
+														"value": "@concat(variables('v_file_name'), ' was copied with sucessful(Exit forced')",
+														"type": "Expression"
+													},
+													"errorCode": "0001"
+												}
 											}
 										]
 									}
@@ -552,6 +482,9 @@
 						"type": "String"
 					},
 					"v_msq": {
+						"type": "String"
+					},
+					"v_only_one_time": {
 						"type": "String"
 					}
 				},
