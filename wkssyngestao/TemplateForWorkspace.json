@@ -182,7 +182,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Get Metadata1",
+						"name": "GetAllLandingFile",
 						"type": "GetMetadata",
 						"dependsOn": [],
 						"policy": {
@@ -195,7 +195,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "ds_binary",
+								"referenceName": "ds_binary_landing",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
@@ -216,11 +216,11 @@
 						}
 					},
 					{
-						"name": "ForEach1",
+						"name": "ForEach",
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Get Metadata1",
+								"activity": "GetAllLandingFile",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -229,33 +229,81 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Get Metadata1').output.childItems",
+								"value": "@activity('GetAllLandingFile').output.childItems\n\n",
 								"type": "Expression"
 							},
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "expp_copiar_pdv_para_raw",
-									"type": "ExecutePipeline",
+									"name": "act_copy_excel_to_parquet",
+									"type": "Copy",
 									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
 									"userProperties": [],
 									"typeProperties": {
-										"pipeline": {
-											"referenceName": "pp_copy_pdv_to_raw",
-											"type": "PipelineReference"
+										"source": {
+											"type": "ExcelSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											}
 										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"p_dt_ingestion": {
-												"value": "@pipeline().parameters.p_data_ingestion",
-												"type": "Expression"
+										"sink": {
+											"type": "ParquetSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
 											},
-											"p_file_name": {
-												"value": "@item().name",
-												"type": "Expression"
+											"formatSettings": {
+												"type": "ParquetWriteSettings"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
 											}
 										}
-									}
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_excel",
+											"type": "DatasetReference",
+											"parameters": {
+												"p_container": "landing",
+												"p_file_name": {
+													"value": "@item()",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ds_parquet",
+											"type": "DatasetReference",
+											"parameters": {
+												"p_container_name": "raw",
+												"p_directory_name": {
+													"value": "@{split(item(),'.')[1]}/@{split(item(),'.')[0]}/dtingestion=@{pipeline().parameters.p_data_ingestion}\n",
+													"type": "Expression"
+												},
+												"p_file_name": {
+													"value": "@{split(item(),'.')[0]}.parquet",
+													"type": "Expression"
+												}
+											}
+										}
+									]
 								}
 							]
 						}
@@ -269,6 +317,9 @@
 					"p_data_ingestion": {
 						"type": "string",
 						"defaultValue": "yyyyMMdd"
+					},
+					"p_file_ingestion": {
+						"type": "string"
 					}
 				},
 				"folder": {
@@ -278,12 +329,35 @@
 				"lastPublishTime": "2022-05-11T18:24:25Z"
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/ds_binary')]",
-				"[concat(variables('workspaceId'), '/pipelines/pp_copy_pdv_to_raw')]"
+				"[concat(variables('workspaceId'), '/datasets/ds_binary_landing')]",
+				"[concat(variables('workspaceId'), '/datasets/ds_excel')]",
+				"[concat(variables('workspaceId'), '/datasets/ds_parquet')]"
 			]
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/ds_binary')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_sagestaoloja",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "landing"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/ls_sagestaoloja')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ds_binary_landing')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
