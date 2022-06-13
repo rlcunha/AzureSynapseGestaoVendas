@@ -106,11 +106,11 @@
 									"parameters": {
 										"p_container_name": "raw",
 										"p_directory_name": {
-											"value": "@{split(item().name,'.')[1]}/dtingestion=@{pipeline().parameters.p_data_ingestion}",
+											"value": "pdv/@{split(item().name,'.')[1]}/dtingestion=@{pipeline().parameters.p_data_ingestion}",
 											"type": "Expression"
 										},
 										"p_file_name": {
-											"value": "@{split(item().name,'.')[0]}.parquet",
+											"value": "@{split(item().name,'.')[0]}+@{split(item().name,'.')[1]}.parquet",
 											"type": "Expression"
 										}
 									}
