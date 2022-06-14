@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "GetAllLandingFile",
+				"name": "GetAllFileLanding",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
@@ -28,6 +28,7 @@
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
 						"recursive": true,
+						"modifiedDatetimeStart": "2022-06-12T00:00:00.492Z",
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -36,11 +37,12 @@
 				}
 			},
 			{
-				"name": "ForEachLandingFile",
+				"name": "ForEachFileLanding",
+				"description": "Get all files of landing container. \nps. All files must be extentions excel.",
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "GetAllLandingFile",
+						"activity": "GetAllFileLanding",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -49,134 +51,15 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('GetAllLandingFile').output.childItems\n\n",
+						"value": "@activity('GetAllFileLanding').output.childItems",
 						"type": "Expression"
 					},
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "var_data_ingestion",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "v_dt_intestion",
-								"value": {
-									"value": "@if(empty(pipeline().parameters.p_data_ingestion),utcNow('yyyyMMdd'),pipeline().parameters.p_data_ingestion)",
-									"type": "Expression"
-								}
-							}
-						},
-						{
-							"name": "transform file",
-							"type": "Switch",
-							"dependsOn": [
-								{
-									"activity": "act_copy_excel_to_parquet",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"on": {
-									"value": "@split(toLower(variables('v_file_name')),'.')[0]",
-									"type": "Expression"
-								},
-								"cases": [
-									{
-										"value": "clientes",
-										"activities": [
-											{
-												"name": "nb_prepare_trusted_clientes",
-												"type": "SynapseNotebook",
-												"dependsOn": [],
-												"policy": {
-													"timeout": "7.00:00:00",
-													"retry": 0,
-													"retryIntervalInSeconds": 30,
-													"secureOutput": false,
-													"secureInput": false
-												},
-												"userProperties": [],
-												"typeProperties": {
-													"notebook": {
-														"referenceName": "nb_prepare_trusted_clientes",
-														"type": "NotebookReference"
-													},
-													"parameters": {
-														"p_dt_ingestion": {
-															"value": {
-																"value": "@variables('v_dt_intestion')",
-																"type": "Expression"
-															},
-															"type": "string"
-														}
-													},
-													"snapshot": true,
-													"sparkPool": {
-														"referenceName": "GestaoPoolSpark",
-														"type": "BigDataPoolReference"
-													}
-												}
-											}
-										]
-									}
-								]
-							}
-						},
-						{
-							"name": "var_only_one_time",
-							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "var_data_ingestion",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "v_only_one_time",
-								"value": {
-									"value": "@if(empty(pipeline().parameters.p_file_ingestion),'0','1')",
-									"type": "Expression"
-								}
-							}
-						},
-						{
-							"name": "var_file_name",
-							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "var_only_one_time",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "v_file_name",
-								"value": {
-									"value": "@item().name",
-									"type": "Expression"
-								}
-							}
-						},
-						{
 							"name": "act_copy_excel_to_parquet",
 							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "var_file_name",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -203,7 +86,15 @@
 										"type": "ParquetWriteSettings"
 									}
 								},
-								"enableStaging": false
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
 							},
 							"inputs": [
 								{
@@ -212,7 +103,7 @@
 									"parameters": {
 										"p_container": "landing",
 										"p_file_name": {
-											"value": "@variables('v_file_name')",
+											"value": "@activity('GetAllFileLanding').output.itemName",
 											"type": "Expression"
 										}
 									}
@@ -225,65 +116,16 @@
 									"parameters": {
 										"p_container_name": "raw",
 										"p_directory_name": {
-											"value": "pdv/@{split(replace(variables('v_file_name'),' ',''),'.')[0]}/dtIngestao=@{variables('v_dt_intestion')}",
+											"value": "pdv/@{split(activity('GetAllFileLanding').output.itemName,'.')[0]}/dtingestion=@{pipeline().parameters.p_data_ingestion}\n",
 											"type": "Expression"
 										},
 										"p_file_name": {
-											"value": "@{split(replace(variables('v_file_name'),' ',''),'.')[0]}@{split(variables('v_file_name'),'.')[1]}.parquet",
+											"value": "split(activity('GetAllFileLanding').output.itemName,'.')[0].parquet",
 											"type": "Expression"
 										}
 									}
 								}
 							]
-						},
-						{
-							"name": "run only one time",
-							"type": "IfCondition",
-							"dependsOn": [
-								{
-									"activity": "transform file",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"expression": {
-									"value": "@equals(variables('v_only_one_time'),'1')",
-									"type": "Expression"
-								},
-								"ifFalseActivities": [
-									{
-										"name": "var_msg",
-										"type": "SetVariable",
-										"dependsOn": [],
-										"userProperties": [],
-										"typeProperties": {
-											"variableName": "v_msq",
-											"value": {
-												"value": "'Go to the next file'",
-												"type": "Expression"
-											}
-										}
-									}
-								],
-								"ifTrueActivities": [
-									{
-										"name": "Fail1",
-										"type": "Fail",
-										"dependsOn": [],
-										"userProperties": [],
-										"typeProperties": {
-											"message": {
-												"value": "@concat(variables('v_file_name'), ' was copied with sucessful(Exit forced')",
-												"type": "Expression"
-											},
-											"errorCode": "0001"
-										}
-									}
-								]
-							}
 						}
 					]
 				}
@@ -291,24 +133,11 @@
 		],
 		"parameters": {
 			"p_data_ingestion": {
+				"type": "string",
+				"defaultValue": "yyyyMMdd"
+			},
+			"p_file_name": {
 				"type": "string"
-			},
-			"p_file_ingestion": {
-				"type": "string"
-			}
-		},
-		"variables": {
-			"v_file_name": {
-				"type": "String"
-			},
-			"v_dt_intestion": {
-				"type": "String"
-			},
-			"v_msq": {
-				"type": "String"
-			},
-			"v_only_one_time": {
-				"type": "String"
 			}
 		},
 		"folder": {
