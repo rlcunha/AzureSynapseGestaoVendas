@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "4bb934d0-d48c-4807-94f1-bb88042686ab"
+				"spark.autotune.trackingId": "cac2e110-2daf-4c8c-b778-c5ec730741b6"
 			}
 		},
 		"metadata": {
@@ -132,15 +132,9 @@
 					}
 				},
 				"source": [
-					"import shutil\r\n",
-					"import codecs\r\n",
-					"from datetime import datetime\r\n",
-					"\r\n",
-					"import pandas as pd\r\n",
-					"\r\n",
-					"from pyspark.sql import *\r\n",
-					"from pyspark.sql.types import *\r\n",
-					"import pyspark.sql.functions as f"
+					"import pyspark.sql.functions as f\r\n",
+					"from pyspark.sql import Window\r\n",
+					"from pyspark.sql import SparkSession"
 				],
 				"execution_count": null
 			},
@@ -238,6 +232,38 @@
 					}
 				},
 				"source": [
+					"**Prepara sessao spark para usar recursos de auto-identação**"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark = SparkSession.builder.getOrCreate()\r\n",
+					"w = Window().orderBy(f.lit('A'))"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"**FORMATA OS DADOS LIDOS DA ORIGEM**"
 				]
 			},
@@ -259,17 +285,51 @@
 					"                        df_clientes.Prop_1.cast(\"string\").alias('NOME'),\\\r\n",
 					"                        df_clientes.Prop_2.cast(\"string\").alias('TELEFONE'),\\\r\n",
 					"                        df_clientes.Prop_3.cast(\"string\").alias('EMAIL'),\\\r\n",
-					"                        df_clientes.Prop_4.cast(\"string\").alias('NASCIMENTO'),\\\r\n",
-					"                        df_clientes.Prop_5.cast(\"string\").alias('ANIVERSARIANTE'),\\\r\n",
-					"                        df_clientes.Prop_6.cast(\"integer\").alias('IDADE'),\\\r\n",
-					"                        df_clientes.Prop_7.cast(\"string\").alias('SEXO'),\\\r\n",
+					"                        # df_clientes.Prop_4.cast(\"string\").alias('NASCIMENTO'),\\\r\n",
+					"                        # df_clientes.Prop_5.cast(\"string\").alias('ANIVERSARIANTE'),\\\r\n",
+					"                        # df_clientes.Prop_6.cast(\"integer\").alias('IDADE'),\\\r\n",
+					"                        # df_clientes.Prop_7.cast(\"string\").alias('SEXO'),\\\r\n",
 					"                        df_clientes.Prop_8.cast(\"string\").alias('ORIGEM'),\\\r\n",
 					"                        df_clientes.Prop_9.cast(\"string\").alias('CADASTRO'),\\\r\n",
 					"                        f.substring(Prop_9,1,2).cast(\"int\").alias('DIA_CAD'),\\\r\n",
 					"                        f.substring(Prop_9,4,2).cast(\"int\").alias('MES_CAD'),\\\r\n",
 					"                        f.substring(Prop_9,7,4).cast(\"int\").alias('ANO_CAD'),\\\r\n",
-					"                        df_clientes.Prop_10.cast(\"string\").alias('UNIDADE')).withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
+					"                        df_clientes.Prop_10.cast(\"string\").alias('UNIDADE'),\\\r\n",
+					"                        f.regexp_replace(f.upper(df0._c1), \" \", \"\").alias('NOMEUPPER')).\\\r\n",
+					"                        withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
 					"print(f'Clientes Formatados : {df_clientes.count()}')"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**RETIRA REGISTROS DUPLICADOS**"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df_clientes_sem_duplicados = df_clientes.dropDuplicates(['NOMEUPPER']).drop('NOMEUPPER')\r\n",
+					"df_clientes = df_clientes_sem_duplicados"
 				],
 				"execution_count": null
 			},
@@ -300,10 +360,40 @@
 					}
 				},
 				"source": [
-					"# # Ler e filtrar e gravar dataframe - Cliente\r\n",
-					"# df_clientes = df_clientes.dropna(how='all', subset='CODIGO')\r\n",
-					"# # df_clientes = df_clientes.dropna(how='all', subset='IDADE')\r\n",
-					"# print(f'Clientes Higienizado : {df_clientes.count()}')"
+					"# Ler e filtrar e gravar dataframe - Cliente\r\n",
+					"df_clientes = df_clientes.dropna(how='all', subset='CODIGO')\r\n",
+					"print(f'Clientes Higienizado : {df_clientes.count()}')"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**AUTO NUMERAÇÃO DOS REGISTROS**"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df_clientes = df_clientes.select(f.row_number().over(w).alias('ID'),'*')"
 				],
 				"execution_count": null
 			},
