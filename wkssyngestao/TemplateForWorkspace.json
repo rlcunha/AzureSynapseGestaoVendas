@@ -33,13 +33,73 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('workspaceName'), '/pp_copy_delivery_to_raw')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Metadata1",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "ds_binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems",
+								"itemName",
+								"lastModified",
+								"itemType"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "BinaryReadSettings"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"p_data_ingestion": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "SourceLandingPDV"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-05-11T15:03:52Z"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/ds_binary')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/pp_copy_pdv_to_raw')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"activities": [
 					{
-						"name": "act_copy_excel_to_parquet",
+						"name": "Copy data1",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -98,7 +158,7 @@
 								"parameters": {
 									"p_container_name": "raw",
 									"p_directory_name": {
-										"value": "pdv/@{split(pipeline().parameters.p_file_name,'.')[0]}/dtingestion=@{pipeline().parameters.p_dt_ingestion}\n",
+										"value": "pdv/@{split(pipeline().parameters.p_file_name,'.')[0]}",
 										"type": "Expression"
 									},
 									"p_file_name": {
@@ -112,7 +172,14 @@
 					{
 						"name": "nb_prepare_trusted_clientes",
 						"type": "SynapseNotebook",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Copy data1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -159,7 +226,7 @@
 					"name": "SourceLandingPDV"
 				},
 				"annotations": [],
-				"lastPublishTime": "2022-06-10T19:21:50Z"
+				"lastPublishTime": "2022-05-11T20:16:54Z"
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/datasets/ds_excel')]",
@@ -175,7 +242,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "GetAllLandingFile",
+						"name": "Get Metadata1",
 						"type": "GetMetadata",
 						"dependsOn": [],
 						"policy": {
@@ -188,7 +255,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "ds_binary_landing",
+								"referenceName": "ds_binary",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
@@ -209,11 +276,11 @@
 						}
 					},
 					{
-						"name": "ForEachLandingFile",
+						"name": "ForEach1",
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "GetAllLandingFile",
+								"activity": "Get Metadata1",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -222,243 +289,10 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('GetAllLandingFile').output.childItems\n\n",
+								"value": "@activity('Get Metadata1').output.childItems",
 								"type": "Expression"
 							},
-							"isSequential": true,
-							"activities": [
-								{
-									"name": "var_data_ingestion",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "v_dt_intestion",
-										"value": {
-											"value": "@if(empty(pipeline().parameters.p_data_ingestion),utcNow('yyyyMMdd'),pipeline().parameters.p_data_ingestion)",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "transform file",
-									"type": "Switch",
-									"dependsOn": [
-										{
-											"activity": "act_copy_excel_to_parquet",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"on": {
-											"value": "@split(toLower(variables('v_file_name')),'.')[0]",
-											"type": "Expression"
-										},
-										"cases": [
-											{
-												"value": "clientes",
-												"activities": [
-													{
-														"name": "nb_prepare_trusted_clientes",
-														"type": "SynapseNotebook",
-														"dependsOn": [],
-														"policy": {
-															"timeout": "7.00:00:00",
-															"retry": 0,
-															"retryIntervalInSeconds": 30,
-															"secureOutput": false,
-															"secureInput": false
-														},
-														"userProperties": [],
-														"typeProperties": {
-															"notebook": {
-																"referenceName": "nb_prepare_trusted_clientes",
-																"type": "NotebookReference"
-															},
-															"parameters": {
-																"p_dt_ingestion": {
-																	"value": {
-																		"value": "@variables('v_dt_intestion')",
-																		"type": "Expression"
-																	},
-																	"type": "string"
-																}
-															},
-															"snapshot": true,
-															"sparkPool": {
-																"referenceName": "GestaoPoolSpark",
-																"type": "BigDataPoolReference"
-															}
-														}
-													}
-												]
-											}
-										]
-									}
-								},
-								{
-									"name": "var_only_one_time",
-									"type": "SetVariable",
-									"dependsOn": [
-										{
-											"activity": "var_data_ingestion",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "v_only_one_time",
-										"value": {
-											"value": "@if(empty(pipeline().parameters.p_file_ingestion),'0','1')",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "var_file_name",
-									"type": "SetVariable",
-									"dependsOn": [
-										{
-											"activity": "var_only_one_time",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "v_file_name",
-										"value": {
-											"value": "@item().name",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "act_copy_excel_to_parquet",
-									"type": "Copy",
-									"dependsOn": [
-										{
-											"activity": "var_file_name",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "ExcelSource",
-											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"recursive": true,
-												"enablePartitionDiscovery": false
-											}
-										},
-										"sink": {
-											"type": "ParquetSink",
-											"storeSettings": {
-												"type": "AzureBlobFSWriteSettings"
-											},
-											"formatSettings": {
-												"type": "ParquetWriteSettings"
-											}
-										},
-										"enableStaging": false
-									},
-									"inputs": [
-										{
-											"referenceName": "ds_excel",
-											"type": "DatasetReference",
-											"parameters": {
-												"p_container": "landing",
-												"p_file_name": {
-													"value": "@variables('v_file_name')",
-													"type": "Expression"
-												}
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "ds_parquet",
-											"type": "DatasetReference",
-											"parameters": {
-												"p_container_name": "raw",
-												"p_directory_name": {
-													"value": "pdv/@{split(replace(variables('v_file_name'),' ',''),'.')[0]}/dtIngestao=@{variables('v_dt_intestion')}",
-													"type": "Expression"
-												},
-												"p_file_name": {
-													"value": "@{split(replace(variables('v_file_name'),' ',''),'.')[0]}@{split(variables('v_file_name'),'.')[1]}.parquet",
-													"type": "Expression"
-												}
-											}
-										}
-									]
-								},
-								{
-									"name": "run only one time",
-									"type": "IfCondition",
-									"dependsOn": [
-										{
-											"activity": "transform file",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@equals(variables('v_only_one_time'),'1')",
-											"type": "Expression"
-										},
-										"ifFalseActivities": [
-											{
-												"name": "var_msg",
-												"type": "SetVariable",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"variableName": "v_msq",
-													"value": {
-														"value": "'Go to the next file'",
-														"type": "Expression"
-													}
-												}
-											}
-										],
-										"ifTrueActivities": [
-											{
-												"name": "Fail1",
-												"type": "Fail",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"message": {
-														"value": "@concat(variables('v_file_name'), ' was copied with sucessful(Exit forced')",
-														"type": "Expression"
-													},
-													"errorCode": "0001"
-												}
-											}
-										]
-									}
-								}
-							]
+							"isSequential": true
 						}
 					}
 				],
@@ -468,24 +302,8 @@
 				},
 				"parameters": {
 					"p_data_ingestion": {
-						"type": "string"
-					},
-					"p_file_ingestion": {
-						"type": "string"
-					}
-				},
-				"variables": {
-					"v_file_name": {
-						"type": "String"
-					},
-					"v_dt_intestion": {
-						"type": "String"
-					},
-					"v_msq": {
-						"type": "String"
-					},
-					"v_only_one_time": {
-						"type": "String"
+						"type": "string",
+						"defaultValue": "yyyyMMdd"
 					}
 				},
 				"folder": {
@@ -495,37 +313,11 @@
 				"lastPublishTime": "2022-05-11T18:24:25Z"
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/ds_binary_landing')]",
-				"[concat(variables('workspaceId'), '/datasets/ds_excel')]",
-				"[concat(variables('workspaceId'), '/datasets/ds_parquet')]",
-				"[concat(variables('workspaceId'), '/notebooks/nb_prepare_trusted_clientes')]",
-				"[concat(variables('workspaceId'), '/bigDataPools/GestaoPoolSpark')]"
+				"[concat(variables('workspaceId'), '/datasets/ds_binary')]"
 			]
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/ds_binary')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_sagestaoloja",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "landing"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/ls_sagestaoloja')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/ds_binary_landing')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -736,7 +528,17 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/irmysql')]",
+			"name": "[concat(parameters('workspaceName'), '/ir-mongo')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ir-mysql')]",
 			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -782,126 +584,6 @@
 			"properties": {
 				"content": {
 					"query": "-- This is auto-generated code\nSELECT\n     *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/raw/ContasaPagar.xlsx/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 3')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n     *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/raw/pdv/Clientes/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 4')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'raw_sagestaoloja_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [raw_sagestaoloja_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://raw@sagestaoloja.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE tbClientes (\n\t[Prop_0] nvarchar(4000),\n\t[Prop_1] nvarchar(4000),\n\t[Prop_2] nvarchar(4000),\n\t[Prop_3] nvarchar(4000),\n\t[Prop_4] nvarchar(4000),\n\t[Prop_5] nvarchar(4000),\n\t[Prop_6] nvarchar(4000),\n\t[Prop_7] nvarchar(4000),\n\t[Prop_8] nvarchar(4000),\n\t[Prop_9] nvarchar(4000),\n\t[Prop_10] nvarchar(4000)\n\t)\n\tWITH (\n\tLOCATION = 'pdv/Clientes/**',\n\tDATA_SOURCE = [raw_sagestaoloja_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM raw.tbClientes\nGO",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "dbGestao",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 5')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT [Prop_0]\n,[Prop_1]\n,[Prop_2]\n,[Prop_3]\n,[Prop_4]\n,[Prop_5]\n,[Prop_6]\n,[Prop_7]\n,[Prop_8]\n,[Prop_9]\n,[Prop_10]\n FROM [dbo].[tbClientes]",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "dbGestao",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 6')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "IF EXISTS (SELECT * FROM sys.views WHERE name = 'vwClientes') \n\tDROP VIEW [dbo].[vwClientes]\nGO\nCREATE VIEW [dbo].[vwClientes]\n\tAS SELECT \n\t         ROW_NUMBER() OVER(ORDER BY Prop_1 ASC) AS Row#\n\t\t\t,Prop_1 as nome \n\t\t\t,cast(Prop_0 as int) as codigo\n\t\t\t,[Prop_2] as telefone\n\t\t\t,[Prop_3] as email\n\t\t\t,[Prop_4] as dtNascimento\n\t\t\t,[Prop_5] as dtAneversario\n\t\t\t,[Prop_6] as dtIdade\n\t\t\t,[Prop_7] as sexo\n\t\t\t,[Prop_8] as origem\n\t\t\t,[Prop_9] as dtCadastro\n\t\t\t,[Prop_10] as unidade\n\t\tFROM [tbClientes]\n\t\twhere ISNUMERIC(Prop_0) > 0\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "dbGestao",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 7')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "select top 10 * from dbGestao..vwClientes\n\nselect count(*) from dbGestao..vwClientes\n\nselect top 10 SUBSTRING(dtCadastro,4,2),*  from dbGestao..vwClientes\n\nselect SUBSTRING(dtCadastro,7,4)+SUBSTRING(dtCadastro,4,2),count(*)\n  from dbGestao..vwClientes\ngroup by SUBSTRING(dtCadastro,7,4)+SUBSTRING(dtCadastro,4,2)\n\nselect upper(trim(nome)),count(*)\n  from dbGestao..vwClientes\ngroup by upper(trim(nome))\nhaving count(*) >1\n\n\nselect nome,count(*)\n  from dbGestao..vwClientes\ngroup by nome \nhaving count(*) > 1\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 8')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/clientes/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
 					"metadata": {
 						"language": "sql"
 					},
@@ -987,8 +669,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"extraHeader": null
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1013,7 +694,6 @@
 							"from pyspark.sql import Row\r\n",
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					},
@@ -1040,7 +720,6 @@
 							"\r\n",
 							"rdd = spark.sparkContext.parallelize(data)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 2
 					},
@@ -1068,7 +747,6 @@
 							"         StructField(\"user_state\", MapType(StringType(),StringType()), True)        \r\n",
 							"         ])"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 3
 					},
@@ -1088,7 +766,6 @@
 						"source": [
 							"print select(\"firstname\")"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 4
 					},
@@ -1110,7 +787,6 @@
 							"df = rdd.toDF(schema=scheme)\r\n",
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -1132,7 +808,6 @@
 							"\r\n",
 							"df.printSchema()"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -1154,7 +829,6 @@
 							"display(df)\r\n",
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -1175,7 +849,6 @@
 							"df.show(truncate=False)\r\n",
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -1201,7 +874,6 @@
 							"display(df02)\r\n",
 							"  "
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -1223,7 +895,6 @@
 							"df03 = (df.filter(F.array_contains(F.col(\"points\"), \"50\")).withColumn(\"get_point\", F.element_at(F.col(\"points\"), 2)))      \r\n",
 							"display(df03)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -1245,7 +916,6 @@
 							"df04 = df.withColumn(\"get_point\", F.element_at(F.col(\"points\"), 1))\r\n",
 							"display(df04)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -1269,7 +939,6 @@
 							")\r\n",
 							"display(df05)"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -1291,7 +960,6 @@
 							"df05 = df05.withColumnRenamed(\"Points\",\"New_Points\")\r\n",
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					},
@@ -1313,7 +981,6 @@
 							"df05.show(truncate=False)\r\n",
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": null
 					}
@@ -1345,7 +1012,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6a9e1254-0c37-4ae6-91b2-2f35becd70d1"
+						"spark.autotune.trackingId": "8c99fa19-dc14-4037-b992-85cedf33a944"
 					}
 				},
 				"metadata": {
@@ -1370,8 +1037,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"extraHeader": null
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1400,7 +1066,6 @@
 							"df.show(truncate=False)\r\n",
 							""
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 5
 					},
@@ -1422,11 +1087,10 @@
 							"\r\n",
 							"\r\n",
 							"# display(df.select(\"name\"))\r\n",
-							"u = substr(df.select(\"name\"))"
+							"print(substr(df.select(\"name\")))"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 10
+						"execution_count": 12
 					}
 				]
 			},
@@ -1825,7 +1489,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "15b50418-a040-409a-9095-411f48ce8cac"
+						"spark.autotune.trackingId": "3b5d726a-279c-4e0c-94c4-eaf09b47f27c"
 					}
 				},
 				"metadata": {
@@ -1850,8 +1514,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1981,8 +1644,8 @@
 						},
 						"source": [
 							"#Clientes\r\n",
-							"file_path_read_clientes = '/pdv/Clientes/dtIngestao='+p_dt_ingestion\r\n",
-							"file_path_write_clientes = '/clientes'"
+							"file_path_read_clientes = '/pdv/Clientes/dtIngestao='+p_dt_ingestion[:6]+\"**\"\r\n",
+							"file_path_write_clientes = '/clientes/ANO='+substr(p_dt_ingestion,1,4)+'/MES='+substr(p_dt_ingestion,5,2)"
 						],
 						"outputs": [],
 						"execution_count": null
@@ -2077,9 +1740,6 @@
 							"                        df_clientes.Prop_7.cast(\"string\").alias('SEXO'),\\\r\n",
 							"                        df_clientes.Prop_8.cast(\"string\").alias('ORIGEM'),\\\r\n",
 							"                        df_clientes.Prop_9.cast(\"string\").alias('CADASTRO'),\\\r\n",
-							"                        f.substring(Prop_9,1,2).cast(\"int\").alias('DIA_CAD'),\\\r\n",
-							"                        f.substring(Prop_9,4,2).cast(\"int\").alias('MES_CAD'),\\\r\n",
-							"                        f.substring(Prop_9,7,4).cast(\"int\").alias('ANO_CAD'),\\\r\n",
 							"                        df_clientes.Prop_10.cast(\"string\").alias('UNIDADE')).withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
 							"print(f'Clientes Formatados : {df_clientes.count()}')"
 						],
@@ -2150,7 +1810,7 @@
 						"source": [
 							"adls_path_write = 'abfss://%s@%s.dfs.core.windows.net' % ('trusted', account_name)\r\n",
 							"#df_q_lctctb_01 = spark.range(5,10) \r\n",
-							"df_clientes.write.partitionBy('ANO_CAD','MES_CAD').format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write_clientes)"
+							"df_clientes.repartition(1).write.format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write_clientes)"
 						],
 						"outputs": [],
 						"execution_count": null
