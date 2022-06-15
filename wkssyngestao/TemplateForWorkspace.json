@@ -235,7 +235,14 @@
 								{
 									"name": "act_copy_excel_to_parquet",
 									"type": "Copy",
-									"dependsOn": [],
+									"dependsOn": [
+										{
+											"activity": "Set variable2",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
 									"policy": {
 										"timeout": "7.00:00:00",
 										"retry": 0,
@@ -279,7 +286,7 @@
 											"parameters": {
 												"p_container": "landing",
 												"p_file_name": {
-													"value": "@activity('GetAllFileLanding').output.itemName",
+													"value": "@item().name",
 													"type": "Expression"
 												}
 											}
@@ -292,11 +299,11 @@
 											"parameters": {
 												"p_container_name": "raw",
 												"p_directory_name": {
-													"value": "@split(replace(activity('GetAllFileLanding').output.itemName,' ',''),'.')[0]\n",
+													"value": "pdv/@{split(replace(item().name,' ',''),'.')[0]}/dtIngestao=@{variables('var_data_ingestion')}",
 													"type": "Expression"
 												},
 												"p_file_name": {
-													"value": "@split(replace(activity('GetAllFileLanding').output.itemName,' ',''),'.')[0]",
+													"value": "@{split(replace(item().name,' ',''),'.')[0]}@{split(replace(item().name,' ',''),'.')[1]}.parquet\n",
 													"type": "Expression"
 												}
 											}
@@ -317,23 +324,6 @@
 									}
 								},
 								{
-									"name": "Fail1",
-									"type": "Fail",
-									"dependsOn": [
-										{
-											"activity": "Set variable2",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"message": "teste",
-										"errorCode": "teste"
-									}
-								},
-								{
 									"name": "Set variable2",
 									"type": "SetVariable",
 									"dependsOn": [
@@ -348,7 +338,7 @@
 									"typeProperties": {
 										"variableName": "var_file_name",
 										"value": {
-											"value": "@split(replace(activity('GetAllFileLanding').output.itemName,' ',''),'.')[0]\n",
+											"value": "@item().name",
 											"type": "Expression"
 										}
 									}
