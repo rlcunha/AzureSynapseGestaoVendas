@@ -127,11 +127,11 @@
 									"parameters": {
 										"p_container_name": "raw",
 										"p_directory_name": {
-											"value": "pdv/@{split(replace(item().name,' ',''),'.')[0]}/dtIngestao=@{variables('var_data_ingestion')}",
+											"value": "/pdv/@{split(replace(item().name,' ',''),'.')[0]}/dtIngestao=@{variables('var_data_ingestion')}",
 											"type": "Expression"
 										},
 										"p_file_name": {
-											"value": "@{split(replace(item().name,' ',''),'.')[0]}@{split(replace(item().name,' ',''),'.')[1]}.parquet\n",
+											"value": "@{split(replace(item().name,' ',''),'.')[0]}.parquet\n",
 											"type": "Expression"
 										}
 									}
