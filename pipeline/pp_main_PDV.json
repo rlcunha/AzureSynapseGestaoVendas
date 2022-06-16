@@ -61,7 +61,40 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "act_copy_excel_to_parquet",
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "var_data_ingestion",
+								"value": {
+									"value": "@if(empty(pipeline().parameters.p_data_ingestion),formatDateTime(utcNow(), 'yyyyMMdd'),pipeline().parameters.p_data_ingestion)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Set variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "var_file_name",
+								"value": {
+									"value": "@item().name",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Copy data1",
 							"type": "Copy",
 							"dependsOn": [
 								{
@@ -112,7 +145,10 @@
 									"referenceName": "ds_excel",
 									"type": "DatasetReference",
 									"parameters": {
-										"p_container": "landing",
+										"p_container": {
+											"value": "landing",
+											"type": "Expression"
+										},
 										"p_file_name": {
 											"value": "@item().name",
 											"type": "Expression"
@@ -127,49 +163,16 @@
 									"parameters": {
 										"p_container_name": "raw",
 										"p_directory_name": {
-											"value": "/pdv/@{split(replace(item().name,' ',''),'.')[0]}/dtIngestao=@{variables('var_data_ingestion')}",
+											"value": "pdv/@{split(replace(item().name,' ',''),'.')[0]}/dtIngestao=@{variables('var_data_ingestion')}",
 											"type": "Expression"
 										},
 										"p_file_name": {
-											"value": "@{split(replace(item().name,' ',''),'.')[0]}.parquet\n",
+											"value": "@{split(replace(item().name,' ',''),'.')[0]}.parquet",
 											"type": "Expression"
 										}
 									}
 								}
 							]
-						},
-						{
-							"name": "Set variable1",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "var_data_ingestion",
-								"value": {
-									"value": "@if(empty(pipeline().parameters.p_data_ingestion),formatDateTime(utcNow(), 'yyyyMMdd'),pipeline().parameters.p_data_ingestion)",
-									"type": "Expression"
-								}
-							}
-						},
-						{
-							"name": "Set variable2",
-							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Set variable1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "var_file_name",
-								"value": {
-									"value": "@item().name",
-									"type": "Expression"
-								}
-							}
 						}
 					]
 				}
