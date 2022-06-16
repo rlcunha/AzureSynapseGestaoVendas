@@ -7,7 +7,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Get Metadata1",
+						"activity": "Get Metadata2",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -28,16 +28,12 @@
 						"p_file_name": {
 							"value": "@pipeline().parameters.par_file_name",
 							"type": "Expression"
-						},
-						"p_get_all_file_name": {
-							"value": "@activity('Get Metadata1').output.childItems",
-							"type": "Expression"
 						}
 					}
 				}
 			},
 			{
-				"name": "Get Metadata1",
+				"name": "Get Metadata2",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
@@ -64,7 +60,6 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
-						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
