@@ -3,50 +3,12 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "GetAllFileLanding",
-				"type": "GetMetadata",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataset": {
-						"referenceName": "ds_excel",
-						"type": "DatasetReference",
-						"parameters": {
-							"p_container": "landing",
-							"p_file_name": {
-								"value": "@pipeline().parameters.p_file_name",
-								"type": "Expression"
-							}
-						}
-					},
-					"fieldList": [
-						"childItems",
-						"itemName",
-						"lastModified",
-						"itemType"
-					],
-					"storeSettings": {
-						"type": "AzureBlobFSReadSettings",
-						"recursive": true,
-						"modifiedDatetimeStart": "2022-06-12T00:00:00.492Z",
-						"enablePartitionDiscovery": false
-					}
-				}
-			},
-			{
 				"name": "ForEachFileLanding",
 				"description": "Get all files of landing container. \nps. All files must be extentions excel.",
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "GetAllFileLanding",
+						"activity": "Get Metadata1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -55,7 +17,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('GetAllFileLanding').output.childItems",
+						"value": "@activity('Get Metadata1').output.childItems",
 						"type": "Expression"
 					},
 					"isSequential": true,
@@ -74,31 +36,11 @@
 							}
 						},
 						{
-							"name": "Set variable2",
-							"type": "SetVariable",
-							"dependsOn": [
-								{
-									"activity": "Set variable1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "var_file_name",
-								"value": {
-									"value": "@item().name",
-									"type": "Expression"
-								}
-							}
-						},
-						{
 							"name": "Copy data1",
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "Set variable2",
+									"activity": "Set variable1",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -176,6 +118,39 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_excel",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_container": "landing",
+							"p_file_name": {
+								"value": "@pipeline().parameters.p_file_name",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"enablePartitionDiscovery": false
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -188,12 +163,6 @@
 		},
 		"variables": {
 			"var_data_ingestion": {
-				"type": "String"
-			},
-			"var_file_name": {
-				"type": "String"
-			},
-			"var_msg": {
 				"type": "String"
 			}
 		},
