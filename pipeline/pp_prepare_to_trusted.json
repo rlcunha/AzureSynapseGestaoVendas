@@ -1,0 +1,9 @@
+{
+	"name": "pp_prepare_to_trusted",
+	"properties": {
+		"folder": {
+			"name": "ELT_Files_PDV"
+		},
+		"annotations": []
+	}
+}

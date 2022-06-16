@@ -1,0 +1,83 @@
+{
+	"name": "pp_initial",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pp_copy_landing_to_raw",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_data_ingestion": {
+							"value": "@pipeline().parameters.par_dt_ingestion",
+							"type": "Expression"
+						},
+						"p_file_name": {
+							"value": "@pipeline().parameters.par_file_name",
+							"type": "Expression"
+						},
+						"p_get_all_file_name": {
+							"value": "@activity('Get Metadata1').output.childItems",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_binary_landing",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "BinaryReadSettings"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"par_dt_ingestion": {
+				"type": "string"
+			},
+			"par_file_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "ELT_Files_PDV"
+		},
+		"annotations": []
+	}
+}
