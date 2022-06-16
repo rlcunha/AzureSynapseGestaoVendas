@@ -51,7 +51,13 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "ds_binary_landing",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"p_file_name": {
+								"value": "@pipeline().parameters.par_file_name",
+								"type": "Expression"
+							}
+						}
 					},
 					"fieldList": [
 						"childItems"
