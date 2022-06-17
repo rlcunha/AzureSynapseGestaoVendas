@@ -33,58 +33,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('workspaceName'), '/Pipeline 1')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get Metadata1",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "ds_binary_landing",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems",
-								"itemName"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "BinaryReadSettings"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "ELT_Files_PDV"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/ds_binary_landing')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/pp_copy_landing_to_raw')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -211,7 +159,7 @@
 									"typeProperties": {
 										"variableName": "var_file_name",
 										"value": {
-											"value": "@item()",
+											"value": "@if(contains(item(),'type'),item().name,item())",
 											"type": "Expression"
 										}
 									}
@@ -306,7 +254,7 @@
 									"typeProperties": {
 										"variableName": "var_files",
 										"value": {
-											"value": "@array(pipeline().parameters.par_file_name)",
+											"value": "@pipeline().parameters.par_file_name",
 											"type": "Expression"
 										}
 									}
@@ -378,7 +326,8 @@
 						"type": "string"
 					},
 					"par_file_name": {
-						"type": "string"
+						"type": "array",
+						"defaultValue": []
 					}
 				},
 				"variables": {
