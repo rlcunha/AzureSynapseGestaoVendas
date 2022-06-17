@@ -33,6 +33,58 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('workspaceName'), '/Pipeline 1')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Metadata1",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "ds_binary_landing",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems",
+								"itemName"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "BinaryReadSettings"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "ELT_Files_PDV"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/ds_binary_landing')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/pp_copy_landing_to_raw')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -46,7 +98,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@pipeline().parameters.p_get_all_file_name",
+								"value": "@variables('var_file_name')",
 								"type": "Expression"
 							},
 							"isSequential": true,
@@ -59,7 +111,7 @@
 									"typeProperties": {
 										"variableName": "var_data_ingestion",
 										"value": {
-											"value": "@if(empty(pipeline().parameters.p_data_ingestion),formatDateTime(utcNow(), 'yyyyMMdd'),pipeline().parameters.p_data_ingestion)",
+											"value": "@if(empty(pipeline().parameters.par_copy_data_ingestion),formatDateTime(utcNow(), 'yyyyMMdd'),pipeline().parameters.par_copy_data_ingestion)",
 											"type": "Expression"
 										}
 									}
@@ -70,6 +122,12 @@
 									"dependsOn": [
 										{
 											"activity": "Set variable1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										},
+										{
+											"activity": "Set variable2",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -121,7 +179,7 @@
 													"type": "Expression"
 												},
 												"p_file_name": {
-													"value": "@item().name",
+													"value": "@variables('var_file_name')",
 													"type": "Expression"
 												}
 											}
@@ -144,6 +202,19 @@
 											}
 										}
 									]
+								},
+								{
+									"name": "Set variable2",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "var_file_name",
+										"value": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
@@ -154,18 +225,18 @@
 					"cancelAfter": {}
 				},
 				"parameters": {
-					"p_data_ingestion": {
+					"par_copy_data_ingestion": {
 						"type": "string"
 					},
-					"p_file_name": {
-						"type": "string"
-					},
-					"p_get_all_file_name": {
+					"par_copy_file_name": {
 						"type": "array"
 					}
 				},
 				"variables": {
 					"var_data_ingestion": {
+						"type": "String"
+					},
+					"var_file_name": {
 						"type": "String"
 					}
 				},
@@ -191,7 +262,7 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "Get Metadata2",
+								"activity": "If Condition1",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -205,51 +276,96 @@
 							},
 							"waitOnCompletion": true,
 							"parameters": {
-								"p_data_ingestion": {
+								"par_copy_data_ingestion": {
 									"value": "@pipeline().parameters.par_dt_ingestion",
 									"type": "Expression"
 								},
-								"p_file_name": {
-									"value": "@pipeline().parameters.par_file_name",
+								"par_copy_file_name": {
+									"value": "@variables('var_files')",
 									"type": "Expression"
 								}
 							}
 						}
 					},
 					{
-						"name": "Get Metadata2",
-						"type": "GetMetadata",
+						"name": "If Condition1",
+						"type": "IfCondition",
 						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
 						"userProperties": [],
 						"typeProperties": {
-							"dataset": {
-								"referenceName": "ds_binary_landing",
-								"type": "DatasetReference",
-								"parameters": {
-									"p_file_name": {
-										"value": "@pipeline().parameters.par_file_name",
-										"type": "Expression"
+							"expression": {
+								"value": "@empty(pipeline().parameters.par_file_name)",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Set variable2",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "var_files",
+										"value": {
+											"value": "@array(pipeline().parameters.par_file_name)",
+											"type": "Expression"
+										}
 									}
 								}
-							},
-							"fieldList": [
-								"childItems"
 							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "BinaryReadSettings"
-							}
+							"ifTrueActivities": [
+								{
+									"name": "Get Metadata2",
+									"type": "GetMetadata",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "ds_binary_landing",
+											"type": "DatasetReference",
+											"parameters": {}
+										},
+										"fieldList": [
+											"childItems",
+											"itemName"
+										],
+										"storeSettings": {
+											"type": "AzureBlobFSReadSettings",
+											"recursive": true,
+											"enablePartitionDiscovery": false
+										},
+										"formatSettings": {
+											"type": "BinaryReadSettings"
+										}
+									}
+								},
+								{
+									"name": "Set variable1",
+									"type": "SetVariable",
+									"dependsOn": [
+										{
+											"activity": "Get Metadata2",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "var_files",
+										"value": {
+											"value": "@activity('Get Metadata2').output.childItems",
+											"type": "Expression"
+										}
+									}
+								}
+							]
 						}
 					}
 				],
@@ -263,6 +379,11 @@
 					},
 					"par_file_name": {
 						"type": "string"
+					}
+				},
+				"variables": {
+					"var_files": {
+						"type": "Array"
 					}
 				},
 				"folder": {
@@ -306,20 +427,11 @@
 					"referenceName": "ls_sagestaoloja",
 					"type": "LinkedServiceReference"
 				},
-				"parameters": {
-					"p_file_name": {
-						"type": "string"
-					}
-				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@dataset().p_file_name",
-							"type": "Expression"
-						},
 						"fileSystem": "landing"
 					}
 				}
