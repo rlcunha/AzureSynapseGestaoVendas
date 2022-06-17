@@ -98,7 +98,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@variables('var_file_name')",
+								"value": "@pipeline().parameters.par_copy_file_name",
 								"type": "Expression"
 							},
 							"isSequential": true,
@@ -192,11 +192,11 @@
 											"parameters": {
 												"p_container_name": "raw",
 												"p_directory_name": {
-													"value": "pdv/@{split(replace(item().name,' ',''),'.')[0]}/dtIngestao=@{variables('var_data_ingestion')}",
+													"value": "pdv/@{split(replace(variables('var_file_name'),' ',''),'.')[0]}/dtIngestao=@{variables('var_data_ingestion')}",
 													"type": "Expression"
 												},
 												"p_file_name": {
-													"value": "@{split(replace(item().name,' ',''),'.')[0]}.parquet",
+													"value": "@{split(replace(variables('var_file_name'),' ',''),'.')[0]}.parquet",
 													"type": "Expression"
 												}
 											}
@@ -294,7 +294,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"expression": {
-								"value": "@empty(pipeline().parameters.par_file_name)",
+								"value": "@equals(length(pipeline().parameters.par_file_name),0)",
 								"type": "Expression"
 							},
 							"ifFalseActivities": [
