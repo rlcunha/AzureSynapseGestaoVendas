@@ -39,7 +39,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@empty(pipeline().parameters.par_file_name)",
+						"value": "@equals(length(pipeline().parameters.par_file_name),0)",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
@@ -81,6 +81,7 @@
 								],
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
