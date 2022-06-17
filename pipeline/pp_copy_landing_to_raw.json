@@ -123,7 +123,7 @@
 							"typeProperties": {
 								"variableName": "var_file_name",
 								"value": {
-									"value": "@item()",
+									"value": "@if(contains(item(),'type'),item().name,item())",
 									"type": "Expression"
 								}
 							}
