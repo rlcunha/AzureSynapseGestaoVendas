@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "cac2e110-2daf-4c8c-b778-c5ec730741b6"
+				"spark.autotune.trackingId": "89f33a16-f828-4787-b23a-8cb74fe9fd41"
 			}
 		},
 		"metadata": {
@@ -67,7 +67,7 @@
 				"source": [
 					"%run GestaoVendas/base/import/nb_import_base"
 				],
-				"execution_count": null
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -85,7 +85,7 @@
 				"source": [
 					"%run GestaoVendas/base/parameter/nb_parameter_base"
 				],
-				"execution_count": null
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -103,7 +103,7 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_config_raw"
 				],
-				"execution_count": null
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -136,7 +136,7 @@
 					"from pyspark.sql import Window\r\n",
 					"from pyspark.sql import SparkSession"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
@@ -166,28 +166,10 @@
 				},
 				"source": [
 					"#Clientes\r\n",
-					"file_path_read_clientes = '/pdv/Clientes/dtIngestao='+p_dt_ingestion\r\n",
+					"file_path_read_clientes = '/pdv/Clientes' #/dtIngestao='+par_data_ingestion\r\n",
 					"file_path_write_clientes = '/clientes'"
 				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					""
-				],
-				"execution_count": null
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -220,7 +202,7 @@
 					"df_clientes = spark.read.parquet(parquet_path,header=\"false\",inferSchema=False) \r\n",
 					"df_clientes.cache()"
 				],
-				"execution_count": null
+				"execution_count": 22
 			},
 			{
 				"cell_type": "markdown",
@@ -252,7 +234,7 @@
 					"spark = SparkSession.builder.getOrCreate()\r\n",
 					"w = Window().orderBy(f.lit('A'))"
 				],
-				"execution_count": null
+				"execution_count": 23
 			},
 			{
 				"cell_type": "markdown",
@@ -291,15 +273,15 @@
 					"                        # df_clientes.Prop_7.cast(\"string\").alias('SEXO'),\\\r\n",
 					"                        df_clientes.Prop_8.cast(\"string\").alias('ORIGEM'),\\\r\n",
 					"                        df_clientes.Prop_9.cast(\"string\").alias('CADASTRO'),\\\r\n",
-					"                        f.substring(Prop_9,1,2).cast(\"int\").alias('DIA_CAD'),\\\r\n",
-					"                        f.substring(Prop_9,4,2).cast(\"int\").alias('MES_CAD'),\\\r\n",
-					"                        f.substring(Prop_9,7,4).cast(\"int\").alias('ANO_CAD'),\\\r\n",
+					"                        f.substring(df_clientes.Prop_9,1,2).cast(\"int\").alias('DIA_CAD'),\\\r\n",
+					"                        f.substring(df_clientes.Prop_9,4,2).cast(\"int\").alias('MES_CAD'),\\\r\n",
+					"                        f.substring(df_clientes.Prop_9,7,4).cast(\"int\").alias('ANO_CAD'),\\\r\n",
 					"                        df_clientes.Prop_10.cast(\"string\").alias('UNIDADE'),\\\r\n",
-					"                        f.regexp_replace(f.upper(df0._c1), \" \", \"\").alias('NOMEUPPER')).\\\r\n",
+					"                        f.regexp_replace(f.upper(df_clientes.Prop_1), \" \", \"\").alias('NOMEUPPER')).\\\r\n",
 					"                        withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
 					"print(f'Clientes Formatados : {df_clientes.count()}')"
 				],
-				"execution_count": null
+				"execution_count": 24
 			},
 			{
 				"cell_type": "markdown",
@@ -331,7 +313,7 @@
 					"df_clientes_sem_duplicados = df_clientes.dropDuplicates(['NOMEUPPER']).drop('NOMEUPPER')\r\n",
 					"df_clientes = df_clientes_sem_duplicados"
 				],
-				"execution_count": null
+				"execution_count": 25
 			},
 			{
 				"cell_type": "markdown",
@@ -364,7 +346,7 @@
 					"df_clientes = df_clientes.dropna(how='all', subset='CODIGO')\r\n",
 					"print(f'Clientes Higienizado : {df_clientes.count()}')"
 				],
-				"execution_count": null
+				"execution_count": 27
 			},
 			{
 				"cell_type": "markdown",
@@ -395,7 +377,7 @@
 				"source": [
 					"df_clientes = df_clientes.select(f.row_number().over(w).alias('ID'),'*')"
 				],
-				"execution_count": null
+				"execution_count": 28
 			},
 			{
 				"cell_type": "markdown",
@@ -428,7 +410,7 @@
 					"#df_q_lctctb_01 = spark.range(5,10) \r\n",
 					"df_clientes.write.partitionBy('ANO_CAD','MES_CAD').format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write_clientes)"
 				],
-				"execution_count": null
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
@@ -446,7 +428,7 @@
 				"source": [
 					"mssparkutils.notebook.exit(adls_path_write + file_path_write_clientes)"
 				],
-				"execution_count": null
+				"execution_count": 30
 			}
 		]
 	}

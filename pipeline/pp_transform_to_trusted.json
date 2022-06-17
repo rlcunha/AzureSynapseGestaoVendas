@@ -26,10 +26,42 @@
 								},
 								"cases": [
 									{
-										"value": "Clientes"
-									},
-									{
-										"value": "ListaPedidos"
+										"value": "Clientes",
+										"activities": [
+											{
+												"name": "Notebook1",
+												"type": "SynapseNotebook",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "7.00:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"notebook": {
+														"referenceName": "nb_prepare_trusted_clientes",
+														"type": "NotebookReference"
+													},
+													"parameters": {
+														"par_data_ingestion": {
+															"value": {
+																"value": "@pipeline().parameters.par_copy_data_ingestion",
+																"type": "Expression"
+															},
+															"type": "string"
+														}
+													},
+													"snapshot": true,
+													"sparkPool": {
+														"referenceName": "GestaoPoolSpark",
+														"type": "BigDataPoolReference"
+													}
+												}
+											}
+										]
 									}
 								]
 							}
