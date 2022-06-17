@@ -7,7 +7,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Get Metadata2",
+						"activity": "If Condition1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -21,50 +21,94 @@
 					},
 					"waitOnCompletion": true,
 					"parameters": {
-						"p_data_ingestion": {
+						"par_copy_data_ingestion": {
 							"value": "@pipeline().parameters.par_dt_ingestion",
 							"type": "Expression"
 						},
-						"p_file_name": {
-							"value": "@pipeline().parameters.par_file_name",
+						"par_copy_file_name": {
+							"value": "@variables('var_files')",
 							"type": "Expression"
 						}
 					}
 				}
 			},
 			{
-				"name": "Get Metadata2",
-				"type": "GetMetadata",
+				"name": "If Condition1",
+				"type": "IfCondition",
 				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataset": {
-						"referenceName": "ds_binary_landing",
-						"type": "DatasetReference",
-						"parameters": {
-							"p_file_name": {
-								"value": "@pipeline().parameters.par_file_name",
-								"type": "Expression"
+					"expression": {
+						"value": "@empty(pipeline().parameters.par_file_name)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "var_files",
+								"value": {
+									"value": "@array(pipeline().parameters.par_file_name)",
+									"type": "Expression"
+								}
 							}
 						}
-					},
-					"fieldList": [
-						"childItems"
 					],
-					"storeSettings": {
-						"type": "AzureBlobFSReadSettings",
-						"enablePartitionDiscovery": false
-					},
-					"formatSettings": {
-						"type": "BinaryReadSettings"
-					}
+					"ifTrueActivities": [
+						{
+							"name": "Get Metadata2",
+							"type": "GetMetadata",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "ds_binary_landing",
+									"type": "DatasetReference"
+								},
+								"fieldList": [
+									"childItems",
+									"itemName"
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							}
+						},
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Get Metadata2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "var_files",
+								"value": {
+									"value": "@activity('Get Metadata2').output.childItems",
+									"type": "Expression"
+								}
+							}
+						}
+					]
 				}
 			}
 		],
@@ -74,6 +118,11 @@
 			},
 			"par_file_name": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"var_files": {
+				"type": "Array"
 			}
 		},
 		"folder": {

@@ -10,7 +10,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@pipeline().parameters.p_get_all_file_name",
+						"value": "@variables('var_file_name')",
 						"type": "Expression"
 					},
 					"isSequential": true,
@@ -23,7 +23,7 @@
 							"typeProperties": {
 								"variableName": "var_data_ingestion",
 								"value": {
-									"value": "@if(empty(pipeline().parameters.p_data_ingestion),formatDateTime(utcNow(), 'yyyyMMdd'),pipeline().parameters.p_data_ingestion)",
+									"value": "@if(empty(pipeline().parameters.par_copy_data_ingestion),formatDateTime(utcNow(), 'yyyyMMdd'),pipeline().parameters.par_copy_data_ingestion)",
 									"type": "Expression"
 								}
 							}
@@ -34,6 +34,12 @@
 							"dependsOn": [
 								{
 									"activity": "Set variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "Set variable2",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -85,7 +91,7 @@
 											"type": "Expression"
 										},
 										"p_file_name": {
-											"value": "@item().name",
+											"value": "@variables('var_file_name')",
 											"type": "Expression"
 										}
 									}
@@ -108,24 +114,37 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "var_file_name",
+								"value": {
+									"value": "@item()",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
 			}
 		],
 		"parameters": {
-			"p_data_ingestion": {
+			"par_copy_data_ingestion": {
 				"type": "string"
 			},
-			"p_file_name": {
-				"type": "string"
-			},
-			"p_get_all_file_name": {
+			"par_copy_file_name": {
 				"type": "array"
 			}
 		},
 		"variables": {
 			"var_data_ingestion": {
+				"type": "String"
+			},
+			"var_file_name": {
 				"type": "String"
 			}
 		},
