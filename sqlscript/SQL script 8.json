@@ -2,7 +2,7 @@
 	"name": "SQL script 8",
 	"properties": {
 		"content": {
-			"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/clientes/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+			"query": "-- This is auto-generated code\nselect ANO_CAD+MES_CAD,count(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/clientes/ANO_CAD=*',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n--group by SUBSTRING(dtCadastro,7,4)+SUBSTRING(dtCadastro,4,2)\n\n\n\n\n",
 			"metadata": {
 				"language": "sql"
 			},
