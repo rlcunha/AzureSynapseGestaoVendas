@@ -1,0 +1,54 @@
+{
+	"name": "pp_transform_to_trusted",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.par_copy_file_name",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Switch1",
+							"type": "Switch",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"on": {
+									"value": "@item()",
+									"type": "Expression"
+								},
+								"cases": [
+									{
+										"value": "Clientes"
+									},
+									{
+										"value": "ListaPedidos"
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"par_copy_data_ingestion": {
+				"type": "string"
+			},
+			"par_copy_file_name": {
+				"type": "array"
+			}
+		},
+		"folder": {
+			"name": "ELT_Files_PDV"
+		},
+		"annotations": []
+	}
+}
