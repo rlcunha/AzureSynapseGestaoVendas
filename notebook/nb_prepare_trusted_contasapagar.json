@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d2e1cfe4-1930-4d2d-ae61-efa5da1f5848"
+				"spark.autotune.trackingId": "0b6fe7d6-598d-4472-a399-59281d4b1c13"
 			}
 		},
 		"metadata": {
@@ -345,7 +345,7 @@
 				"source": [
 					"# Ler e filtrar e gravar dataframe - Cliente\r\n",
 					"df = df.dropna(how='all', subset='DESCRICAO')\r\n",
-					"print(f'Clientes Higienizado : {df.count()}')"
+					"print(f'Contas a Pagar Higienizado : {df.count()}')"
 				],
 				"execution_count": 27
 			},
