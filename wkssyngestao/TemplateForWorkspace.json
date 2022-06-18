@@ -39,7 +39,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "ForEachFileLanding",
+						"name": "For Each File Landing",
 						"description": "Get all files of landing container. \nps. All files must be extentions excel.",
 						"type": "ForEach",
 						"dependsOn": [],
@@ -52,7 +52,7 @@
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "Set variable1",
+									"name": "Set variable data ingestion",
 									"type": "SetVariable",
 									"dependsOn": [],
 									"userProperties": [],
@@ -65,17 +65,17 @@
 									}
 								},
 								{
-									"name": "Copy data1",
+									"name": "copy landing to raw parquet",
 									"type": "Copy",
 									"dependsOn": [
 										{
-											"activity": "Set variable1",
+											"activity": "Set variable data ingestion",
 											"dependencyConditions": [
 												"Succeeded"
 											]
 										},
 										{
-											"activity": "Set variable2",
+											"activity": "Set variable file name",
 											"dependencyConditions": [
 												"Succeeded"
 											]
@@ -152,7 +152,7 @@
 									]
 								},
 								{
-									"name": "Set variable2",
+									"name": "Set variable file name",
 									"type": "SetVariable",
 									"dependsOn": [],
 									"userProperties": [],
@@ -206,11 +206,11 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Execute Pipeline1",
+						"name": "ex_pp_copy_landing",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "If Condition1",
+								"activity": "if file name is empty",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -236,7 +236,7 @@
 						}
 					},
 					{
-						"name": "If Condition1",
+						"name": "if file name is empty",
 						"type": "IfCondition",
 						"dependsOn": [],
 						"userProperties": [],
@@ -715,6 +715,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 10')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nselect SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2),count(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/clientes/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2)\norder by SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2)\n\nselect SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2),count(*)\n  from dbGestao..vwClientes\ngroup by SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2)",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/SQL script 2')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -840,7 +860,27 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/clientes/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+					"query": "-- This is auto-generated code\nselect ANO_CAD+MES_CAD,count(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/clientes/ANO_CAD=*',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n--group by SUBSTRING(dtCadastro,7,4)+SUBSTRING(dtCadastro,4,2)\n\n\n\n\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 9')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/pdv/clientes/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
 					"metadata": {
 						"language": "sql"
 					},
@@ -1284,7 +1324,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "961568cd-81b2-4965-b198-f521c48edb7b"
+						"spark.autotune.trackingId": "6a9e1254-0c37-4ae6-91b2-2f35becd70d1"
 					}
 				},
 				"metadata": {
@@ -1310,14 +1350,13 @@
 						"nodeCount": 10,
 						"cores": 8,
 						"memory": 56,
-						"automaticScaleJobs": false
+						"extraHeader": null
 					},
 					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"import pyspark.sql.functions as F\r\n",
 							"from pyspark.sql.window import Window\r\n",
@@ -1340,6 +1379,7 @@
 							"df.show(truncate=False)\r\n",
 							""
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 5
 					},
@@ -1363,6 +1403,7 @@
 							"# display(df.select(\"name\"))\r\n",
 							"u = substr(df.select(\"name\"))"
 						],
+						"attachments": null,
 						"outputs": [],
 						"execution_count": 10
 					}
