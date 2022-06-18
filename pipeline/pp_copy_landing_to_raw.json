@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "ForEachFileLanding",
+				"name": "For Each File Landing",
 				"description": "Get all files of landing container. \nps. All files must be extentions excel.",
 				"type": "ForEach",
 				"dependsOn": [],
@@ -16,7 +16,7 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "Set variable1",
+							"name": "Set variable data ingestion",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"userProperties": [],
@@ -29,17 +29,17 @@
 							}
 						},
 						{
-							"name": "Copy data1",
+							"name": "copy landing to raw parquet",
 							"type": "Copy",
 							"dependsOn": [
 								{
-									"activity": "Set variable1",
+									"activity": "Set variable data ingestion",
 									"dependencyConditions": [
 										"Succeeded"
 									]
 								},
 								{
-									"activity": "Set variable2",
+									"activity": "Set variable file name",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -116,7 +116,7 @@
 							]
 						},
 						{
-							"name": "Set variable2",
+							"name": "Set variable file name",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"userProperties": [],

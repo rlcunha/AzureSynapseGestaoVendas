@@ -3,11 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Execute Pipeline1",
+				"name": "ex_pp_copy_landing",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "If Condition1",
+						"activity": "if file name is empty",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -33,7 +33,7 @@
 				}
 			},
 			{
-				"name": "If Condition1",
+				"name": "if file name is empty",
 				"type": "IfCondition",
 				"dependsOn": [],
 				"userProperties": [],
