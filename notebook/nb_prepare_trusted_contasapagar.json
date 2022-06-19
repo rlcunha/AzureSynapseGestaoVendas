@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "0b6fe7d6-598d-4472-a399-59281d4b1c13"
+				"spark.autotune.trackingId": "60df7a4d-22a3-4723-a047-d8b134ec402f"
 			}
 		},
 		"metadata": {
@@ -263,25 +263,25 @@
 					}
 				},
 				"source": [
-					"df1 = df0.select(df0._c0.cast(\"string\").alias('CATEGORIA'),\\\r\n",
-					"                        df0._c1.cast(\"string\").alias('DESCRICAO'),\\\r\n",
-					"                        f.substring(df0._c2,1,2).cast(\"int\").alias('DIAVENCTO'),\\\r\n",
-					"                        f.substring(df0._c2,4,2).cast(\"int\").alias('MESVENCTO'),\\\r\n",
-					"                        f.substring(df0._c2,7,4).cast(\"int\").alias('ANOVENCTO'),\\\r\n",
-					"                        # f.substring(df0._c2,12,2).cast(\"int\").alias('HORAVENCTO'),\\\r\n",
-					"                        # f.substring(df0._c2,15,2).cast(\"int\").alias('MINUTOVENCTO'),\\\r\n",
-					"                        f.substring(df0._c3,1,2).cast(\"int\").alias('DIA_PG'),\\\r\n",
-					"                        f.substring(df0._c3,4,2).cast(\"int\").alias('MES_PG'),\\\r\n",
-					"                        f.substring(df0._c3,7,4).cast(\"int\").alias('ANO_PG'),\\\r\n",
-					"                        # f.substring(df0._c3,12,2).cast(\"int\").alias('HORAPG'),\\\r\n",
-					"                        # f.substring(df0._c3,15,2).cast(\"int\").alias('MINUTOPG'),\\\r\n",
-					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0._c4),'[R$ ]',''),'[.]',''),',','.').alias('VALOR'),\\\r\n",
-					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0._c5),'[R$ ]',''),'[.]',''),',','.').alias('VALORPG'),\\\r\n",
-					"                        df0._c6.cast(\"string\").alias('STATUS'),\\\r\n",
-					"                        df0._c7.cast(\"string\").alias('PARCELAS'),\\\r\n",
-					"                        df0._c8.cast(\"string\").alias('FORNECEDOR'),\\\r\n",
-					"                        df0._c9.cast(\"string\").alias('UNIDADE'))\r\n",
-					"print(f'Contas a Pagar Formatados : {df01.count()}')"
+					"df1 = df.select(df.Prop0.cast(\"string\").alias('CATEGORIA'),\\\r\n",
+					"                        df.Prop1.cast(\"string\").alias('DESCRICAO'),\\\r\n",
+					"                        f.substring(df.Prop2,1,2).cast(\"int\").alias('DIAVENCTO'),\\\r\n",
+					"                        f.substring(df.Prop2,4,2).cast(\"int\").alias('MESVENCTO'),\\\r\n",
+					"                        f.substring(df.Prop2,7,4).cast(\"int\").alias('ANOVENCTO'),\\\r\n",
+					"                        # f.substring(df.Prop2,12,2).cast(\"int\").alias('HORAVENCTO'),\\\r\n",
+					"                        # f.substring(df.Prop2,15,2).cast(\"int\").alias('MINUTOVENCTO'),\\\r\n",
+					"                        f.substring(df.Prop3,1,2).cast(\"int\").alias('DIA_PG'),\\\r\n",
+					"                        f.substring(df.Prop3,4,2).cast(\"int\").alias('MES_PG'),\\\r\n",
+					"                        f.substring(df.Prop3,7,4).cast(\"int\").alias('ANO_PG'),\\\r\n",
+					"                        # f.substring(df.Prop3,12,2).cast(\"int\").alias('HORAPG'),\\\r\n",
+					"                        # f.substring(df.Prop3,15,2).cast(\"int\").alias('MINUTOPG'),\\\r\n",
+					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df.Prop4),'[R$ ]',''),'[.]',''),',','.').alias('VALOR'),\\\r\n",
+					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df.Prop5),'[R$ ]',''),'[.]',''),',','.').alias('VALORPG'),\\\r\n",
+					"                        df.Prop6.cast(\"string\").alias('STATUS'),\\\r\n",
+					"                        df.Prop7.cast(\"string\").alias('PARCELAS'),\\\r\n",
+					"                        df.Prop8.cast(\"string\").alias('FORNECEDOR'),\\\r\n",
+					"                        df.Prop9.cast(\"string\").alias('UNIDADE'))\r\n",
+					"print(f'Contas a Pagar Formatados : {df1.count()}')"
 				],
 				"execution_count": 24
 			},
@@ -409,9 +409,28 @@
 				"source": [
 					"adls_path_write = 'abfss://%s@%s.dfs.core.windows.net' % ('trusted', account_name)\r\n",
 					"#df_q_lctctb_01 = spark.range(5,10) \r\n",
-					"df.write.partitionBy('ANO_PAG','MES_PAG').format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write)"
+					"df.write.partitionBy('ANO_PG','MES_PG').format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write)"
 				],
 				"execution_count": 29
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df_cotas = df_contasapagar.select('CODIGO','SUBCODIGO1','SUBCODIGO2','DESCSUBCODIGO').distinct().dropna(how='all', subset='CODIGO')\r\n",
+					"df_cotas.write.format(\"parquet\").mode(\"overwrite\").parquet('work/codigocontas')"
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
