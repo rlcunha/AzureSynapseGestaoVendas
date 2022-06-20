@@ -819,6 +819,46 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 7')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'trusted_sagestaoloja_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [trusted_sagestaoloja_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://trusted@sagestaoloja.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE contasapagarrefined (\n\t[ID] int,\n\t[CODIGO] int,\n\t[SUBCODIGO1] int,\n\t[SUBCODIGO2] int,\n\t[DESCSUBCODIGO] nvarchar(4000),\n\t[CATEGORIA] nvarchar(4000),\n\t[DESCRICAO] nvarchar(4000),\n\t[DIAVENCTO] int,\n\t[MESVENCTO] int,\n\t[ANOVENCTO] int,\n\t[DIA_PG] int,\n\t[MES_PG] int,\n\t[ANO_PG] int,\n\t[VALOR] nvarchar(4000),\n\t[VALORPG] nvarchar(4000),\n\t[STATUS] nvarchar(4000),\n\t[PARCELAS] nvarchar(4000),\n\t[FORNECEDOR] nvarchar(4000),\n\t[UNIDADE] nvarchar(4000),\n\t[DATAINGESTAO] nvarchar(4000)\n\t)\n\tWITH (\n\tLOCATION = 'contasapagar/**',\n\tDATA_SOURCE = [trusted_sagestaoloja_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM dbo.contasapagarrefined\nGO",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "dbGestaoLoja",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 8')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "select categoria, codigo, subcodigo1, sum(cp.valorpg)\n  from dbGestaoLoja..contasapagarrefined cp\n where cp.ano_pg = 2022 and cp.mes_pg = 5\n group by categoria, codigo, subcodigo1",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Notebook 1')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
@@ -2251,7 +2291,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "1157e87e-169c-4303-81b0-cd8283a4b5bc"
+						"spark.autotune.trackingId": "19bb9ac1-05dc-477f-b8ff-4dd51ed93b5a"
 					}
 				},
 				"metadata": {
@@ -2276,7 +2316,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2516,8 +2557,8 @@
 							"                        f.substring(df0.Prop_3,7,4).cast('int').alias('ANO_PG'),\r\n",
 							"                        # f.substring(df0.Prop_3,12,2).cast('int').alias('HORAPG'),\r\n",
 							"                        # f.substring(df0.Prop_3,15,2).cast('int').alias('MINUTOPG'),\r\n",
-							"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').alias('VALOR'),\r\n",
-							"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').alias('VALORPG'),\r\n",
+							"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2').alias('VALOR'),\r\n",
+							"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2').alias('VALORPG'),\r\n",
 							"                        df0.Prop_6.cast('string').alias('STATUS'),\r\n",
 							"                        df0.Prop_7.cast('string').alias('PARCELAS'),\r\n",
 							"                        df0.Prop_8.cast('string').alias('FORNECEDOR'),\r\n",
