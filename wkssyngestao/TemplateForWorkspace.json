@@ -1859,7 +1859,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "3679c642-181b-4b9f-a78c-b591b25b95e9"
+						"spark.autotune.trackingId": "85347fe9-9947-46c3-b493-1851cf02cc3e"
 					}
 				},
 				"metadata": {
@@ -1907,7 +1907,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_clientes"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -1926,7 +1926,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_contasapagar"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 7
 					},
 					{
 						"cell_type": "code",
@@ -2515,7 +2515,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b6278a64-6977-43ea-855c-2372fa7dea69"
+						"spark.autotune.trackingId": "9893d144-2666-4ff0-9354-471fe64b1d88"
 					}
 				},
 				"metadata": {
@@ -2540,7 +2540,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2934,7 +2935,7 @@
 							}
 						},
 						"source": [
-							"df_cotas = df_contasapagar.select('CODIGO','SUBCODIGO1','SUBCODIGO2','DESCSUBCODIGO').distinct().dropna(how='all', subset='CODIGO')\r\n",
+							"df_cotas = df.select('CODIGO','SUBCODIGO1','SUBCODIGO2','DESCSUBCODIGO').distinct().dropna(how='all', subset='CODIGO')\r\n",
 							"df_cotas.write.format(\"parquet\").mode(\"overwrite\").parquet('work/codigocontas')"
 						],
 						"outputs": [],
@@ -2987,7 +2988,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b376f374-3e25-4390-af37-9db8d6c74683"
+						"spark.autotune.trackingId": "049c3fa9-6f1c-4e5f-83af-459a1df281db"
 					}
 				},
 				"metadata": {
@@ -3012,8 +3013,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
