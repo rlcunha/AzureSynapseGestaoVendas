@@ -1859,7 +1859,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b9070006-41c8-47e1-8be5-b2fd998c65f5"
+						"spark.autotune.trackingId": "dadf1ef3-97ec-467c-b7cc-51415c0e0bd9"
 					}
 				},
 				"metadata": {
@@ -1925,7 +1925,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_contasapagar"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -1944,7 +1944,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_historico_pedidos"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -1963,7 +1963,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_lista_pedidos"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -2514,7 +2514,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "5238b110-6bbd-4a97-a133-e96812f3d1aa"
+						"spark.autotune.trackingId": "7fada467-7d09-4890-a9c1-5ca227b20d01"
 					}
 				},
 				"metadata": {
@@ -3444,7 +3444,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "7e06b22f-c9e1-4129-ae5b-618b597f436f"
+						"spark.autotune.trackingId": "3985ead6-6bbc-487b-8856-e3fbe3f5e104"
 					}
 				},
 				"metadata": {
@@ -3469,7 +3469,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -3697,7 +3698,7 @@
 							"                          df0.Prop_1.cast(\"string\").alias('ORIGEM'),\\\r\n",
 							"                          df0.Prop_2.cast(\"string\").alias('TIPO'),\\\r\n",
 							"                          df0.Prop_3.cast(\"integer\").alias('QTITEM'),\\\r\n",
-							"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop4),'[R$ ]',''),'[.]',''),',','.').alias('VL_FINAL'),\\\r\n",
+							"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').alias('VL_FINAL'),\\\r\n",
 							"                          df0.Prop_5.cast(\"string\").alias('STATUS'),\\\r\n",
 							"                          f.substring(df0.Prop_6,1,2).cast(\"int\").alias('DIA_PED'),\\\r\n",
 							"                          f.substring(df0.Prop_6,4,2).cast(\"int\").alias('MES_PED'),\\\r\n",
