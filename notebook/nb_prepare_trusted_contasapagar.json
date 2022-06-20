@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b6278a64-6977-43ea-855c-2372fa7dea69"
+				"spark.autotune.trackingId": "31e6b62b-6900-4908-a4d1-dde486bb22dc"
 			}
 		},
 		"metadata": {
@@ -428,7 +428,7 @@
 					}
 				},
 				"source": [
-					"df_cotas = df_contasapagar.select('CODIGO','SUBCODIGO1','SUBCODIGO2','DESCSUBCODIGO').distinct().dropna(how='all', subset='CODIGO')\r\n",
+					"df_cotas = df.select('CODIGO','SUBCODIGO1','SUBCODIGO2','DESCSUBCODIGO').distinct().dropna(how='all', subset='CODIGO')\r\n",
 					"df_cotas.write.format(\"parquet\").mode(\"overwrite\").parquet('work/codigocontas')"
 				],
 				"execution_count": null
