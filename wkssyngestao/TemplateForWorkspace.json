@@ -1859,7 +1859,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "0eaeb3cc-0f2a-4c22-bac1-3556cfc5c0e2"
+						"spark.autotune.trackingId": "49197139-6a47-4138-b625-6ed78d68eafc"
 					}
 				},
 				"metadata": {
@@ -1906,7 +1906,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_clientes"
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -1925,7 +1925,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_contasapagar"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 3
 					},
 					{
 						"cell_type": "code",
@@ -2514,7 +2514,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6a1300b2-1989-4774-8d54-69b4e52c4d2c"
+						"spark.autotune.trackingId": "441c5f3f-e1a7-4201-a090-8f7a8ade6e23"
 					}
 				},
 				"metadata": {
@@ -2539,7 +2539,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2763,24 +2764,24 @@
 							}
 						},
 						"source": [
-							"df1 = df.select(df.Prop0.cast(\"string\").alias('CATEGORIA'),\\\r\n",
-							"                        df.Prop1.cast(\"string\").alias('DESCRICAO'),\\\r\n",
-							"                        f.substring(df.Prop2,1,2).cast(\"int\").alias('DIAVENCTO'),\\\r\n",
-							"                        f.substring(df.Prop2,4,2).cast(\"int\").alias('MESVENCTO'),\\\r\n",
-							"                        f.substring(df.Prop2,7,4).cast(\"int\").alias('ANOVENCTO'),\\\r\n",
+							"df1 = df.select(df.Prop_0.cast(\"string\").alias('CATEGORIA'),\\\r\n",
+							"                        df.Prop_1.cast(\"string\").alias('DESCRICAO'),\\\r\n",
+							"                        f.substring(df.Prop_2,1,2).cast(\"int\").alias('DIAVENCTO'),\\\r\n",
+							"                        f.substring(df.Prop_2,4,2).cast(\"int\").alias('MESVENCTO'),\\\r\n",
+							"                        f.substring(df.Prop_2,7,4).cast(\"int\").alias('ANOVENCTO'),\\\r\n",
 							"                        # f.substring(df.Prop2,12,2).cast(\"int\").alias('HORAVENCTO'),\\\r\n",
 							"                        # f.substring(df.Prop2,15,2).cast(\"int\").alias('MINUTOVENCTO'),\\\r\n",
-							"                        f.substring(df.Prop3,1,2).cast(\"int\").alias('DIA_PG'),\\\r\n",
-							"                        f.substring(df.Prop3,4,2).cast(\"int\").alias('MES_PG'),\\\r\n",
-							"                        f.substring(df.Prop3,7,4).cast(\"int\").alias('ANO_PG'),\\\r\n",
+							"                        f.substring(df.Prop_3,1,2).cast(\"int\").alias('DIA_PG'),\\\r\n",
+							"                        f.substring(df.Prop_3,4,2).cast(\"int\").alias('MES_PG'),\\\r\n",
+							"                        f.substring(df.Prop_3,7,4).cast(\"int\").alias('ANO_PG'),\\\r\n",
 							"                        # f.substring(df.Prop3,12,2).cast(\"int\").alias('HORAPG'),\\\r\n",
 							"                        # f.substring(df.Prop3,15,2).cast(\"int\").alias('MINUTOPG'),\\\r\n",
-							"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df.Prop4),'[R$ ]',''),'[.]',''),',','.').alias('VALOR'),\\\r\n",
-							"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df.Prop5),'[R$ ]',''),'[.]',''),',','.').alias('VALORPG'),\\\r\n",
-							"                        df.Prop6.cast(\"string\").alias('STATUS'),\\\r\n",
-							"                        df.Prop7.cast(\"string\").alias('PARCELAS'),\\\r\n",
-							"                        df.Prop8.cast(\"string\").alias('FORNECEDOR'),\\\r\n",
-							"                        df.Prop9.cast(\"string\").alias('UNIDADE'))\\\r\n",
+							"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df.Prop_4),'[R$ ]',''),'[.]',''),',','.').alias('VALOR'),\\\r\n",
+							"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df.Prop_5),'[R$ ]',''),'[.]',''),',','.').alias('VALORPG'),\\\r\n",
+							"                        df.Prop_6.cast(\"string\").alias('STATUS'),\\\r\n",
+							"                        df.Prop_7.cast(\"string\").alias('PARCELAS'),\\\r\n",
+							"                        df.Prop_8.cast(\"string\").alias('FORNECEDOR'),\\\r\n",
+							"                        df.Prop_9.cast(\"string\").alias('UNIDADE'))\\\r\n",
 							"                        .withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
 							"print(f'Contas a Pagar Formatados : {df1.count()}')"
 						],
@@ -2986,7 +2987,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "8f6e1f0f-5b31-431a-982e-c983c6a8f655"
+						"spark.autotune.trackingId": "9e955b59-e73e-417e-aae1-678c9f271c3a"
 					}
 				},
 				"metadata": {
@@ -3011,7 +3012,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -3887,7 +3889,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "fdf81227-5950-496c-bd93-43000181c60b"
+						"spark.autotune.trackingId": "e17bf55f-04f4-4f25-98d3-3152a0ea6c84"
 					}
 				},
 				"metadata": {
@@ -3912,8 +3914,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
