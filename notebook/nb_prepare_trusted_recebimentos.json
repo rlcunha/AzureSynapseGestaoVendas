@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e17bf55f-04f4-4f25-98d3-3152a0ea6c84"
+				"spark.autotune.trackingId": "0f3627e9-ad0d-4e83-95c8-9951a54a78eb"
 			}
 		},
 		"metadata": {
@@ -263,19 +263,19 @@
 					}
 				},
 				"source": [
-					"  df1 = df0.select(df0.Prop0.cast(\"string\").alias('TIPO'), \\\r\n",
-					"                                           df0.Prop1.cast(\"string\").alias('FORMAPG'), \\\r\n",
-					"                                           f.substring(df0.Prop2,1,2).cast(\"int\").alias('DIA_HIS'), \\\r\n",
-					"                                           f.substring(df0.Prop2,4,2).cast(\"int\").alias('MES_HIS'), \\\r\n",
-					"                                           f.substring(df0.Prop2,7,4).cast(\"int\").alias('ANO_HIS'), \\\r\n",
-					"                                           f.substring(df0.Prop2,12,2).cast(\"int\").alias('HORA_HIS'), \\\r\n",
-					"                                           f.substring(df0.Prop2,15,2).cast(\"int\").alias('MINUTO_HIS'), \\\r\n",
-					"                                            f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop4),'[R$ ]',''),'[.]',''),',','.').alias('VALOR'),\\\r\n",
-					"                                            f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop5),'[R$ ]',''),'[.]',''),',','.').alias('VLLIQUIDO'),\\\r\n",
-					"                                           df0.Prop6.cast(\"integer\").alias('PEDIDO'), \\\r\n",
-					"                                           df0.Prop7.cast(\"string\").alias('FUNC'), \\\r\n",
-					"                                           df0.Prop8.cast(\"integer\").alias('CAIXA'), \\\r\n",
-					"                                           df0.Prop9.cast(\"string\").alias('UNIDADE'))\\\r\n",
+					"  df1 = df0.select(df0.Prop_0.cast(\"string\").alias('TIPO'), \\\r\n",
+					"                                           df0.Prop_1.cast(\"string\").alias('FORMAPG'), \\\r\n",
+					"                                           f.substring(df0.Prop_2,1,2).cast(\"int\").alias('DIA_HIS'), \\\r\n",
+					"                                           f.substring(df0.Prop_2,4,2).cast(\"int\").alias('MES_HIS'), \\\r\n",
+					"                                           f.substring(df0.Prop_2,7,4).cast(\"int\").alias('ANO_HIS'), \\\r\n",
+					"                                           f.substring(df0.Prop_2,12,2).cast(\"int\").alias('HORA_HIS'), \\\r\n",
+					"                                           f.substring(df0.Prop_2,15,2).cast(\"int\").alias('MINUTO_HIS'), \\\r\n",
+					"                                            f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').alias('VALOR'),\\\r\n",
+					"                                            f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').alias('VLLIQUIDO'),\\\r\n",
+					"                                           df0.Prop_6.cast(\"integer\").alias('PEDIDO'), \\\r\n",
+					"                                           df0.Prop_7.cast(\"string\").alias('FUNC'), \\\r\n",
+					"                                           df0.Prop_8.cast(\"integer\").alias('CAIXA'), \\\r\n",
+					"                                           df0.Prop_9.cast(\"string\").alias('UNIDADE'))\\\r\n",
 					"                                           .withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
 					"print(f'Recebimento: {df1.count()}')"
 				],
