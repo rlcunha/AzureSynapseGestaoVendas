@@ -68,6 +68,30 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Notebook2",
+				"type": "SynapseNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "nb_main_prepare_trusted",
+						"type": "NotebookReference"
+					},
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": "GestaoPoolSpark",
+						"type": "BigDataPoolReference"
+					}
+				}
 			}
 		],
 		"parameters": {

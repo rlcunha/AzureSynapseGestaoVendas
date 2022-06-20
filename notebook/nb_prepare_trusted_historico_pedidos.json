@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "34e8a15d-12af-4021-b8d5-16144652a50b"
+				"spark.autotune.trackingId": "8f6e1f0f-5b31-431a-982e-c983c6a8f655"
 			}
 		},
 		"metadata": {
@@ -429,7 +429,7 @@
 					}
 				},
 				"source": [
-					"mssparkutils.notebook.exit(adls_path_write + file_path_write)"
+					"# mssparkutils.notebook.exit(adls_path_write + file_path_write)"
 				],
 				"execution_count": 30
 			}

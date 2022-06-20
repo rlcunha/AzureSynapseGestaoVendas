@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "11a08f81-f88d-4e2f-90c0-a026555fa747"
+				"spark.autotune.trackingId": "56068acf-3c84-4632-9ccb-d09276f05049"
 			}
 		},
 		"metadata": {
@@ -408,7 +408,7 @@
 				"source": [
 					"adls_path_write = 'abfss://%s@%s.dfs.core.windows.net' % ('trusted', account_name)\r\n",
 					"#df_q_lctctb_01 = spark.range(5,10) \r\n",
-					"df_clientes.write.partitionBy('ANO_CAD','MES_CAD').format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write_clientes)"
+					"df_clientes.write.format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write_clientes)"
 				],
 				"execution_count": 29
 			},
@@ -426,7 +426,7 @@
 					}
 				},
 				"source": [
-					"mssparkutils.notebook.exit(adls_path_write + file_path_write_clientes)"
+					"# mssparkutils.notebook.exit(adls_path_write + file_path_write_clientes)"
 				],
 				"execution_count": 30
 			}
