@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "50340d31-8aee-4002-b7d7-6f53f417b344"
+				"spark.autotune.trackingId": "1157e87e-169c-4303-81b0-cd8283a4b5bc"
 			}
 		},
 		"metadata": {
@@ -199,8 +199,8 @@
 				},
 				"source": [
 					"parquet_path = adls_path + file_path_read\r\n",
-					"df = spark.read.parquet(parquet_path,header=\"false\",inferSchema=False) \r\n",
-					"df.cache()"
+					"df0 = spark.read.parquet(parquet_path,header=\"false\",inferSchema=False) \r\n",
+					"df0.cache()"
 				],
 				"execution_count": 22
 			},

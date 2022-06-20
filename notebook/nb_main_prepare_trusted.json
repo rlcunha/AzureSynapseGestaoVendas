@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d9e11145-7f88-4afe-b6d6-4e9f4c7d4e5f"
+				"spark.autotune.trackingId": "b9070006-41c8-47e1-8be5-b2fd998c65f5"
 			}
 		},
 		"metadata": {
@@ -85,7 +85,7 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_prepare_trusted_contasapagar"
 				],
-				"execution_count": 2
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
