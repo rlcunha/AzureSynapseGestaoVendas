@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "fb6a420c-4cf4-40ae-8e3b-c9929954f856"
+				"spark.autotune.trackingId": "a7864877-9f7b-4ca9-9466-9a4639188bc5"
 			}
 		},
 		"metadata": {
@@ -276,7 +276,7 @@
 					"                                           df0.Prop7.cast(\"string\").alias('FUNC'), \\\r\n",
 					"                                           df0.Prop8.cast(\"integer\").alias('CAIXA'), \\\r\n",
 					"                                           df0.Prop9.cast(\"string\").alias('UNIDADE'))\\\r\n",
-					"                                           .withColumn('DATAINGESTAO', f.lit('20220620'))\r\n",
+					"                                           .withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
 					"print(f'Recebimento: {df1.count()}')"
 				],
 				"execution_count": 24

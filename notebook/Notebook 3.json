@@ -1,8 +1,8 @@
 {
-	"name": "nb_config_raw",
+	"name": "Notebook 3",
 	"properties": {
 		"folder": {
-			"name": "GestaoVendas/raw"
+			"name": "GestaoVendas"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -16,7 +16,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "94dbd6c8-9e70-4b6b-b44b-c6f5ebaea058"
+				"spark.autotune.trackingId": "01cc7b3e-81ce-4c4b-8a7c-5a2d95a485bc"
 			}
 		},
 		"metadata": {
@@ -46,7 +46,9 @@
 					}
 				},
 				"source": [
-					"dtIngestion = '20220620'"
+					"import pyspark.sql.functions as f\r\n",
+					"from pyspark.sql import Window\r\n",
+					"from pyspark.sql import SparkSession"
 				],
 				"execution_count": null
 			},
@@ -64,25 +66,36 @@
 					}
 				},
 				"source": [
-					"container_name = 'raw'"
+					"file_path_read = '/pdv/listapedidos' #/dtIngestao='+par_data_ingestion\r\n",
+					"# file_path_write_clientes = '/clientes'"
 				],
 				"execution_count": null
 			},
 			{
 				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
 				"source": [
+					"container_name = 'trusted'\r\n",
 					"adls_path = 'abfss://%s@%s.dfs.core.windows.net' % (container_name, account_name)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"parquet_path = adls_path + file_path_read\r\n",
+					"df_clientes = spark.read.parquet(parquet_path,header=\"false\",inferSchema=False) \r\n",
+					"df_clientes.cache()"
 				],
 				"execution_count": null
 			}

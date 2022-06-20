@@ -42,7 +42,7 @@
 												"userProperties": [],
 												"typeProperties": {
 													"notebook": {
-														"referenceName": "nb_prepare_trusted_clientes",
+														"referenceName": "nb_main_prepare_trusted",
 														"type": "NotebookReference"
 													},
 													"parameters": {

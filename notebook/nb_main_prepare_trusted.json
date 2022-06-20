@@ -20,14 +20,11 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "4a7c5633-10ae-443a-9a02-d62514eedddd"
+				"spark.autotune.trackingId": "e883d249-fad2-4682-9e8e-36218a801b11"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
@@ -49,7 +46,7 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -70,7 +67,6 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_prepare_trusted_clientes"
 				],
-				"attachments": null,
 				"execution_count": 14
 			},
 			{
@@ -89,7 +85,6 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_prepare_trusted_contasapagar"
 				],
-				"attachments": null,
 				"execution_count": 15
 			},
 			{
@@ -106,9 +101,8 @@
 					}
 				},
 				"source": [
-					"%run GestaoVendas/raw/nb_prepare_trusted_fornecedores"
+					"%run GestaoVendas/raw/nb_prepare_trusted_historico_pedidos"
 				],
-				"attachments": null,
 				"execution_count": 16
 			},
 			{
@@ -125,9 +119,8 @@
 					}
 				},
 				"source": [
-					"%run GestaoVendas/raw/nb_prepare_trusted_pedidos"
+					"%run GestaoVendas/raw/nb_prepare_trusted_lista_pedidos"
 				],
-				"attachments": null,
 				"execution_count": 17
 			},
 			{
@@ -146,7 +139,6 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_prepare_trusted_recebimentos"
 				],
-				"attachments": null,
 				"execution_count": 18
 			}
 		]

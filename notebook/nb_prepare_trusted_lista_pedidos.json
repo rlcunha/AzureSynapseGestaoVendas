@@ -1,5 +1,5 @@
 {
-	"name": "nb_prepare_trusted_contasapagar",
+	"name": "nb_prepare_trusted_lista_pedidos",
 	"properties": {
 		"folder": {
 			"name": "GestaoVendas/raw"
@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9d04e7ef-1040-4969-812b-0988ba03c558"
+				"spark.autotune.trackingId": "0e02a3b7-2dab-467c-be75-fd5015227345"
 			}
 		},
 		"metadata": {
@@ -166,8 +166,8 @@
 				},
 				"source": [
 					"#Clientes\r\n",
-					"file_path_read = '/pdv/ContasaPagar' #/dtIngestao='+par_data_ingestion\r\n",
-					"file_path_write = '/contasapagar'"
+					"file_path_read = '/pdv/ListaPedidos' #/dtIngestao='+par_data_ingestion\r\n",
+					"file_path_write = '/listapedidos'"
 				],
 				"execution_count": 5
 			},
@@ -199,8 +199,8 @@
 				},
 				"source": [
 					"parquet_path = adls_path + file_path_read\r\n",
-					"df = spark.read.parquet(parquet_path,header=\"false\",inferSchema=False) \r\n",
-					"df.cache()"
+					"df0 = spark.read.parquet(parquet_path,header=\"false\",inferSchema=False) \r\n",
+					"df0.cache()"
 				],
 				"execution_count": 22
 			},
@@ -263,26 +263,22 @@
 					}
 				},
 				"source": [
-					"df1 = df.select(df.Prop0.cast(\"string\").alias('CATEGORIA'),\\\r\n",
-					"                        df.Prop1.cast(\"string\").alias('DESCRICAO'),\\\r\n",
-					"                        f.substring(df.Prop2,1,2).cast(\"int\").alias('DIAVENCTO'),\\\r\n",
-					"                        f.substring(df.Prop2,4,2).cast(\"int\").alias('MESVENCTO'),\\\r\n",
-					"                        f.substring(df.Prop2,7,4).cast(\"int\").alias('ANOVENCTO'),\\\r\n",
-					"                        # f.substring(df.Prop2,12,2).cast(\"int\").alias('HORAVENCTO'),\\\r\n",
-					"                        # f.substring(df.Prop2,15,2).cast(\"int\").alias('MINUTOVENCTO'),\\\r\n",
-					"                        f.substring(df.Prop3,1,2).cast(\"int\").alias('DIA_PG'),\\\r\n",
-					"                        f.substring(df.Prop3,4,2).cast(\"int\").alias('MES_PG'),\\\r\n",
-					"                        f.substring(df.Prop3,7,4).cast(\"int\").alias('ANO_PG'),\\\r\n",
-					"                        # f.substring(df.Prop3,12,2).cast(\"int\").alias('HORAPG'),\\\r\n",
-					"                        # f.substring(df.Prop3,15,2).cast(\"int\").alias('MINUTOPG'),\\\r\n",
-					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df.Prop4),'[R$ ]',''),'[.]',''),',','.').alias('VALOR'),\\\r\n",
-					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df.Prop5),'[R$ ]',''),'[.]',''),',','.').alias('VALORPG'),\\\r\n",
-					"                        df.Prop6.cast(\"string\").alias('STATUS'),\\\r\n",
-					"                        df.Prop7.cast(\"string\").alias('PARCELAS'),\\\r\n",
-					"                        df.Prop8.cast(\"string\").alias('FORNECEDOR'),\\\r\n",
-					"                        df.Prop9.cast(\"string\").alias('UNIDADE'))\\\r\n",
-					"                        .withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
-					"print(f'Contas a Pagar Formatados : {df1.count()}')"
+					"  df1 = df0.select(df0.Prop_0.cast(\"integer\").alias('CODIGO'),\\\r\n",
+					"                          df0.Prop_1.cast(\"string\").alias('ORIGEM'),\\\r\n",
+					"                          df0.Prop_2.cast(\"string\").alias('TIPO'),\\\r\n",
+					"                          df0.Prop_3.cast(\"integer\").alias('QTITEM'),\\\r\n",
+					"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop4),'[R$ ]',''),'[.]',''),',','.').alias('VL_FINAL'),\\\r\n",
+					"                          df0.Prop_5.cast(\"string\").alias('STATUS'),\\\r\n",
+					"                          f.substring(df0.Prop_6,1,2).cast(\"int\").alias('DIA_PED'),\\\r\n",
+					"                          f.substring(df0.Prop_6,4,2).cast(\"int\").alias('MES_PED'),\\\r\n",
+					"                          f.substring(df0.Prop_6,7,4).cast(\"int\").alias('ANO_PED'),\\\r\n",
+					"                          f.substring(df0.Prop_6,12,2).cast(\"int\").alias('HH_PED'),\\\r\n",
+					"                          f.substring(df0.Prop_6,15,2).cast(\"int\").alias('MM_PED'),\\\r\n",
+					"                          df0.Prop_7.cast(\"string\").alias('TEMPO'),\\\r\n",
+					"                          df0.Prop_8.cast(\"string\").alias('UNIDADE'),\\\r\n",
+					"                          df0.Prop_9.cast(\"string\").alias('EXCLUSAO'))\\\r\n",
+					"                          .withColumn('DATAINGESTAO', f.lit(dtIngestion))  \r\n",
+					"print(f'Lista Pedidos: {df1.count()}')"
 				],
 				"execution_count": 24
 			},
@@ -313,7 +309,7 @@
 					}
 				},
 				"source": [
-					"df = df0.distinct()"
+					"df2 = df1.distinct()"
 				],
 				"execution_count": 25
 			},
@@ -345,8 +341,8 @@
 				},
 				"source": [
 					"# Ler e filtrar e gravar dataframe - Cliente\r\n",
-					"df = df.dropna(how='all', subset='DESCRICAO')\r\n",
-					"print(f'Contas a Pagar Higienizado : {df.count()}')"
+					"df3 = df2.dropna(how='all', subset='MES_PED')\r\n",
+					"print(f'Lista Pedidos Higienizado : {df2.count()}')"
 				],
 				"execution_count": 27
 			},
@@ -377,7 +373,7 @@
 					}
 				},
 				"source": [
-					"df = df.select(f.row_number().over(w).alias('ID'),'*')"
+					"df = df3.select(f.row_number().over(w).alias('ID'),'*')"
 				],
 				"execution_count": 28
 			},
@@ -410,28 +406,9 @@
 				"source": [
 					"adls_path_write = 'abfss://%s@%s.dfs.core.windows.net' % ('trusted', account_name)\r\n",
 					"#df_q_lctctb_01 = spark.range(5,10) \r\n",
-					"df.write.partitionBy('ANO_PG','MES_PG').format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write)"
+					"df.write.format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write)"
 				],
 				"execution_count": 29
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"df_cotas = df_contasapagar.select('CODIGO','SUBCODIGO1','SUBCODIGO2','DESCSUBCODIGO').distinct().dropna(how='all', subset='CODIGO')\r\n",
-					"df_cotas.write.format(\"parquet\").mode(\"overwrite\").parquet('work/codigocontas')"
-				],
-				"execution_count": null
 			},
 			{
 				"cell_type": "code",

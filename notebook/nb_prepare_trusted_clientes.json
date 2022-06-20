@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a29a2989-ea4d-4206-97fe-5acaf2b030d1"
+				"spark.autotune.trackingId": "11a08f81-f88d-4e2f-90c0-a026555fa747"
 			}
 		},
 		"metadata": {
@@ -277,8 +277,8 @@
 					"                        f.substring(df_clientes.Prop_9,4,2).cast(\"int\").alias('MES_CAD'),\\\r\n",
 					"                        f.substring(df_clientes.Prop_9,7,4).cast(\"int\").alias('ANO_CAD'),\\\r\n",
 					"                        df_clientes.Prop_10.cast(\"string\").alias('UNIDADE'),\\\r\n",
-					"                        f.regexp_replace(f.upper(df_clientes.Prop_1), \" \", \"\").alias('NOMEUPPER')).\\\r\n",
-					"                        withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
+					"                        f.regexp_replace(f.upper(df_clientes.Prop_1), \" \", \"\").alias('NOMEUPPER'))\\\r\n",
+					"                        .withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
 					"print(f'Clientes Formatados : {df_clientes.count()}')"
 				],
 				"execution_count": 24
