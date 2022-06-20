@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1157e87e-169c-4303-81b0-cd8283a4b5bc"
+				"spark.autotune.trackingId": "987cccba-5c1c-4b3c-a11c-244008404781"
 			}
 		},
 		"metadata": {
@@ -279,8 +279,8 @@
 					"                        f.substring(df0.Prop_3,7,4).cast('int').alias('ANO_PG'),\r\n",
 					"                        # f.substring(df0.Prop_3,12,2).cast('int').alias('HORAPG'),\r\n",
 					"                        # f.substring(df0.Prop_3,15,2).cast('int').alias('MINUTOPG'),\r\n",
-					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').alias('VALOR'),\r\n",
-					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').alias('VALORPG'),\r\n",
+					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2').alias('VALOR'),\r\n",
+					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2').alias('VALORPG'),\r\n",
 					"                        df0.Prop_6.cast('string').alias('STATUS'),\r\n",
 					"                        df0.Prop_7.cast('string').alias('PARCELAS'),\r\n",
 					"                        df0.Prop_8.cast('string').alias('FORNECEDOR'),\r\n",

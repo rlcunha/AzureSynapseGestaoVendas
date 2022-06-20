@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 8",
+	"properties": {
+		"content": {
+			"query": "select categoria, codigo, subcodigo1, sum(cp.valorpg)\n  from dbGestaoLoja..contasapagarrefined cp\n where cp.ano_pg = 2022 and cp.mes_pg = 5\n group by categoria, codigo, subcodigo1",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
