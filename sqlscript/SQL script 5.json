@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 5",
+	"properties": {
+		"content": {
+			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'trusted_sagestaoloja_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [trusted_sagestaoloja_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://trusted@sagestaoloja.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE recebimentosrefined (\n\t[ID] int,\n\t[TIPO] nvarchar(4000),\n\t[FORMAPG] nvarchar(4000),\n\t[DIA_HIS] int,\n\t[MES_HIS] int,\n\t[ANO_HIS] int,\n\t[HORA_HIS] int,\n\t[MINUTO_HIS] int,\n\t[VALOR] nvarchar(4000),\n\t[VLLIQUIDO] nvarchar(4000),\n\t[PEDIDO] int,\n\t[FUNC] nvarchar(4000),\n\t[CAIXA] int,\n\t[UNIDADE] nvarchar(4000),\n\t[DATAINGESTAO] nvarchar(4000)\n\t)\n\tWITH (\n\tLOCATION = 'recebimentos/**',\n\tDATA_SOURCE = [trusted_sagestaoloja_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM dbo.recebimentosrefined\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "dbGestaoLoja",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 2",
+	"properties": {
+		"content": {
+			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'trusted_sagestaoloja_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [trusted_sagestaoloja_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://trusted@sagestaoloja.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE contasapagartrusted (\n\t[ID] int,\n\t[CODIGO] int,\n\t[SUBCODIGO1] int,\n\t[SUBCODIGO2] int,\n\t[DESCSUBCODIGO] nvarchar(4000),\n\t[CATEGORIA] nvarchar(4000),\n\t[DESCRICAO] nvarchar(4000),\n\t[DIAVENCTO] int,\n\t[MESVENCTO] int,\n\t[ANOVENCTO] int,\n\t[DIA_PG] int,\n\t[MES_PG] int,\n\t[ANO_PG] int,\n\t[VALOR] nvarchar(4000),\n\t[VALORPG] nvarchar(4000),\n\t[STATUS] nvarchar(4000),\n\t[PARCELAS] nvarchar(4000),\n\t[FORNECEDOR] nvarchar(4000),\n\t[UNIDADE] nvarchar(4000),\n\t[DATAINGESTAO] nvarchar(4000)\n\t)\n\tWITH (\n\tLOCATION = 'contasapagar/**',\n\tDATA_SOURCE = [trusted_sagestaoloja_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM dbo.contasapagartrusted\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "dbGestaoLoja",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
