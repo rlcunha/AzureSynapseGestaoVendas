@@ -735,6 +735,146 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 11')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/codigocontas/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 12')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/contasapagar/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 13')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/listapedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\n\nselect SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2),count(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/listapedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2)\norder by SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2)",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 14')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "CREATE TABLE IF NOT EXISTS `mydb`.`tbRecebimentos` (\n  `ds_tipo` INT NOT NULL,\n  `ds_formapagto` VARCHAR(45) NULL,\n  `dia_pgto` INT NULL,\n  `mes_pgto` INT NULL,\n  `ano_pgto` INT NULL,\n  `dia_cred` INT NULL,\n  `mes_cred` INT NULL,\n  `ano_cred` INT NULL,\n  `vl_valor_bruto` DECIMAL(12,2) NULL,\n  `vl_valor_liq` DECIMAL(12,2) NULL,\n  `cd_pedido` INT NULL,\n  `cd_caixa` INT NULL,\n  `ds_unidade` VARCHAR(45) NULL,\n  `tbRecebimentoscol` VARCHAR(45) NULL,\n  PRIMARY KEY (`ds_tipo`))\nENGINE = InnoDB\n\nCREATE TABLE IF NOT EXISTS `mydb`.`tbVendas` (\n  `no_codigo` INT NOT NULL,\n  `cd_origem` VARCHAR(45) NULL,\n  `cd_tipo` VARCHAR(30) NULL,\n  `no_itens` INT NULL,\n  `vl_venda` DECIMAL(12,2) NULL,\n  `cd_status` VARCHAR(45) NULL,\n  `no_dia` INT NULL,\n  `no_mes` INT NULL,\n  `no_ano` INT NULL,\n  `no_hora` INT NULL,\n  `no_minuto` INT NULL,\n  `cd_tempo` VARCHAR(45) NULL,\n  `ds_unidade` VARCHAR(45) NULL,\n  PRIMARY KEY (`no_codigo`))\nENGINE = InnoDB\n\nCREATE TABLE IF NOT EXISTS `mydb`.`tbClientes` (\n  `no_codigo` INT NOT NULL,\n  `nm_nome` VARCHAR(45) NULL,\n  `ds_telefone` VARCHAR(45) NULL,\n  `ds_email` VARCHAR(45) NULL,\n  `ds_origem` VARCHAR(45) NULL,\n  `dt_cadastro` VARCHAR(45) NULL,\n  `no_dia` INT NULL,\n  `no_mes` INT NULL,\n  `no_ano` INT NULL,\n  `ds_unidade` VARCHAR(45) NULL,\n  `dt_ingestao` VARCHAR(45) NULL,\n  PRIMARY KEY (`no_codigo`))\nENGINE = InnoDB\nCOMMENT = '\t'\n\nCREATE TABLE IF NOT EXISTS `mydb`.`tbContasPagar` (\n  `no_codigo` INT NOT NULL,\n  `no_subcodigo1` INT NULL,\n  `no_subcodigo2` VARCHAR(45) NULL,\n  `ds_descsubcodigo` VARCHAR(45) NULL,\n  `ds_categoria` VARCHAR(45) NULL,\n  `ds_descricao` VARCHAR(45) NULL,\n  `no_diavencto` INT NULL,\n  `no_mesvencto` INT NULL,\n  `no_anovencto` INT NULL,\n  `no_dia_pg` INT NULL,\n  `no_mes_pg` INT NULL,\n  `no_ano_pg` INT NULL,\n  `vl_valor_vecto` DECIMAL(12,2) NULL,\n  `vl_total` DECIMAL(12,2) NULL,\n  `ds_status` VARCHAR(45) NULL,\n  `ds_parcelas` VARCHAR(45) NULL,\n  `ds_fornecedor` VARCHAR(45) NULL,\n  `ds_unidade` VARCHAR(45) NULL,\n  PRIMARY KEY (`no_codigo`))\nENGINE = InnoDB",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 15')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'trusted_sagestaoloja_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [trusted_sagestaoloja_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://trusted@sagestaoloja.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE tbClientes (\n\t[ID] int,\n\t[CODIGO] int,\n\t[NOME] nvarchar(4000),\n\t[TELEFONE] nvarchar(4000),\n\t[EMAIL] nvarchar(4000),\n\t[ORIGEM] nvarchar(4000),\n\t[CADASTRO] nvarchar(4000),\n\t[DIA_CAD] int,\n\t[UNIDADE] nvarchar(4000),\n\t[DATAINGESTAO] nvarchar(4000)\n\t)\n\tWITH (\n\tLOCATION = 'clientes/**',\n\tDATA_SOURCE = [trusted_sagestaoloja_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM refined.tbClientes\nGO",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "dbGestaoLoja",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 16')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/raw/pdv/HistoricoPedidos/dtIngestao=20211001/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 17')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT\n    *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/raw/pdv/HistoricoPedidos/dtIngestao=20220620/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/SQL script 2')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -1804,7 +1944,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "89f33a16-f828-4787-b23a-8cb74fe9fd41"
+						"spark.autotune.trackingId": "a29a2989-ea4d-4206-97fe-5acaf2b030d1"
 					}
 				},
 				"metadata": {
@@ -2254,7 +2394,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "bad10ce3-226a-48c6-8e88-44c1e4acdf2b"
+						"spark.autotune.trackingId": "87af49c0-fadd-41d2-97f1-ea71e0b323b8"
 					}
 				},
 				"metadata": {
@@ -2279,8 +2419,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -3085,14 +3224,11 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b4ae743e-e437-429d-a261-7170290aab0f"
+						"spark.autotune.trackingId": "fee5692a-fb7b-4058-b492-9f642bad4c7f"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1"
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -3114,7 +3250,7 @@
 						"nodeCount": 10,
 						"cores": 8,
 						"memory": 56,
-						"extraHeader": null
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -3135,9 +3271,8 @@
 						"source": [
 							"%run GestaoVendas/base/import/nb_import_base"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 45
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -3155,9 +3290,8 @@
 						"source": [
 							"%run GestaoVendas/base/parameter/nb_parameter_base"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 46
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -3175,9 +3309,8 @@
 						"source": [
 							"%run GestaoVendas/raw/nb_config_raw"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 47
+						"execution_count": 3
 					},
 					{
 						"cell_type": "markdown",
@@ -3190,8 +3323,7 @@
 						},
 						"source": [
 							"**BIBLIOTECAS IMPORTADAS DE USO LOCAL**"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3207,19 +3339,12 @@
 							}
 						},
 						"source": [
-							"import shutil\r\n",
-							"import codecs\r\n",
-							"from datetime import datetime\r\n",
-							"\r\n",
-							"import pandas as pd\r\n",
-							"\r\n",
-							"from pyspark.sql import *\r\n",
-							"from pyspark.sql.types import *\r\n",
-							"import pyspark.sql.functions as f"
+							"import pyspark.sql.functions as f\r\n",
+							"from pyspark.sql import Window\r\n",
+							"from pyspark.sql import SparkSession"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 48
+						"execution_count": 4
 					},
 					{
 						"cell_type": "markdown",
@@ -3232,8 +3357,7 @@
 						},
 						"source": [
 							"**PARAMETROS LOCAIS**"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3250,12 +3374,11 @@
 						},
 						"source": [
 							"#Clientes\r\n",
-							"file_path_read = '/Recebimentos.xlsx/dtIngestao=**'\r\n",
+							"file_path_read = '/pdv/Recebimentos' #/dtIngestao='+par_data_ingestion\r\n",
 							"file_path_write = '/recebimentos'"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 54
+						"execution_count": 5
 					},
 					{
 						"cell_type": "markdown",
@@ -3268,8 +3391,7 @@
 						},
 						"source": [
 							"**LER DADOS EM FORMATO PARQUET**"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3286,13 +3408,11 @@
 						},
 						"source": [
 							"parquet_path = adls_path + file_path_read\r\n",
-							"df_raw = spark.read.parquet(parquet_path,header=\"false\",inferSchema=False) \r\n",
-							"df_raw.cache()\r\n",
-							"print(f'Recebimentos CARREGADOS : {df_raw.cache().count()}')"
+							"df0 = spark.read.parquet(parquet_path,header=\"false\",inferSchema=False) \r\n",
+							"df0.cache()"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 50
+						"execution_count": 22
 					},
 					{
 						"cell_type": "markdown",
@@ -3304,9 +3424,8 @@
 							}
 						},
 						"source": [
-							"**FORMATA OS DADOS LIDOS DA ORIGEM**"
-						],
-						"attachments": null
+							"**Prepara sessao spark para usar recursos de auto-identação**"
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3322,24 +3441,89 @@
 							}
 						},
 						"source": [
-							"df_raw = df_raw.select(df_raw.Prop_0.cast(\"string\").alias('TIPO'), \\\r\n",
-							"                                         df_raw.Prop_1.cast(\"string\").alias('FORMAPG'), \\\r\n",
-							"                                         f.substring(df_raw.Prop_2,1,2).cast(\"int\").alias('DIA'), \\\r\n",
-							"                                         f.substring(df_raw.Prop_2,4,2).cast(\"int\").alias('MES'), \\\r\n",
-							"                                         f.substring(df_raw.Prop_2,7,4).cast(\"int\").alias('ANO'), \\\r\n",
-							"                                         f.substring(df_raw.Prop_2,12,2).cast(\"int\").alias('HORA'), \\\r\n",
-							"                                         f.substring(df_raw.Prop_2,15,2).cast(\"int\").alias('MINUTO'), \\\r\n",
-							"                                         f.regexp_replace(f.regexp_replace(df_raw.Prop_4,'[R$]',''),',','.').cast('double').alias('VALOR'), \\\r\n",
-							"                                         f.regexp_replace(f.regexp_replace(df_raw.Prop_5,'[R$]',''), ',', '.').cast('double').alias('VLLIQUIDO'), \\\r\n",
-							"                                         df_raw.Prop_6.cast(\"integer\").alias('PEDIDO'), \\\r\n",
-							"                                         df_raw.Prop_7.cast(\"string\").alias('FUNC'), \\\r\n",
-							"                                         df_raw.Prop_8.cast(\"integer\").alias('CAIXA'), \\\r\n",
-							"                                         df_raw.Prop_9.cast(\"string\").alias('UNIDADE')).withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
-							"print(f'Recebimentos Formatados : {df_raw.count()}')"
+							"spark = SparkSession.builder.getOrCreate()\r\n",
+							"w = Window().orderBy(f.lit('A'))"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 51
+						"execution_count": 23
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**FORMATA OS DADOS LIDOS DA ORIGEM**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"  df1 = df0.select(df0.Prop0.cast(\"string\").alias('TIPO'), \\\r\n",
+							"                                           df0.Prop1.cast(\"string\").alias('FORMAPG'), \\\r\n",
+							"                                           f.substring(df0.Prop2,1,2).cast(\"int\").alias('DIA_HIS'), \\\r\n",
+							"                                           f.substring(df0.Prop2,4,2).cast(\"int\").alias('MES_HIS'), \\\r\n",
+							"                                           f.substring(df0.Prop2,7,4).cast(\"int\").alias('ANO_HIS'), \\\r\n",
+							"                                           f.substring(df0.Prop2,12,2).cast(\"int\").alias('HORA_HIS'), \\\r\n",
+							"                                           f.substring(df0.Prop2,15,2).cast(\"int\").alias('MINUTO_HIS'), \\\r\n",
+							"                                            f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop4),'[R$ ]',''),'[.]',''),',','.').alias('VALOR'),\\\r\n",
+							"                                            f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop5),'[R$ ]',''),'[.]',''),',','.').alias('VLLIQUIDO'),\\\r\n",
+							"                                           df0.Prop6.cast(\"integer\").alias('PEDIDO'), \\\r\n",
+							"                                           df0.Prop7.cast(\"string\").alias('FUNC'), \\\r\n",
+							"                                           df0.Prop8.cast(\"integer\").alias('CAIXA'), \\\r\n",
+							"                                           df0.Prop9.cast(\"string\").alias('UNIDADE'))\\\r\n",
+							"                                           .withColumn('DATAINGESTAO', f.lit('20220620'))\r\n",
+							"print(f'Recebimento: {df1.count()}')"
+						],
+						"outputs": [],
+						"execution_count": 24
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**RETIRA REGISTROS DUPLICADOS**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df2 = df1.distinct()"
+						],
+						"outputs": [],
+						"execution_count": 25
 					},
 					{
 						"cell_type": "markdown",
@@ -3352,8 +3536,7 @@
 						},
 						"source": [
 							"**LIMPAR OS DADOS IMPORTADOS**"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3370,13 +3553,43 @@
 						},
 						"source": [
 							"# Ler e filtrar e gravar dataframe - Cliente\r\n",
-							"# df_raw = df_raw.dropna(how='all', subset='TIPO')\r\n",
-							"# df_raw = df_raw.dropna(how='all', subset='VALOR')\r\n",
-							"print(f'Recebimentos Higienizado : {df_raw.count()}')"
+							"df3 = df2.dropna(how='all', subset='MES_HIS')\r\n",
+							"print(f'Recebimentos Higienizado : {df2.count()}')"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 56
+						"execution_count": 27
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"**AUTO NUMERAÇÃO DOS REGISTROS**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df = df3.select(f.row_number().over(w).alias('ID'),'*')"
+						],
+						"outputs": [],
+						"execution_count": 28
 					},
 					{
 						"cell_type": "markdown",
@@ -3389,8 +3602,7 @@
 						},
 						"source": [
 							"**GRAVAR OS DADOS NA TRUSTED**"
-						],
-						"attachments": null
+						]
 					},
 					{
 						"cell_type": "code",
@@ -3408,12 +3620,29 @@
 						"source": [
 							"adls_path_write = 'abfss://%s@%s.dfs.core.windows.net' % ('trusted', account_name)\r\n",
 							"#df_q_lctctb_01 = spark.range(5,10) \r\n",
-							"print(adls_path_write + file_path_write)\r\n",
-							"df_raw.repartition(2).write.format(\"parquet\").mode(\"overwrite\").partitionBy(\"ANO\",\"MES\").save(adls_path_write + file_path_write)"
+							"df.write.format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write)"
 						],
-						"attachments": null,
 						"outputs": [],
-						"execution_count": 57
+						"execution_count": 29
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"mssparkutils.notebook.exit(adls_path_write + file_path_write)"
+						],
+						"outputs": [],
+						"execution_count": 30
 					}
 				]
 			},
