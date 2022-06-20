@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "5b199c68-cab8-4c49-887a-45ea974ba767"
+				"spark.autotune.trackingId": "d9e11145-7f88-4afe-b6d6-4e9f4c7d4e5f"
 			}
 		},
 		"metadata": {
@@ -67,7 +67,7 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_prepare_trusted_clientes"
 				],
-				"execution_count": 6
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -85,7 +85,7 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_prepare_trusted_contasapagar"
 				],
-				"execution_count": 7
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",

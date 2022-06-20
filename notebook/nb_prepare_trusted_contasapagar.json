@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "31e6b62b-6900-4908-a4d1-dde486bb22dc"
+				"spark.autotune.trackingId": "50340d31-8aee-4002-b7d7-6f53f417b344"
 			}
 		},
 		"metadata": {
@@ -263,24 +263,28 @@
 					}
 				},
 				"source": [
-					"df1 = df.select(df.Prop_0.cast(\"string\").alias('CATEGORIA'),\\\r\n",
-					"                        df.Prop_1.cast(\"string\").alias('DESCRICAO'),\\\r\n",
-					"                        f.substring(df.Prop_2,1,2).cast(\"int\").alias('DIAVENCTO'),\\\r\n",
-					"                        f.substring(df.Prop_2,4,2).cast(\"int\").alias('MESVENCTO'),\\\r\n",
-					"                        f.substring(df.Prop_2,7,4).cast(\"int\").alias('ANOVENCTO'),\\\r\n",
-					"                        # f.substring(df.Prop2,12,2).cast(\"int\").alias('HORAVENCTO'),\\\r\n",
-					"                        # f.substring(df.Prop2,15,2).cast(\"int\").alias('MINUTOVENCTO'),\\\r\n",
-					"                        f.substring(df.Prop_3,1,2).cast(\"int\").alias('DIA_PG'),\\\r\n",
-					"                        f.substring(df.Prop_3,4,2).cast(\"int\").alias('MES_PG'),\\\r\n",
-					"                        f.substring(df.Prop_3,7,4).cast(\"int\").alias('ANO_PG'),\\\r\n",
-					"                        # f.substring(df.Prop3,12,2).cast(\"int\").alias('HORAPG'),\\\r\n",
-					"                        # f.substring(df.Prop3,15,2).cast(\"int\").alias('MINUTOPG'),\\\r\n",
-					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df.Prop_4),'[R$ ]',''),'[.]',''),',','.').alias('VALOR'),\\\r\n",
-					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df.Prop_5),'[R$ ]',''),'[.]',''),',','.').alias('VALORPG'),\\\r\n",
-					"                        df.Prop_6.cast(\"string\").alias('STATUS'),\\\r\n",
-					"                        df.Prop_7.cast(\"string\").alias('PARCELAS'),\\\r\n",
-					"                        df.Prop_8.cast(\"string\").alias('FORNECEDOR'),\\\r\n",
-					"                        df.Prop_9.cast(\"string\").alias('UNIDADE'))\\\r\n",
+					"df1 = df0.select(f.substring(df0.Prop_8,1,2).cast('int').alias('CODIGO'),\r\n",
+					"                        f.substring(df0.Prop_8,4,2).cast('int').alias('SUBCODIGO1'),\r\n",
+					"                        f.substring(df0.Prop_8,7,2).cast('int').alias('SUBCODIGO2'),\r\n",
+					"                        f.substring(f.regexp_replace(df0.Prop_8,'-',''),9,30).alias('DESCSUBCODIGO'),\r\n",
+					"                        df0.Prop_0.cast('string').alias('CATEGORIA'),\r\n",
+					"                        df0.Prop_1.cast('string').alias('DESCRICAO'),\r\n",
+					"                        f.substring(df0.Prop_2,1,2).cast('int').alias('DIAVENCTO'),\r\n",
+					"                        f.substring(df0.Prop_2,4,2).cast('int').alias('MESVENCTO'),\r\n",
+					"                        f.substring(df0.Prop_2,7,4).cast('int').alias('ANOVENCTO'),\r\n",
+					"                        # f.substring(df0.Prop_2,12,2).cast('int').alias('HORAVENCTO'),\r\n",
+					"                        # f.substring(df0.Prop_2,15,2).cast('int').alias('MINUTOVENCTO'),\r\n",
+					"                        f.substring(df0.Prop_3,1,2).cast('int').alias('DIA_PG'),\r\n",
+					"                        f.substring(df0.Prop_3,4,2).cast('int').alias('MES_PG'),\r\n",
+					"                        f.substring(df0.Prop_3,7,4).cast('int').alias('ANO_PG'),\r\n",
+					"                        # f.substring(df0.Prop_3,12,2).cast('int').alias('HORAPG'),\r\n",
+					"                        # f.substring(df0.Prop_3,15,2).cast('int').alias('MINUTOPG'),\r\n",
+					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').alias('VALOR'),\r\n",
+					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').alias('VALORPG'),\r\n",
+					"                        df0.Prop_6.cast('string').alias('STATUS'),\r\n",
+					"                        df0.Prop_7.cast('string').alias('PARCELAS'),\r\n",
+					"                        df0.Prop_8.cast('string').alias('FORNECEDOR'),\r\n",
+					"                        df0.Prop_9.cast('string').alias('UNIDADE'))\\\r\n",
 					"                        .withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
 					"print(f'Contas a Pagar Formatados : {df1.count()}')"
 				],
@@ -429,7 +433,7 @@
 				},
 				"source": [
 					"df_cotas = df.select('CODIGO','SUBCODIGO1','SUBCODIGO2','DESCSUBCODIGO').distinct().dropna(how='all', subset='CODIGO')\r\n",
-					"df_cotas.write.format(\"parquet\").mode(\"overwrite\").parquet('work/codigocontas')"
+					"df_cotas.write.format(\"parquet\").mode(\"overwrite\").parquet('/codigocontas')"
 				],
 				"execution_count": null
 			},
