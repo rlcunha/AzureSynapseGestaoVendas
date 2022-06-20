@@ -719,132 +719,12 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 1')]",
+			"name": "[concat(parameters('workspaceName'), '/SQL script 2')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n     *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/contasapagar/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "dbTrusted",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 10')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nselect SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2),count(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/clientes/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2)\norder by SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2)\n\nselect SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2),count(*)\n  from dbGestao..vwClientes\ngroup by SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2)",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 11')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/codigocontas/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 12')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/contasapagar/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 13')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/listapedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\n\nselect SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2),count(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/listapedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2)\norder by SUBSTRING(Cadastro,7,4)+SUBSTRING(Cadastro,4,2)",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 14')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "CREATE TABLE IF NOT EXISTS `mydb`.`tbRecebimentos` (\n  `ds_tipo` INT NOT NULL,\n  `ds_formapagto` VARCHAR(45) NULL,\n  `dia_pgto` INT NULL,\n  `mes_pgto` INT NULL,\n  `ano_pgto` INT NULL,\n  `dia_cred` INT NULL,\n  `mes_cred` INT NULL,\n  `ano_cred` INT NULL,\n  `vl_valor_bruto` DECIMAL(12,2) NULL,\n  `vl_valor_liq` DECIMAL(12,2) NULL,\n  `cd_pedido` INT NULL,\n  `cd_caixa` INT NULL,\n  `ds_unidade` VARCHAR(45) NULL,\n  `tbRecebimentoscol` VARCHAR(45) NULL,\n  PRIMARY KEY (`ds_tipo`))\nENGINE = InnoDB\n\nCREATE TABLE IF NOT EXISTS `mydb`.`tbVendas` (\n  `no_codigo` INT NOT NULL,\n  `cd_origem` VARCHAR(45) NULL,\n  `cd_tipo` VARCHAR(30) NULL,\n  `no_itens` INT NULL,\n  `vl_venda` DECIMAL(12,2) NULL,\n  `cd_status` VARCHAR(45) NULL,\n  `no_dia` INT NULL,\n  `no_mes` INT NULL,\n  `no_ano` INT NULL,\n  `no_hora` INT NULL,\n  `no_minuto` INT NULL,\n  `cd_tempo` VARCHAR(45) NULL,\n  `ds_unidade` VARCHAR(45) NULL,\n  PRIMARY KEY (`no_codigo`))\nENGINE = InnoDB\n\nCREATE TABLE IF NOT EXISTS `mydb`.`tbClientes` (\n  `no_codigo` INT NOT NULL,\n  `nm_nome` VARCHAR(45) NULL,\n  `ds_telefone` VARCHAR(45) NULL,\n  `ds_email` VARCHAR(45) NULL,\n  `ds_origem` VARCHAR(45) NULL,\n  `dt_cadastro` VARCHAR(45) NULL,\n  `no_dia` INT NULL,\n  `no_mes` INT NULL,\n  `no_ano` INT NULL,\n  `ds_unidade` VARCHAR(45) NULL,\n  `dt_ingestao` VARCHAR(45) NULL,\n  PRIMARY KEY (`no_codigo`))\nENGINE = InnoDB\nCOMMENT = '\t'\n\nCREATE TABLE IF NOT EXISTS `mydb`.`tbContasPagar` (\n  `no_codigo` INT NOT NULL,\n  `no_subcodigo1` INT NULL,\n  `no_subcodigo2` VARCHAR(45) NULL,\n  `ds_descsubcodigo` VARCHAR(45) NULL,\n  `ds_categoria` VARCHAR(45) NULL,\n  `ds_descricao` VARCHAR(45) NULL,\n  `no_diavencto` INT NULL,\n  `no_mesvencto` INT NULL,\n  `no_anovencto` INT NULL,\n  `no_dia_pg` INT NULL,\n  `no_mes_pg` INT NULL,\n  `no_ano_pg` INT NULL,\n  `vl_valor_vecto` DECIMAL(12,2) NULL,\n  `vl_total` DECIMAL(12,2) NULL,\n  `ds_status` VARCHAR(45) NULL,\n  `ds_parcelas` VARCHAR(45) NULL,\n  `ds_fornecedor` VARCHAR(45) NULL,\n  `ds_unidade` VARCHAR(45) NULL,\n  PRIMARY KEY (`no_codigo`))\nENGINE = InnoDB",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 15')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'trusted_sagestaoloja_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [trusted_sagestaoloja_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://trusted@sagestaoloja.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE tbClientes (\n\t[ID] int,\n\t[CODIGO] int,\n\t[NOME] nvarchar(4000),\n\t[TELEFONE] nvarchar(4000),\n\t[EMAIL] nvarchar(4000),\n\t[ORIGEM] nvarchar(4000),\n\t[CADASTRO] nvarchar(4000),\n\t[DIA_CAD] int,\n\t[UNIDADE] nvarchar(4000),\n\t[DATAINGESTAO] nvarchar(4000)\n\t)\n\tWITH (\n\tLOCATION = 'clientes/**',\n\tDATA_SOURCE = [trusted_sagestaoloja_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM refined.tbClientes\nGO",
+					"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'trusted_sagestaoloja_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [trusted_sagestaoloja_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://trusted@sagestaoloja.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE contasapagartrusted (\n\t[ID] int,\n\t[CODIGO] int,\n\t[SUBCODIGO1] int,\n\t[SUBCODIGO2] int,\n\t[DESCSUBCODIGO] nvarchar(4000),\n\t[CATEGORIA] nvarchar(4000),\n\t[DESCRICAO] nvarchar(4000),\n\t[DIAVENCTO] int,\n\t[MESVENCTO] int,\n\t[ANOVENCTO] int,\n\t[DIA_PG] int,\n\t[MES_PG] int,\n\t[ANO_PG] int,\n\t[VALOR] nvarchar(4000),\n\t[VALORPG] nvarchar(4000),\n\t[STATUS] nvarchar(4000),\n\t[PARCELAS] nvarchar(4000),\n\t[FORNECEDOR] nvarchar(4000),\n\t[UNIDADE] nvarchar(4000),\n\t[DATAINGESTAO] nvarchar(4000)\n\t)\n\tWITH (\n\tLOCATION = 'contasapagar/**',\n\tDATA_SOURCE = [trusted_sagestaoloja_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM dbo.contasapagartrusted\nGO",
 					"metadata": {
 						"language": "sql"
 					},
@@ -859,77 +739,17 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 16')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/raw/pdv/HistoricoPedidos/dtIngestao=20211001/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 17')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n    *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/raw/pdv/HistoricoPedidos/dtIngestao=20220620/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 2')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n     *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/raw/ContasaPagar.xlsx/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/SQL script 3')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n     *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/raw/pdv/Clientes/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+					"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'trusted_sagestaoloja_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [trusted_sagestaoloja_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://trusted@sagestaoloja.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE historicopedidosrefined (\n\t[ID] int,\n\t[CLIENTE] nvarchar(4000),\n\t[TIPO] nvarchar(4000),\n\t[DIA_ABE] int,\n\t[MES_ABE] int,\n\t[ANO_ABE] int,\n\t[HH_ABE] int,\n\t[MM_ABE] int,\n\t[DIA_FIM] int,\n\t[MES_FIM] int,\n\t[ANO_FIM] int,\n\t[HH_FIM] int,\n\t[MM_FIM] int,\n\t[FORMAPG] nvarchar(4000),\n\t[ENTREGA] int,\n\t[STATUS] nvarchar(4000),\n\t[Vl_FINAL] nvarchar(4000),\n\t[ABRIR] nvarchar(4000),\n\t[OBSPEDIDO] nvarchar(4000),\n\t[OSBDELIVERY] nvarchar(4000),\n\t[DATAINGESTAO] nvarchar(4000)\n\t)\n\tWITH (\n\tLOCATION = 'historicopedidos/**',\n\tDATA_SOURCE = [trusted_sagestaoloja_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM dbo.historicopedidosrefined\nGO",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
-						"databaseName": "master",
+						"databaseName": "dbGestaoLoja",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -944,12 +764,12 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'raw_sagestaoloja_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [raw_sagestaoloja_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://raw@sagestaoloja.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE tbClientes (\n\t[Prop_0] nvarchar(4000),\n\t[Prop_1] nvarchar(4000),\n\t[Prop_2] nvarchar(4000),\n\t[Prop_3] nvarchar(4000),\n\t[Prop_4] nvarchar(4000),\n\t[Prop_5] nvarchar(4000),\n\t[Prop_6] nvarchar(4000),\n\t[Prop_7] nvarchar(4000),\n\t[Prop_8] nvarchar(4000),\n\t[Prop_9] nvarchar(4000),\n\t[Prop_10] nvarchar(4000)\n\t)\n\tWITH (\n\tLOCATION = 'pdv/Clientes/**',\n\tDATA_SOURCE = [raw_sagestaoloja_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM raw.tbClientes\nGO",
+					"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'trusted_sagestaoloja_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [trusted_sagestaoloja_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://trusted@sagestaoloja.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE listapedidosrefined (\n\t[ID] int,\n\t[CODIGO] int,\n\t[ORIGEM] nvarchar(4000),\n\t[TIPO] nvarchar(4000),\n\t[QTITEM] int,\n\t[VL_FINAL] nvarchar(4000),\n\t[STATUS] nvarchar(4000),\n\t[DIA_PED] int,\n\t[MES_PED] int,\n\t[ANO_PED] int,\n\t[HH_PED] int,\n\t[MM_PED] int,\n\t[TEMPO] nvarchar(4000),\n\t[UNIDADE] nvarchar(4000),\n\t[EXCLUSAO] nvarchar(4000),\n\t[DATAINGESTAO] nvarchar(4000)\n\t)\n\tWITH (\n\tLOCATION = 'listapedidos/**',\n\tDATA_SOURCE = [trusted_sagestaoloja_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM dbo.listapedidosrefined\nGO",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
-						"databaseName": "dbGestao",
+						"databaseName": "dbGestaoLoja",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -964,12 +784,12 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "SELECT [Prop_0]\n,[Prop_1]\n,[Prop_2]\n,[Prop_3]\n,[Prop_4]\n,[Prop_5]\n,[Prop_6]\n,[Prop_7]\n,[Prop_8]\n,[Prop_9]\n,[Prop_10]\n FROM [dbo].[tbClientes]",
+					"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'trusted_sagestaoloja_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [trusted_sagestaoloja_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://trusted@sagestaoloja.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE recebimentosrefined (\n\t[ID] int,\n\t[TIPO] nvarchar(4000),\n\t[FORMAPG] nvarchar(4000),\n\t[DIA_HIS] int,\n\t[MES_HIS] int,\n\t[ANO_HIS] int,\n\t[HORA_HIS] int,\n\t[MINUTO_HIS] int,\n\t[VALOR] nvarchar(4000),\n\t[VLLIQUIDO] nvarchar(4000),\n\t[PEDIDO] int,\n\t[FUNC] nvarchar(4000),\n\t[CAIXA] int,\n\t[UNIDADE] nvarchar(4000),\n\t[DATAINGESTAO] nvarchar(4000)\n\t)\n\tWITH (\n\tLOCATION = 'recebimentos/**',\n\tDATA_SOURCE = [trusted_sagestaoloja_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM dbo.recebimentosrefined\nGO",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
-						"databaseName": "dbGestao",
+						"databaseName": "dbGestaoLoja",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -984,95 +804,12 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "IF EXISTS (SELECT * FROM sys.views WHERE name = 'vwClientes') \n\tDROP VIEW [dbo].[vwClientes]\nGO\nCREATE VIEW [dbo].[vwClientes]\n\tAS SELECT \n\t         ROW_NUMBER() OVER(ORDER BY Prop_1 ASC) AS Row#\n\t\t\t,Prop_1 as nome \n\t\t\t,cast(Prop_0 as int) as codigo\n\t\t\t,[Prop_2] as telefone\n\t\t\t,[Prop_3] as email\n\t\t\t,[Prop_4] as dtNascimento\n\t\t\t,[Prop_5] as dtAneversario\n\t\t\t,[Prop_6] as dtIdade\n\t\t\t,[Prop_7] as sexo\n\t\t\t,[Prop_8] as origem\n\t\t\t,[Prop_9] as dtCadastro\n\t\t\t,[Prop_10] as unidade\n\t\tFROM [tbClientes]\n\t\twhere ISNUMERIC(Prop_0) > 0\n",
+					"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'trusted_sagestaoloja_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [trusted_sagestaoloja_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://trusted@sagestaoloja.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE clientesrefined (\n\t[ID] int,\n\t[CODIGO] int,\n\t[NOME] nvarchar(4000),\n\t[TELEFONE] nvarchar(4000),\n\t[EMAIL] nvarchar(4000),\n\t[ORIGEM] nvarchar(4000),\n\t[CADASTRO] nvarchar(4000),\n\t[DIA_CAD] int,\n\t[MES_CAD] int,\n\t[ANO_CAD] int,\n\t[UNIDADE] nvarchar(4000),\n\t[DATAINGESTAO] nvarchar(4000)\n\t)\n\tWITH (\n\tLOCATION = 'clientes/**',\n\tDATA_SOURCE = [trusted_sagestaoloja_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM dbo.clientesrefined\nGO",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
-						"databaseName": "dbGestao",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 7')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "select top 10 * from dbGestao..vwClientes\n\nselect count(*) from dbGestao..vwClientes\n\nselect top 10 SUBSTRING(dtCadastro,4,2),*  from dbGestao..vwClientes\n\nselect SUBSTRING(dtCadastro,7,4)+SUBSTRING(dtCadastro,4,2),count(*)\n  from dbGestao..vwClientes\ngroup by SUBSTRING(dtCadastro,7,4)+SUBSTRING(dtCadastro,4,2)\n\nselect upper(trim(nome)),count(*)\n  from dbGestao..vwClientes\ngroup by upper(trim(nome))\nhaving count(*) >1\n\n\nselect nome,count(*)\n  from dbGestao..vwClientes\ngroup by nome \nhaving count(*) > 1\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 8')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nselect ANO_CAD+MES_CAD,count(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/clientes/ANO_CAD=*',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n--group by SUBSTRING(dtCadastro,7,4)+SUBSTRING(dtCadastro,4,2)\n\n\n\n\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 9')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/pdv/clientes/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/sc_external_table_clientes')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "GestaoVendasTrusted"
-				},
-				"content": {
-					"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'trusted_sagestaoloja_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [trusted_sagestaoloja_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://trusted@sagestaoloja.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE tbClientes (\n\t[CODIGO] int,\n\t[NOME] nvarchar(4000),\n\t[TELEFONE] nvarchar(4000),\n\t[EMAIL] nvarchar(4000),\n\t[NASCIMENTO] nvarchar(4000),\n\t[ANIVERSARIANTE] nvarchar(4000),\n\t[IDADE] int,\n\t[SEXO] nvarchar(4000),\n\t[ORIGEM] nvarchar(4000),\n\t[CADASTRO] nvarchar(4000),\n\t[UNIDADE] nvarchar(4000),\n\t[DATAINGESTAO] nvarchar(4000)\n\t)\n\tWITH (\n\tLOCATION = 'clientes/**',\n\tDATA_SOURCE = [trusted_sagestaoloja_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM dbo.tbClientes\nGO",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "dbTrusted",
+						"databaseName": "dbGestaoLoja",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -1859,7 +1596,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "ef6bd5e4-cb27-4200-a663-1569eacbaf67"
+						"spark.autotune.trackingId": "c96f4817-43f3-4cc3-a9f9-6ceb1ff71d0c"
 					}
 				},
 				"metadata": {
@@ -1884,8 +1621,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1964,7 +1700,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_lista_pedidos"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 10
 					},
 					{
 						"cell_type": "code",
@@ -3444,7 +3180,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "c5089225-2df4-4876-9439-0452baf1c0e1"
+						"spark.autotune.trackingId": "f251eb36-fc00-4705-8b33-ed8c53196095"
 					}
 				},
 				"metadata": {
@@ -3469,8 +3205,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
