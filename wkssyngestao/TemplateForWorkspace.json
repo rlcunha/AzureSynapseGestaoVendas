@@ -1636,7 +1636,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "c96f4817-43f3-4cc3-a9f9-6ceb1ff71d0c"
+						"spark.autotune.trackingId": "144c010f-cc1a-4d45-9e20-0fdd9007a51e"
 					}
 				},
 				"metadata": {
@@ -1661,7 +1661,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1702,7 +1703,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_contasapagar"
 						],
 						"outputs": [],
-						"execution_count": 9
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -1721,7 +1722,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_historico_pedidos"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -2291,7 +2292,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "cf2b3713-a3e1-4efb-a0d0-01ae0a3b0377"
+						"spark.autotune.trackingId": "62e9a9d5-b1e0-4d8c-91c0-571a84230037"
 					}
 				},
 				"metadata": {
@@ -2768,7 +2769,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "049c3fa9-6f1c-4e5f-83af-459a1df281db"
+						"spark.autotune.trackingId": "6e8218b0-72f3-44d6-8caf-3b2402380b80"
 					}
 				},
 				"metadata": {
@@ -2834,7 +2835,7 @@
 							"%run GestaoVendas/base/parameter/nb_parameter_base"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -2853,7 +2854,7 @@
 							"%run GestaoVendas/raw/nb_config_raw"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -2887,7 +2888,7 @@
 							"from pyspark.sql import SparkSession"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -2921,7 +2922,7 @@
 							"file_path_write = '/historicopedidos'"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -2955,7 +2956,7 @@
 							"df0.cache()"
 						],
 						"outputs": [],
-						"execution_count": 22
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -2988,7 +2989,7 @@
 							"w = Window().orderBy(f.lit('A'))"
 						],
 						"outputs": [],
-						"execution_count": 23
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -3032,7 +3033,7 @@
 							"                          df0.Prop_4.cast(\"string\").alias('FORMAPG'),\\\r\n",
 							"                          df0.Prop_5.cast(\"integer\").alias('ENTREGA'),\\\r\n",
 							"                          df0.Prop_6.cast(\"string\").alias('STATUS'),\\\r\n",
-							"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_7),'[R$ ]',''),'[.]',''),',','.').alias('Vl_FINAL'),\\\r\n",
+							"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_7),'[R$ ]',''),'[.]',''),',','.')cast('decimal(12,2)').alias('Vl_FINAL'),\\\r\n",
 							"                          df0.Prop_8.cast(\"string\").alias('ABRIR'),\\\r\n",
 							"                          df0.Prop_9.cast(\"string\").alias('OBSPEDIDO'),\\\r\n",
 							"                          df0.Prop_10.cast(\"string\").alias('OSBDELIVERY'))\\\r\n",
@@ -3040,7 +3041,7 @@
 							"print(f'Historico Pedidos: {df1.count()}')"
 						],
 						"outputs": [],
-						"execution_count": 24
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -3072,7 +3073,7 @@
 							"df2 = df1.distinct()"
 						],
 						"outputs": [],
-						"execution_count": 25
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -3106,7 +3107,7 @@
 							"print(f'Historico Pedidos : {df2.count()}')"
 						],
 						"outputs": [],
-						"execution_count": 27
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -3138,7 +3139,7 @@
 							"df = df3.select(f.row_number().over(w).alias('ID'),'*')"
 						],
 						"outputs": [],
-						"execution_count": 28
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -3172,7 +3173,7 @@
 							"df.write.format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write)"
 						],
 						"outputs": [],
-						"execution_count": 29
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -3191,7 +3192,7 @@
 							"# mssparkutils.notebook.exit(adls_path_write + file_path_write)"
 						],
 						"outputs": [],
-						"execution_count": 30
+						"execution_count": null
 					}
 				]
 			},
@@ -3221,7 +3222,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "f251eb36-fc00-4705-8b33-ed8c53196095"
+						"spark.autotune.trackingId": "cb8b2029-8286-4968-b82a-e3fb5ce08650"
 					}
 				},
 				"metadata": {
@@ -3474,7 +3475,7 @@
 							"                          df0.Prop_1.cast(\"string\").alias('ORIGEM'),\\\r\n",
 							"                          df0.Prop_2.cast(\"string\").alias('TIPO'),\\\r\n",
 							"                          df0.Prop_3.cast(\"integer\").alias('QTITEM'),\\\r\n",
-							"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').alias('VL_FINAL'),\\\r\n",
+							"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('VL_FINAL'),\\\r\n",
 							"                          df0.Prop_5.cast(\"string\").alias('STATUS'),\\\r\n",
 							"                          f.substring(df0.Prop_6,1,2).cast(\"int\").alias('DIA_PED'),\\\r\n",
 							"                          f.substring(df0.Prop_6,4,2).cast(\"int\").alias('MES_PED'),\\\r\n",
@@ -3669,7 +3670,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "0f3627e9-ad0d-4e83-95c8-9951a54a78eb"
+						"spark.autotune.trackingId": "b0fb72de-f48e-4912-9545-93a34bb383bd"
 					}
 				},
 				"metadata": {
@@ -3925,8 +3926,8 @@
 							"                                           f.substring(df0.Prop_2,7,4).cast(\"int\").alias('ANO_HIS'), \\\r\n",
 							"                                           f.substring(df0.Prop_2,12,2).cast(\"int\").alias('HORA_HIS'), \\\r\n",
 							"                                           f.substring(df0.Prop_2,15,2).cast(\"int\").alias('MINUTO_HIS'), \\\r\n",
-							"                                            f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').alias('VALOR'),\\\r\n",
-							"                                            f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').alias('VLLIQUIDO'),\\\r\n",
+							"                                            f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('VALOR'),\\\r\n",
+							"                                            f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('VLLIQUIDO'),\\\r\n",
 							"                                           df0.Prop_6.cast(\"integer\").alias('PEDIDO'), \\\r\n",
 							"                                           df0.Prop_7.cast(\"string\").alias('FUNC'), \\\r\n",
 							"                                           df0.Prop_8.cast(\"integer\").alias('CAIXA'), \\\r\n",
