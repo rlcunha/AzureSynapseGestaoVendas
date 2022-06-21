@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f251eb36-fc00-4705-8b33-ed8c53196095"
+				"spark.autotune.trackingId": "cb8b2029-8286-4968-b82a-e3fb5ce08650"
 			}
 		},
 		"metadata": {
@@ -267,7 +267,7 @@
 					"                          df0.Prop_1.cast(\"string\").alias('ORIGEM'),\\\r\n",
 					"                          df0.Prop_2.cast(\"string\").alias('TIPO'),\\\r\n",
 					"                          df0.Prop_3.cast(\"integer\").alias('QTITEM'),\\\r\n",
-					"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').alias('VL_FINAL'),\\\r\n",
+					"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('VL_FINAL'),\\\r\n",
 					"                          df0.Prop_5.cast(\"string\").alias('STATUS'),\\\r\n",
 					"                          f.substring(df0.Prop_6,1,2).cast(\"int\").alias('DIA_PED'),\\\r\n",
 					"                          f.substring(df0.Prop_6,4,2).cast(\"int\").alias('MES_PED'),\\\r\n",

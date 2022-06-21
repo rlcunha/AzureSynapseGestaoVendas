@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "049c3fa9-6f1c-4e5f-83af-459a1df281db"
+				"spark.autotune.trackingId": "6e8218b0-72f3-44d6-8caf-3b2402380b80"
 			}
 		},
 		"metadata": {
@@ -85,7 +85,7 @@
 				"source": [
 					"%run GestaoVendas/base/parameter/nb_parameter_base"
 				],
-				"execution_count": 2
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -103,7 +103,7 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_config_raw"
 				],
-				"execution_count": 3
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -136,7 +136,7 @@
 					"from pyspark.sql import Window\r\n",
 					"from pyspark.sql import SparkSession"
 				],
-				"execution_count": 4
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -169,7 +169,7 @@
 					"file_path_read = '/pdv/HistoricoPedidos' #/dtIngestao='+par_data_ingestion\r\n",
 					"file_path_write = '/historicopedidos'"
 				],
-				"execution_count": 5
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -202,7 +202,7 @@
 					"df0 = spark.read.parquet(parquet_path,header=\"false\",inferSchema=False) \r\n",
 					"df0.cache()"
 				],
-				"execution_count": 22
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -234,7 +234,7 @@
 					"spark = SparkSession.builder.getOrCreate()\r\n",
 					"w = Window().orderBy(f.lit('A'))"
 				],
-				"execution_count": 23
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -278,14 +278,14 @@
 					"                          df0.Prop_4.cast(\"string\").alias('FORMAPG'),\\\r\n",
 					"                          df0.Prop_5.cast(\"integer\").alias('ENTREGA'),\\\r\n",
 					"                          df0.Prop_6.cast(\"string\").alias('STATUS'),\\\r\n",
-					"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_7),'[R$ ]',''),'[.]',''),',','.').alias('Vl_FINAL'),\\\r\n",
+					"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_7),'[R$ ]',''),'[.]',''),',','.')cast('decimal(12,2)').alias('Vl_FINAL'),\\\r\n",
 					"                          df0.Prop_8.cast(\"string\").alias('ABRIR'),\\\r\n",
 					"                          df0.Prop_9.cast(\"string\").alias('OBSPEDIDO'),\\\r\n",
 					"                          df0.Prop_10.cast(\"string\").alias('OSBDELIVERY'))\\\r\n",
 					"                          .withColumn('DATAINGESTAO', f.lit('20220620'))\r\n",
 					"print(f'Historico Pedidos: {df1.count()}')"
 				],
-				"execution_count": 24
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -316,7 +316,7 @@
 				"source": [
 					"df2 = df1.distinct()"
 				],
-				"execution_count": 25
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -349,7 +349,7 @@
 					"df3 = df2.dropna(how='all', subset='TIPO')\r\n",
 					"print(f'Historico Pedidos : {df2.count()}')"
 				],
-				"execution_count": 27
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -380,7 +380,7 @@
 				"source": [
 					"df = df3.select(f.row_number().over(w).alias('ID'),'*')"
 				],
-				"execution_count": 28
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -413,7 +413,7 @@
 					"#df_q_lctctb_01 = spark.range(5,10) \r\n",
 					"df.write.format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write)"
 				],
-				"execution_count": 29
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -431,7 +431,7 @@
 				"source": [
 					"# mssparkutils.notebook.exit(adls_path_write + file_path_write)"
 				],
-				"execution_count": 30
+				"execution_count": null
 			}
 		]
 	}

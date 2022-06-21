@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "0f3627e9-ad0d-4e83-95c8-9951a54a78eb"
+				"spark.autotune.trackingId": "b0fb72de-f48e-4912-9545-93a34bb383bd"
 			}
 		},
 		"metadata": {
@@ -270,8 +270,8 @@
 					"                                           f.substring(df0.Prop_2,7,4).cast(\"int\").alias('ANO_HIS'), \\\r\n",
 					"                                           f.substring(df0.Prop_2,12,2).cast(\"int\").alias('HORA_HIS'), \\\r\n",
 					"                                           f.substring(df0.Prop_2,15,2).cast(\"int\").alias('MINUTO_HIS'), \\\r\n",
-					"                                            f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').alias('VALOR'),\\\r\n",
-					"                                            f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').alias('VLLIQUIDO'),\\\r\n",
+					"                                            f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('VALOR'),\\\r\n",
+					"                                            f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('VLLIQUIDO'),\\\r\n",
 					"                                           df0.Prop_6.cast(\"integer\").alias('PEDIDO'), \\\r\n",
 					"                                           df0.Prop_7.cast(\"string\").alias('FUNC'), \\\r\n",
 					"                                           df0.Prop_8.cast(\"integer\").alias('CAIXA'), \\\r\n",
