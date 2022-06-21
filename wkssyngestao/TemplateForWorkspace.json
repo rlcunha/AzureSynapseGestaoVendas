@@ -2291,7 +2291,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "19bb9ac1-05dc-477f-b8ff-4dd51ed93b5a"
+						"spark.autotune.trackingId": "cf2b3713-a3e1-4efb-a0d0-01ae0a3b0377"
 					}
 				},
 				"metadata": {
@@ -2479,7 +2479,7 @@
 							"df0.cache()"
 						],
 						"outputs": [],
-						"execution_count": 22
+						"execution_count": 6
 					},
 					{
 						"cell_type": "markdown",
@@ -2512,7 +2512,7 @@
 							"w = Window().orderBy(f.lit('A'))"
 						],
 						"outputs": [],
-						"execution_count": 23
+						"execution_count": 7
 					},
 					{
 						"cell_type": "markdown",
@@ -2557,8 +2557,8 @@
 							"                        f.substring(df0.Prop_3,7,4).cast('int').alias('ANO_PG'),\r\n",
 							"                        # f.substring(df0.Prop_3,12,2).cast('int').alias('HORAPG'),\r\n",
 							"                        # f.substring(df0.Prop_3,15,2).cast('int').alias('MINUTOPG'),\r\n",
-							"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2').alias('VALOR'),\r\n",
-							"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2').alias('VALORPG'),\r\n",
+							"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('VALOR'),\r\n",
+							"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('VALORPG'),\r\n",
 							"                        df0.Prop_6.cast('string').alias('STATUS'),\r\n",
 							"                        df0.Prop_7.cast('string').alias('PARCELAS'),\r\n",
 							"                        df0.Prop_8.cast('string').alias('FORNECEDOR'),\r\n",
@@ -2567,7 +2567,7 @@
 							"print(f'Contas a Pagar Formatados : {df1.count()}')"
 						],
 						"outputs": [],
-						"execution_count": 24
+						"execution_count": 8
 					},
 					{
 						"cell_type": "markdown",
@@ -2599,7 +2599,7 @@
 							"df = df1.distinct()"
 						],
 						"outputs": [],
-						"execution_count": 25
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -2633,7 +2633,7 @@
 							"print(f'Contas a Pagar Higienizado : {df.count()}')"
 						],
 						"outputs": [],
-						"execution_count": 27
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -2665,7 +2665,7 @@
 							"df = df.select(f.row_number().over(w).alias('ID'),'*')"
 						],
 						"outputs": [],
-						"execution_count": 28
+						"execution_count": null
 					},
 					{
 						"cell_type": "markdown",
@@ -2699,7 +2699,7 @@
 							"df.write.format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write)"
 						],
 						"outputs": [],
-						"execution_count": 29
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -2738,7 +2738,7 @@
 							"# mssparkutils.notebook.exit(adls_path_write + file_path_write)"
 						],
 						"outputs": [],
-						"execution_count": 30
+						"execution_count": null
 					}
 				]
 			},
