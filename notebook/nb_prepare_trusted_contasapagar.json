@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "987cccba-5c1c-4b3c-a11c-244008404781"
+				"spark.autotune.trackingId": "6c5bfd24-004f-44ec-8735-0dd95f2a01a3"
 			}
 		},
 		"metadata": {
@@ -202,7 +202,7 @@
 					"df0 = spark.read.parquet(parquet_path,header=\"false\",inferSchema=False) \r\n",
 					"df0.cache()"
 				],
-				"execution_count": 22
+				"execution_count": 6
 			},
 			{
 				"cell_type": "markdown",
@@ -234,7 +234,7 @@
 					"spark = SparkSession.builder.getOrCreate()\r\n",
 					"w = Window().orderBy(f.lit('A'))"
 				],
-				"execution_count": 23
+				"execution_count": 7
 			},
 			{
 				"cell_type": "markdown",
@@ -279,8 +279,8 @@
 					"                        f.substring(df0.Prop_3,7,4).cast('int').alias('ANO_PG'),\r\n",
 					"                        # f.substring(df0.Prop_3,12,2).cast('int').alias('HORAPG'),\r\n",
 					"                        # f.substring(df0.Prop_3,15,2).cast('int').alias('MINUTOPG'),\r\n",
-					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2').alias('VALOR'),\r\n",
-					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2').alias('VALORPG'),\r\n",
+					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('VALOR'),\r\n",
+					"                        f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('VALORPG'),\r\n",
 					"                        df0.Prop_6.cast('string').alias('STATUS'),\r\n",
 					"                        df0.Prop_7.cast('string').alias('PARCELAS'),\r\n",
 					"                        df0.Prop_8.cast('string').alias('FORNECEDOR'),\r\n",
@@ -288,7 +288,7 @@
 					"                        .withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
 					"print(f'Contas a Pagar Formatados : {df1.count()}')"
 				],
-				"execution_count": 24
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
@@ -319,7 +319,7 @@
 				"source": [
 					"df = df1.distinct()"
 				],
-				"execution_count": 25
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -352,7 +352,7 @@
 					"df = df.dropna(how='all', subset='DESCRICAO')\r\n",
 					"print(f'Contas a Pagar Higienizado : {df.count()}')"
 				],
-				"execution_count": 27
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -383,7 +383,7 @@
 				"source": [
 					"df = df.select(f.row_number().over(w).alias('ID'),'*')"
 				],
-				"execution_count": 28
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -416,7 +416,7 @@
 					"#df_q_lctctb_01 = spark.range(5,10) \r\n",
 					"df.write.format(\"parquet\").mode(\"overwrite\").save(adls_path_write + file_path_write)"
 				],
-				"execution_count": 29
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -453,7 +453,7 @@
 				"source": [
 					"# mssparkutils.notebook.exit(adls_path_write + file_path_write)"
 				],
-				"execution_count": 30
+				"execution_count": null
 			}
 		]
 	}
