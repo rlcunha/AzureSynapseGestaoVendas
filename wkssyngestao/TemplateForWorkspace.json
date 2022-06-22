@@ -324,7 +324,8 @@
 				},
 				"parameters": {
 					"par_dt_ingestion": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "20220501"
 					},
 					"par_file_name": {
 						"type": "array",
@@ -1517,7 +1518,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "94dbd6c8-9e70-4b6b-b44b-c6f5ebaea058"
+						"spark.autotune.trackingId": "71a94305-e984-48d7-8ab8-9ab4c63aa7e7"
 					}
 				},
 				"metadata": {
@@ -1547,7 +1548,7 @@
 							}
 						},
 						"source": [
-							"dtIngestion = '20220620'"
+							"dtIngestion = '20220501'"
 						],
 						"outputs": [],
 						"execution_count": null
@@ -1670,7 +1671,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a278cfae-48bb-40f1-8429-d207de135969"
+						"spark.autotune.trackingId": "a965cff6-dcee-49bd-8b79-f37c0662e207"
 					}
 				},
 				"metadata": {
@@ -1695,7 +1696,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1717,7 +1719,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_clientes"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
@@ -1736,7 +1738,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_contasapagar"
 						],
 						"outputs": [],
-						"execution_count": 8
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -1755,7 +1757,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_historico_pedidos"
 						],
 						"outputs": [],
-						"execution_count": 9
+						"execution_count": 3
 					},
 					{
 						"cell_type": "code",
@@ -1774,7 +1776,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_lista_pedidos"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -1793,7 +1795,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_recebimentos"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 5
 					}
 				]
 			},
@@ -2801,7 +2803,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6e8218b0-72f3-44d6-8caf-3b2402380b80"
+						"spark.autotune.trackingId": "0045734f-8a62-4bbb-a3ae-03f7eab52685"
 					}
 				},
 				"metadata": {
@@ -2826,7 +2828,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -3065,7 +3068,7 @@
 							"                          df0.Prop_4.cast(\"string\").alias('FORMAPG'),\\\r\n",
 							"                          df0.Prop_5.cast(\"integer\").alias('ENTREGA'),\\\r\n",
 							"                          df0.Prop_6.cast(\"string\").alias('STATUS'),\\\r\n",
-							"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_7),'[R$ ]',''),'[.]',''),',','.')cast('decimal(12,2)').alias('Vl_FINAL'),\\\r\n",
+							"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_7),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('Vl_FINAL'),\\\r\n",
 							"                          df0.Prop_8.cast(\"string\").alias('ABRIR'),\\\r\n",
 							"                          df0.Prop_9.cast(\"string\").alias('OBSPEDIDO'),\\\r\n",
 							"                          df0.Prop_10.cast(\"string\").alias('OSBDELIVERY'))\\\r\n",
