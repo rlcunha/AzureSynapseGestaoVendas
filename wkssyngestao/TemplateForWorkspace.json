@@ -1571,7 +1571,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "99179dc1-115d-4eb4-9cf9-c842c283861a"
+						"spark.autotune.trackingId": "b867263f-240a-4d7b-966e-ac478517f985"
 					}
 				},
 				"metadata": {
@@ -1596,8 +1596,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1657,7 +1656,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_historico_pedidos"
 						],
 						"outputs": [],
-						"execution_count": 11
+						"execution_count": 12
 					},
 					{
 						"cell_type": "code",
@@ -2703,7 +2702,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b1a97fdc-0f7e-4a11-a924-161ed0fc69db"
+						"spark.autotune.trackingId": "7e510364-8809-41f7-b7b2-e12983149d8e"
 					}
 				},
 				"metadata": {
@@ -2973,7 +2972,7 @@
 							"                          df0.Prop_8.cast(\"string\").alias('ABRIR'),\\\r\n",
 							"                          df0.Prop_9.cast(\"string\").alias('OBSPEDIDO'),\\\r\n",
 							"                          df0.Prop_10.cast(\"string\").alias('OSBDELIVERY'))\\\r\n",
-							"                          .withColumn('DATAINGESTAO', f.lit('20220620')))                     \r\n",
+							"                          .withColumn('DATAINGESTAO', f.lit('20220620'))                    \r\n",
 							"print(f'Historico Pedidos: {df1.count()}')"
 						],
 						"outputs": [],
