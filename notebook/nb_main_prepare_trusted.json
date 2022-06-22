@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d621b083-e538-497e-a170-05e807f61553"
+				"spark.autotune.trackingId": "4d785c2f-dd4a-4559-94c8-19f4e04f489c"
 			}
 		},
 		"metadata": {
@@ -139,7 +139,7 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_prepare_trusted_recebimentos"
 				],
-				"execution_count": 9
+				"execution_count": 10
 			}
 		]
 	}
