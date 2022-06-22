@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ae61b8fb-2879-4173-aa13-8aeffc1d9923"
+				"spark.autotune.trackingId": "0fcc7605-c858-4029-8f9c-41f1f097fb16"
 			}
 		},
 		"metadata": {
@@ -264,8 +264,8 @@
 				},
 				"source": [
 					"  df1 = df0.select(df0.Prop_0.cast(\"string\").alias('CLIENTE'),\\\r\n",
-					"                          f.expr(\"case when trim(Prop_1) = 'Delivery' then 'Delivery' \" +\r\n",
-					"                                                  \"else 'Balcão' end\").alias('TIPO'),\\\r\n",
+					"                          f.expr(\"case when trim(Prop_1) = 'Delivery' then 'DELIVERY' \" +\r\n",
+					"                                                  \"else 'BALCAO' end\").alias('TIPO'),\\\r\n",
 					"                          f.substring(df0.Prop_2,9,2).cast(\"int\").alias('DIA_ABE'),\\\r\n",
 					"                          f.substring(df0.Prop_2,6,2).cast(\"int\").alias('MES_ABE'),\\\r\n",
 					"                          f.substring(df0.Prop_2,1,4).cast(\"int\").alias('ANO_ABE'),\\\r\n",

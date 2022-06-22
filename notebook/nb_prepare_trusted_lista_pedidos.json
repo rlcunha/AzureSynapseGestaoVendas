@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ea992146-49a9-491d-83ad-366a1b7c6897"
+				"spark.autotune.trackingId": "c8a70192-1a7e-4e81-b4c2-661eb96e762c"
 			}
 		},
 		"metadata": {
@@ -265,8 +265,8 @@
 				"source": [
 					"  df1 = df0.select(df0.Prop_0.cast(\"integer\").alias('CODIGO'),\\\r\n",
 					"                          df0.Prop_1.cast(\"string\").alias('ORIGEM'),\\\r\n",
-					"                          f.expr(\"case when Prop_2 = 'Delivery' then 'Delivery' \" +\r\n",
-					"                          \"else 'Balcão' end\").alias('TIPO'),\\\r\n",
+					"                          f.expr(\"case when Prop_2 = 'Delivery' then 'DELIVERY' \" +\r\n",
+					"                          \"else 'BALCAO' end\").alias('TIPO'),\\\r\n",
 					"                          df0.Prop_3.cast(\"integer\").alias('QTITEM'),\\\r\n",
 					"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('VL_FINAL'),\\\r\n",
 					"                          df0.Prop_5.cast(\"string\").alias('STATUS'),\\\r\n",
