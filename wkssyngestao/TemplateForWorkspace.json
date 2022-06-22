@@ -817,12 +817,32 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": " select sum(cp.valor) as valor, sum(cp.vlliquido) as valorLiquido, \n  from dbGestaoLojarefined..recebimentos cp\n where cp.ano_his = 2022 and cp.mes_his = 5",
+					"query": " select sum(cp.valor) as valor, sum(cp.vlliquido) as valorLiquido\n  from dbGestaoLojarefined..recebimentos cp\n where cp.ano_his = 2022 and cp.mes_his = 6",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
 						"databaseName": "dbGestaoLojaRefined",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 15')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT\n    Prop_2\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/raw/pdv/Recebimentos/dtIngestao=20220401/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by Prop_2\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -3233,7 +3253,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "ee33ca3c-38b8-43d0-bc1a-b6a71e109ed9"
+						"spark.autotune.trackingId": "ea992146-49a9-491d-83ad-366a1b7c6897"
 					}
 				},
 				"metadata": {
@@ -3258,8 +3278,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -3485,7 +3504,8 @@
 						"source": [
 							"  df1 = df0.select(df0.Prop_0.cast(\"integer\").alias('CODIGO'),\\\r\n",
 							"                          df0.Prop_1.cast(\"string\").alias('ORIGEM'),\\\r\n",
-							"                          df0.Prop_2.cast(\"string\").alias('TIPO'),\\\r\n",
+							"                          f.expr(\"case when Prop_2 = 'Delivery' then 'Delivery' \" +\r\n",
+							"                          \"else 'Balcão' end\").alias('TIPO'),\\\r\n",
 							"                          df0.Prop_3.cast(\"integer\").alias('QTITEM'),\\\r\n",
 							"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_4),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('VL_FINAL'),\\\r\n",
 							"                          df0.Prop_5.cast(\"string\").alias('STATUS'),\\\r\n",
@@ -3714,7 +3734,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b0fb72de-f48e-4912-9545-93a34bb383bd"
+						"spark.autotune.trackingId": "6dedfaaa-9b95-4ec8-9bd0-5c39baa722a1"
 					}
 				},
 				"metadata": {
@@ -3739,7 +3759,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -3976,7 +3997,14 @@
 							"                                           df0.Prop_7.cast(\"string\").alias('FUNC'), \\\r\n",
 							"                                           df0.Prop_8.cast(\"integer\").alias('CAIXA'), \\\r\n",
 							"                                           df0.Prop_9.cast(\"string\").alias('UNIDADE'))\\\r\n",
-							"                                           .withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
+							"                                           .withColumn('DATAINGESTAO', f.lit(dtIngestion))\\\r\n",
+							"                                           .withColumn(\"TIPOPG\", f.when(f.instr(f.col('FORMAPG'),'Débito') > 0, f.lit('DEBITO')).\\\r\n",
+							"                                                                   when(f.instr(f.col('FORMAPG'),'Crédito') > 0, f.lit('CREDITO')).\\\r\n",
+							"                                                                   when(f.instr(f.col('FORMAPG'),'Dinheiro') > 0, f.lit('DINHEIRO')).\\\r\n",
+							"                                                                   when(f.instr(f.col('FORMAPG'),'Vale') > 0, f.lit('VALES')).\\\r\n",
+							"                                                                   when(f.instr(f.col('FORMAPG'),'iFood') > 0, f.lit('IFOOD')).\\\r\n",
+							"                                                                   when(f.instr(f.col('FORMAPG'),'Cheque') > 0, f.lit('DINHEIRO')).\\\r\n",
+							"                                                                   when(f.instr(f.col('FORMAPG'),'PIX') > 0, f.lit('PIX')))\r\n",
 							"print(f'Recebimento: {df1.count()}')"
 						],
 						"outputs": [],
