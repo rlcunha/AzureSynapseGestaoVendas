@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6e8218b0-72f3-44d6-8caf-3b2402380b80"
+				"spark.autotune.trackingId": "fafd75f1-95e5-4247-b253-5f9a6768ea36"
 			}
 		},
 		"metadata": {
@@ -278,7 +278,7 @@
 					"                          df0.Prop_4.cast(\"string\").alias('FORMAPG'),\\\r\n",
 					"                          df0.Prop_5.cast(\"integer\").alias('ENTREGA'),\\\r\n",
 					"                          df0.Prop_6.cast(\"string\").alias('STATUS'),\\\r\n",
-					"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_7),'[R$ ]',''),'[.]',''),',','.')cast('decimal(12,2)').alias('Vl_FINAL'),\\\r\n",
+					"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_7),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('Vl_FINAL'),\\\r\n",
 					"                          df0.Prop_8.cast(\"string\").alias('ABRIR'),\\\r\n",
 					"                          df0.Prop_9.cast(\"string\").alias('OBSPEDIDO'),\\\r\n",
 					"                          df0.Prop_10.cast(\"string\").alias('OSBDELIVERY'))\\\r\n",

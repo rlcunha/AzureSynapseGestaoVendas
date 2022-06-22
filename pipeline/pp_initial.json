@@ -115,7 +115,8 @@
 		],
 		"parameters": {
 			"par_dt_ingestion": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "20220501"
 			},
 			"par_file_name": {
 				"type": "array",

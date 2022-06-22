@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a278cfae-48bb-40f1-8429-d207de135969"
+				"spark.autotune.trackingId": "b2b9a1bc-d43a-4656-93be-6e900b53d69a"
 			}
 		},
 		"metadata": {
@@ -67,7 +67,7 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_prepare_trusted_clientes"
 				],
-				"execution_count": 7
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -85,7 +85,7 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_prepare_trusted_contasapagar"
 				],
-				"execution_count": 8
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -103,7 +103,7 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_prepare_trusted_historico_pedidos"
 				],
-				"execution_count": 9
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -121,7 +121,7 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_prepare_trusted_lista_pedidos"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -139,7 +139,7 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_prepare_trusted_recebimentos"
 				],
-				"execution_count": null
+				"execution_count": 5
 			}
 		]
 	}
