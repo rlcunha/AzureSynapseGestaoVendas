@@ -759,7 +759,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n    TIPOPG,count(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/recebimentos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by TIPOPG\n\n\nSELECT\n    *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/recebimentos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\nwhere TIPOPG is null\n",
+					"query": "-- This is auto-generated code\nSELECT\n    TIPOPG,count(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/recebimentos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by TIPOPG\n\n\nSELECT\n    top 10 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/recebimentos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\n\nSELECT\n    *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/listapedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\nSELECT\n    TIPO,MES_PED, count(*), sum(QTITEM),sum(VL_FINAL)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/listapedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by TIPO,MES_PED\n\n\nSELECT\n    top 10 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/historicopedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\nSELECT\n    TIPO, COUNT(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/historicopedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by TIPO",
 					"metadata": {
 						"language": "sql"
 					},
@@ -1571,7 +1571,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "d621b083-e538-497e-a170-05e807f61553"
+						"spark.autotune.trackingId": "4d785c2f-dd4a-4559-94c8-19f4e04f489c"
 					}
 				},
 				"metadata": {
@@ -1694,7 +1694,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_recebimentos"
 						],
 						"outputs": [],
-						"execution_count": 9
+						"execution_count": 10
 					}
 				]
 			},
@@ -1776,7 +1776,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "88166249-1d35-4b01-ba49-0ceeab4bc50b"
+						"spark.autotune.trackingId": "56068acf-3c84-4632-9ccb-d09276f05049"
 					}
 				},
 				"metadata": {
@@ -1801,8 +1801,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2703,7 +2702,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "fafd75f1-95e5-4247-b253-5f9a6768ea36"
+						"spark.autotune.trackingId": "f5aef72a-7964-429f-894e-9403496891c7"
 					}
 				},
 				"metadata": {
@@ -2728,7 +2727,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -3637,7 +3637,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "e1366040-764b-44f3-8a3b-02d1d17a72e0"
+						"spark.autotune.trackingId": "ed8d2154-f6db-4ab5-bc23-3406a12001db"
 					}
 				},
 				"metadata": {
@@ -3662,8 +3662,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
