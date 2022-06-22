@@ -2702,7 +2702,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "905539e4-0ab2-47d5-ae56-67634601c714"
+						"spark.autotune.trackingId": "b6ffd835-2dfe-4657-b093-21426c0e7444"
 					}
 				},
 				"metadata": {
@@ -2972,7 +2972,16 @@
 							"                          df0.Prop_8.cast(\"string\").alias('ABRIR'),\\\r\n",
 							"                          df0.Prop_9.cast(\"string\").alias('OBSPEDIDO'),\\\r\n",
 							"                          df0.Prop_10.cast(\"string\").alias('OSBDELIVERY'))\\\r\n",
-							"                          .withColumn('DATAINGESTAO', f.lit('20220620'))                    \r\n",
+							"                          .withColumn('DATAINGESTAO', f.lit('20220620'))\\\r\n",
+							"                          .withColumn(\"TIPOPG\", f.when(f.instr(f.col('FORMAPG'),'Débito') > 0, f.lit('DEBITO')).\\\r\n",
+							"                                                  when(f.instr(f.col('FORMAPG'),'Crédito') > 0, f.lit('CREDITO')).\\\r\n",
+							"                                                  when(f.instr(f.col('FORMAPG'),'Dinheiro') > 0, f.lit('DINHEIRO')).\\\r\n",
+							"                                                  when(f.instr(f.col('FORMAPG'),'Vale') > 0, f.lit('VALES')).\\\r\n",
+							"                                                  when(f.instr(f.col('FORMAPG'),'iFood') > 0, f.lit('IFOOD')).\\\r\n",
+							"                                                  when(f.instr(f.col('FORMAPG'),'Cheque') > 0, f.lit('DINHEIRO')).\\\r\n",
+							"                                                  when(f.instr(f.col('FORMAPG'),'Beblue') > 0, f.lit('BEBLUE')).\\\r\n",
+							"                                                  when(f.instr(f.col('FORMAPG'),'PIX') > 0, f.lit('PIX')).\\\r\n",
+							"                                                  otherwise(f.lit('OUTROS')))                                           \r\n",
 							"print(f'Historico Pedidos: {df1.count()}')"
 						],
 						"outputs": [],
