@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2ff739e1-4115-41b5-86db-04d3c82f9522"
+				"spark.autotune.trackingId": "ed8d2154-f6db-4ab5-bc23-3406a12001db"
 			}
 		},
 		"metadata": {
@@ -284,7 +284,8 @@
 					"                                                                   when(f.instr(f.col('FORMAPG'),'iFood') > 0, f.lit('IFOOD')).\\\r\n",
 					"                                                                   when(f.instr(f.col('FORMAPG'),'Cheque') > 0, f.lit('DINHEIRO')).\\\r\n",
 					"                                                                   when(f.instr(f.col('FORMAPG'),'Beblue') > 0, f.lit('BEBLUE')).\\\r\n",
-					"                                                                   when(f.instr(f.col('FORMAPG'),'PIX') > 0, f.lit('PIX')))\r\n",
+					"                                                                   when(f.instr(f.col('FORMAPG'),'PIX') > 0, f.lit('PIX')).\\\r\n",
+					"                                                                   otherwise(f.lit('OUTROS')))\r\n",
 					"print(f'Recebimento: {df1.count()}')"
 				],
 				"execution_count": 24
