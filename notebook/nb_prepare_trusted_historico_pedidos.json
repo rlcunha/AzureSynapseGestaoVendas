@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "0fcc7605-c858-4029-8f9c-41f1f097fb16"
+				"spark.autotune.trackingId": "9b799712-2b28-4d9e-8a29-b7f8dd568850"
 			}
 		},
 		"metadata": {
@@ -283,7 +283,16 @@
 					"                          df0.Prop_8.cast(\"string\").alias('ABRIR'),\\\r\n",
 					"                          df0.Prop_9.cast(\"string\").alias('OBSPEDIDO'),\\\r\n",
 					"                          df0.Prop_10.cast(\"string\").alias('OSBDELIVERY'))\\\r\n",
-					"                          .withColumn('DATAINGESTAO', f.lit('20220620'))                    \r\n",
+					"                          .withColumn('DATAINGESTAO', f.lit('20220620'))\\\r\n",
+					"                          .withColumn(\"TIPOPG\", f.when(f.instr(f.col('FORMAPG'),'Débito') > 0, f.lit('DEBITO')).\\\r\n",
+					"                                                  when(f.instr(f.col('FORMAPG'),'Crédito') > 0, f.lit('CREDITO')).\\\r\n",
+					"                                                  when(f.instr(f.col('FORMAPG'),'Dinheiro') > 0, f.lit('DINHEIRO')).\\\r\n",
+					"                                                  when(f.instr(f.col('FORMAPG'),'Vale') > 0, f.lit('VALES')).\\\r\n",
+					"                                                  when(f.instr(f.col('FORMAPG'),'iFood') > 0, f.lit('IFOOD')).\\\r\n",
+					"                                                  when(f.instr(f.col('FORMAPG'),'Cheque') > 0, f.lit('DINHEIRO')).\\\r\n",
+					"                                                  when(f.instr(f.col('FORMAPG'),'Beblue') > 0, f.lit('BEBLUE')).\\\r\n",
+					"                                                  when(f.instr(f.col('FORMAPG'),'PIX') > 0, f.lit('PIX')).\\\r\n",
+					"                                                  otherwise(f.lit('OUTROS')))                                           \r\n",
 					"print(f'Historico Pedidos: {df1.count()}')"
 				],
 				"execution_count": null
