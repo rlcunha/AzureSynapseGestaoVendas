@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 15",
+	"properties": {
+		"content": {
+			"query": "-- This is auto-generated code\nSELECT\n    Prop_2\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/raw/pdv/Recebimentos/dtIngestao=20220401/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by Prop_2\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

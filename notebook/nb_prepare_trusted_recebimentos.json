@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b0fb72de-f48e-4912-9545-93a34bb383bd"
+				"spark.autotune.trackingId": "71fa2351-cee0-4a1d-bfbd-b013340eb3a2"
 			}
 		},
 		"metadata": {
@@ -276,7 +276,14 @@
 					"                                           df0.Prop_7.cast(\"string\").alias('FUNC'), \\\r\n",
 					"                                           df0.Prop_8.cast(\"integer\").alias('CAIXA'), \\\r\n",
 					"                                           df0.Prop_9.cast(\"string\").alias('UNIDADE'))\\\r\n",
-					"                                           .withColumn('DATAINGESTAO', f.lit(dtIngestion))\r\n",
+					"                                           .withColumn('DATAINGESTAO', f.lit(dtIngestion))\\\r\n",
+					"                                           .withColumn(\"TIPOPG\", f.when(f.instr(f.col('FORMAPG'),'Débito') > 0, f.lit('DEBITO')).\\\r\n",
+					"                                                                   when(f.instr(f.col('FORMAPG'),'Crédito') > 0, f.lit('CREDITO')).\\\r\n",
+					"                                                                   when(f.instr(f.col('FORMAPG'),'Dinheiro') > 0, f.lit('DINHEIRO')).\\\r\n",
+					"                                                                   when(f.instr(f.col('FORMAPG'),'Vale') > 0, f.lit('VALES')).\\\r\n",
+					"                                                                   when(f.instr(f.col('FORMAPG'),'iFood') > 0, f.lit('IFOOD')).\\\r\n",
+					"                                                                   when(f.instr(f.col('FORMAPG'),'Cheque') > 0, f.lit('DINHEIRO')).\\\r\n",
+					"                                                                   when(f.instr(f.col('FORMAPG'),'PIX') > 0, f.lit('PIX')))\r\n",
 					"print(f'Recebimento: {df1.count()}')"
 				],
 				"execution_count": 24

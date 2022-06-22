@@ -2,7 +2,7 @@
 	"name": "SQL script 14",
 	"properties": {
 		"content": {
-			"query": " select sum(cp.valor) as valor, sum(cp.vlliquido) as valorLiquido, \n  from dbGestaoLojarefined..recebimentos cp\n where cp.ano_his = 2022 and cp.mes_his = 5",
+			"query": " select sum(cp.valor) as valor, sum(cp.vlliquido) as valorLiquido\n  from dbGestaoLojarefined..recebimentos cp\n where cp.ano_his = 2022 and cp.mes_his = 6",
 			"metadata": {
 				"language": "sql"
 			},
