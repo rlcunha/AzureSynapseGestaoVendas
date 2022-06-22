@@ -177,7 +177,8 @@
 						"type": "string"
 					},
 					"par_copy_file_name": {
-						"type": "array"
+						"type": "array",
+						"defaultValue": []
 					}
 				},
 				"variables": {
@@ -3734,7 +3735,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6dedfaaa-9b95-4ec8-9bd0-5c39baa722a1"
+						"spark.autotune.trackingId": "71fa2351-cee0-4a1d-bfbd-b013340eb3a2"
 					}
 				},
 				"metadata": {
@@ -3759,8 +3760,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
