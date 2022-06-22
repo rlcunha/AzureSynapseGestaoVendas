@@ -2,7 +2,7 @@
 	"name": "SQL script 15",
 	"properties": {
 		"content": {
-			"query": "-- This is auto-generated code\nSELECT\n    Prop_2\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/raw/pdv/Recebimentos/dtIngestao=20220401/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by Prop_2\n",
+			"query": "-- This is auto-generated code\nSELECT\n    TIPOPG,count(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/recebimentos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by TIPOPG\n\n\nSELECT\n    *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/recebimentos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\nwhere TIPOPG is null\n",
 			"metadata": {
 				"language": "sql"
 			},
