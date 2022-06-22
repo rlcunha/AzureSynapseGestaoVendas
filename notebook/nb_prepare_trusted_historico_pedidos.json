@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8571d54d-a603-4c93-9b64-58413139c13a"
+				"spark.autotune.trackingId": "29261bd6-e615-4940-b656-c1b4f224cf04"
 			}
 		},
 		"metadata": {
@@ -264,6 +264,8 @@
 				},
 				"source": [
 					"  df1 = df0.select(df0.Prop_0.cast(\"string\").alias('CLIENTE'),\\\r\n",
+					"                          f.expr(\"case when Prop_1 = 'Delivery' then 'Delivery' \" +\r\n",
+					"                                                  \"else 'Balcão' end\").alias('TIPO'),\\\r\n",
 					"                          f.substring(df0.Prop_2,9,2).cast(\"int\").alias('DIA_ABE'),\\\r\n",
 					"                          f.substring(df0.Prop_2,6,2).cast(\"int\").alias('MES_ABE'),\\\r\n",
 					"                          f.substring(df0.Prop_2,1,4).cast(\"int\").alias('ANO_ABE'),\\\r\n",
@@ -281,10 +283,7 @@
 					"                          df0.Prop_8.cast(\"string\").alias('ABRIR'),\\\r\n",
 					"                          df0.Prop_9.cast(\"string\").alias('OBSPEDIDO'),\\\r\n",
 					"                          df0.Prop_10.cast(\"string\").alias('OSBDELIVERY'))\\\r\n",
-					"                          .withColumn('DATAINGESTAO', f.lit('20220620'))\\\r\n",
-					"                          .withColumn(\"TIPOPG\", f.when(f.instr(f.col('Prop_1'),'Delivery') > 0, f.lit('DELIVERY')).\\\r\n",
-					"                                                  when(f.instr(f.col('Prop_1'),'Balcao') > 0, f.lit('BALCAO')).\\\r\n",
-					"                                                  otherwise(f.lit('BALCAO')))                     \r\n",
+					"                          .withColumn('DATAINGESTAO', f.lit('20220620')))                     \r\n",
 					"print(f'Historico Pedidos: {df1.count()}')"
 				],
 				"execution_count": null

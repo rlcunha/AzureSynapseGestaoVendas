@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "4d785c2f-dd4a-4559-94c8-19f4e04f489c"
+				"spark.autotune.trackingId": "28f06a62-f201-4e59-b8a0-b8005fa02a87"
 			}
 		},
 		"metadata": {
@@ -103,7 +103,7 @@
 				"source": [
 					"%run GestaoVendas/raw/nb_prepare_trusted_historico_pedidos"
 				],
-				"execution_count": 8
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
