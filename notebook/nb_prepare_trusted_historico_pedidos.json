@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "29261bd6-e615-4940-b656-c1b4f224cf04"
+				"spark.autotune.trackingId": "ad8eb646-57aa-49f8-8f2b-e3ed69e9ad5f"
 			}
 		},
 		"metadata": {
@@ -283,7 +283,7 @@
 					"                          df0.Prop_8.cast(\"string\").alias('ABRIR'),\\\r\n",
 					"                          df0.Prop_9.cast(\"string\").alias('OBSPEDIDO'),\\\r\n",
 					"                          df0.Prop_10.cast(\"string\").alias('OSBDELIVERY'))\\\r\n",
-					"                          .withColumn('DATAINGESTAO', f.lit('20220620')))                     \r\n",
+					"                          .withColumn('DATAINGESTAO', f.lit('20220620'))                    \r\n",
 					"print(f'Historico Pedidos: {df1.count()}')"
 				],
 				"execution_count": null
