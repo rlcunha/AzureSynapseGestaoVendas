@@ -1571,7 +1571,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "eba410a7-5912-4d55-8e5b-748987d7ede7"
+						"spark.autotune.trackingId": "d621b083-e538-497e-a170-05e807f61553"
 					}
 				},
 				"metadata": {
@@ -1694,7 +1694,7 @@
 							"%run GestaoVendas/raw/nb_prepare_trusted_recebimentos"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 9
 					}
 				]
 			},
@@ -1776,7 +1776,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "56068acf-3c84-4632-9ccb-d09276f05049"
+						"spark.autotune.trackingId": "88166249-1d35-4b01-ba49-0ceeab4bc50b"
 					}
 				},
 				"metadata": {
@@ -1801,7 +1801,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -3636,7 +3637,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "bf2a5f37-f4ea-47f0-b89f-6818f2a03568"
+						"spark.autotune.trackingId": "e1366040-764b-44f3-8a3b-02d1d17a72e0"
 					}
 				},
 				"metadata": {
@@ -3907,7 +3908,8 @@
 							"                                                                   when(f.instr(f.col('FORMAPG'),'iFood') > 0, f.lit('IFOOD')).\\\r\n",
 							"                                                                   when(f.instr(f.col('FORMAPG'),'Cheque') > 0, f.lit('DINHEIRO')).\\\r\n",
 							"                                                                   when(f.instr(f.col('FORMAPG'),'Beblue') > 0, f.lit('BEBLUE')).\\\r\n",
-							"                                                                   when(f.instr(f.col('FORMAPG'),'PIX') > 0, f.lit('PIX')))\r\n",
+							"                                                                   when(f.instr(f.col('FORMAPG'),'PIX') > 0, f.lit('PIX')).\\\r\n",
+							"                                                                   otherwise(f.lit('OUTROS')))\r\n",
 							"print(f'Recebimento: {df1.count()}')"
 						],
 						"outputs": [],
