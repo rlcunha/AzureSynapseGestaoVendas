@@ -1,0 +1,20 @@
+{
+	"name": "ddl_create_proc_controle_versao",
+	"properties": {
+		"folder": {
+			"name": "dbControle"
+		},
+		"content": {
+			"query": "create proc Proc_Controle_Versao\n   @nomeArquivo varchar(64),\n   @dtUltimaMod Datetime,\n   @dtFechamento  varchar(8)  \nAs\n   Insert into dbo.ControleVersao (\n      nomeArquivo,\n      dtIngestao,\n      dtUltimaMod,\n      dtFechamento\n   )\n   Values\n   (\n      @nomeArquivo,\n      getdate(),\n      @dtUltimaMod,\n      @dtFechamento\n   );\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"name": "dml_exec_proc_controle_versao",
+	"properties": {
+		"folder": {
+			"name": "dbControle"
+		},
+		"content": {
+			"query": "USE [dbControle]\nGO\n\nDECLARE\t@return_value int\n\nEXEC\t@return_value = [dbo].[Proc_Controle_Versao]\n\nSELECT\t'Return Value' = @return_value\n\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

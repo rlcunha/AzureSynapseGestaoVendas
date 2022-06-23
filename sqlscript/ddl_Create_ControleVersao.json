@@ -1,0 +1,20 @@
+{
+	"name": "ddl_Create_ControleVersao",
+	"properties": {
+		"folder": {
+			"name": "dbControle"
+		},
+		"content": {
+			"query": "-- dbControle.dbo.ControleVersao definition\n\n-- Drop table\n\n-- DROP TABLE dbControle.dbo.ControleVersao;\n\nCREATE TABLE dbControle.dbo.ControleVersao (\n\tid int IDENTITY(1,1) NOT NULL,\n\tnomeArquivo varchar(64) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n\tdtUltimaMod datetime NULL,\n\tdtIngestao datetime NULL,\n\tdtFechamento varchar(8) COLLATE SQL_Latin1_General_CP1_CI_AS NULL\n);",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
