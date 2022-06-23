@@ -759,7 +759,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "-- This is auto-generated code\nSELECT\n    TIPOPG,count(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/recebimentos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by TIPOPG\n\n\nSELECT\n    top 10 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/recebimentos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\n\nSELECT\n    *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/listapedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\nSELECT\n    TIPO,MES_PED, count(*), sum(QTITEM),sum(VL_FINAL)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/listapedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by TIPO,MES_PED\n\n\nSELECT\n    top 10 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/historicopedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\nSELECT\n    TIPO, COUNT(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/historicopedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by TIPO",
+					"query": "-- This is auto-generated code\nSELECT\n    TIPOPG,count(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/recebimentos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by TIPOPG\n\n\nSELECT\n    top 10 *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/recebimentos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\n\nSELECT\n    *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/listapedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\nSELECT\n    TIPO,MES_PED, count(*), sum(QTITEM),sum(VL_FINAL)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/listapedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by TIPO,MES_PED\n\n\nSELECT CLIENTE, TIPO, DIA_ABE, MES_ABE, VL_FINAL\n    -- *\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/historicopedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n where FORMAPG is null and CLIENTE = 'Consumo-Julia' and VL_FINAL > 100\n\n SELECT\n    CLIENTE, COUNT(*),sum(VL_FINAL)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/historicopedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n where FORMAPG is null \n group by CLIENTE \n\nSELECT\n    FORMAPG, COUNT(*)\nFROM\n    OPENROWSET(\n        BULK 'https://sagestaoloja.dfs.core.windows.net/trusted/historicopedidos/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\ngroup by FORMAPG",
 					"metadata": {
 						"language": "sql"
 					},
@@ -1571,7 +1571,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "3ef38342-d6f0-42db-9cc8-6723aa2193e0"
+						"spark.autotune.trackingId": "d55d9f26-cbc4-4460-809e-ba03383b7e7b"
 					}
 				},
 				"metadata": {
@@ -1776,7 +1776,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "56068acf-3c84-4632-9ccb-d09276f05049"
+						"spark.autotune.trackingId": "fdacf2f3-3242-4442-8a33-6940f70db216"
 					}
 				},
 				"metadata": {
@@ -1801,7 +1801,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2702,7 +2703,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b6ffd835-2dfe-4657-b093-21426c0e7444"
+						"spark.autotune.trackingId": "782ca96b-4983-4194-910b-67130219649d"
 					}
 				},
 				"metadata": {
@@ -2727,8 +2728,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2952,36 +2952,35 @@
 							}
 						},
 						"source": [
-							"  df1 = df0.select(df0.Prop_0.cast(\"string\").alias('CLIENTE'),\\\r\n",
-							"                          f.expr(\"case when trim(Prop_1) = 'Delivery' then 'DELIVERY' \" +\r\n",
-							"                                                  \"else 'BALCAO' end\").alias('TIPO'),\\\r\n",
-							"                          f.substring(df0.Prop_2,9,2).cast(\"int\").alias('DIA_ABE'),\\\r\n",
-							"                          f.substring(df0.Prop_2,6,2).cast(\"int\").alias('MES_ABE'),\\\r\n",
-							"                          f.substring(df0.Prop_2,1,4).cast(\"int\").alias('ANO_ABE'),\\\r\n",
-							"                          f.substring(df0.Prop_2,12,2).cast(\"int\").alias('HH_ABE'),\\\r\n",
-							"                          f.substring(df0.Prop_2,15,2).cast(\"int\").alias('MM_ABE'),\\\r\n",
-							"                          f.substring(df0.Prop_3,9,2).cast(\"int\").alias('DIA_FIM'),\\\r\n",
-							"                          f.substring(df0.Prop_3,6,2).cast(\"int\").alias('MES_FIM'),\\\r\n",
-							"                          f.substring(df0.Prop_3,1,4).cast(\"int\").alias('ANO_FIM'),\\\r\n",
-							"                          f.substring(df0.Prop_3,12,2).cast(\"int\").alias('HH_FIM'),\\\r\n",
-							"                          f.substring(df0.Prop_3,15,2).cast(\"int\").alias('MM_FIM'),\\\r\n",
-							"                          df0.Prop_4.cast(\"string\").alias('FORMAPG'),\\\r\n",
-							"                          df0.Prop_5.cast(\"integer\").alias('ENTREGA'),\\\r\n",
-							"                          df0.Prop_6.cast(\"string\").alias('STATUS'),\\\r\n",
-							"                          f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_7),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('Vl_FINAL'),\\\r\n",
-							"                          df0.Prop_8.cast(\"string\").alias('ABRIR'),\\\r\n",
-							"                          df0.Prop_9.cast(\"string\").alias('OBSPEDIDO'),\\\r\n",
-							"                          df0.Prop_10.cast(\"string\").alias('OSBDELIVERY'))\\\r\n",
-							"                          .withColumn('DATAINGESTAO', f.lit('20220620'))\\\r\n",
-							"                          .withColumn(\"TIPOPG\", f.when(f.instr(f.col('FORMAPG'),'Débito') > 0, f.lit('DEBITO')).\\\r\n",
-							"                                                  when(f.instr(f.col('FORMAPG'),'Crédito') > 0, f.lit('CREDITO')).\\\r\n",
-							"                                                  when(f.instr(f.col('FORMAPG'),'Dinheiro') > 0, f.lit('DINHEIRO')).\\\r\n",
-							"                                                  when(f.instr(f.col('FORMAPG'),'Vale') > 0, f.lit('VALES')).\\\r\n",
-							"                                                  when(f.instr(f.col('FORMAPG'),'iFood') > 0, f.lit('IFOOD')).\\\r\n",
-							"                                                  when(f.instr(f.col('FORMAPG'),'Cheque') > 0, f.lit('DINHEIRO')).\\\r\n",
-							"                                                  when(f.instr(f.col('FORMAPG'),'Beblue') > 0, f.lit('BEBLUE')).\\\r\n",
-							"                                                  when(f.instr(f.col('FORMAPG'),'PIX') > 0, f.lit('PIX')).\\\r\n",
-							"                                                  otherwise(f.lit('OUTROS')))                                           \r\n",
+							"df1 = df0.select(df0.Prop_0.cast(\"string\").alias('CLIENTE'),\\\r\n",
+							"                f.expr(\"case when trim(Prop_1) = 'Delivery' then 'Delivery' \" +\r\n",
+							"                \"else 'Balcão' end\").alias('TIPO'),\\\r\n",
+							"                f.substring(df0.Prop_2,9,2).cast(\"int\").alias('DIA_ABE'),\\\r\n",
+							"                f.substring(df0.Prop_2,6,2).cast(\"int\").alias('MES_ABE'),\\\r\n",
+							"                f.substring(df0.Prop_2,1,4).cast(\"int\").alias('ANO_ABE'),\\\r\n",
+							"                f.substring(df0.Prop_2,12,2).cast(\"int\").alias('HH_ABE'),\\\r\n",
+							"                f.substring(df0.Prop_2,15,2).cast(\"int\").alias('MM_ABE'),\\\r\n",
+							"                f.substring(df0.Prop_3,9,2).cast(\"int\").alias('DIA_FIM'),\\\r\n",
+							"                f.substring(df0.Prop_3,6,2).cast(\"int\").alias('MES_FIM'),\\\r\n",
+							"                f.substring(df0.Prop_3,1,4).cast(\"int\").alias('ANO_FIM'),\\\r\n",
+							"                f.substring(df0.Prop_3,12,2).cast(\"int\").alias('HH_FIM'),\\\r\n",
+							"                f.substring(df0.Prop_3,15,2).cast(\"int\").alias('MM_FIM'),\\\r\n",
+							"                df0.Prop_4.cast(\"string\").alias('FORMAPG'),\\\r\n",
+							"                df0.Prop_5.cast(\"integer\").alias('ENTREGA'),\\\r\n",
+							"                df0.Prop_6.cast(\"string\").alias('STATUS'),\\\r\n",
+							"                f.regexp_replace(f.regexp_replace(f.regexp_replace(f.trim(df0.Prop_5),'[R$ ]',''),'[.]',''),',','.').cast('decimal(12,2)').alias('VALORFINAL'),\\\r\n",
+							"                df0.Prop_8.cast(\"string\").alias('ABRIR'),\\\r\n",
+							"                df0.Prop_9.cast(\"string\").alias('OBSPEDIDO'),\\\r\n",
+							"                df0.Prop_10.cast(\"string\").alias('OSBDELIVERY'),\\\r\n",
+							"                f.substring(f.regexp_replace(f.trim(df0.Prop_10),'#',''),1,4).cast(\"int\").alias('CODIGOIFOOD'))\\\r\n",
+							"                .withColumn('DATAINGESTAO', f.lit('20220620'))\\\r\n",
+							"                .withColumn(\"TIPOPG\", f.when(f.instr(f.col('FORMAPG'),'Débito') > 0, f.lit('DEBITO')).\\\r\n",
+							"                                        when(f.instr(f.col('FORMAPG'),'Crédito') > 0, f.lit('CREDITO')).\\\r\n",
+							"                                        when(f.instr(f.col('FORMAPG'),'Dinheiro') > 0, f.lit('DINHEIRO')).\\\r\n",
+							"                                        when(f.instr(f.col('FORMAPG'),'Vale') > 0, f.lit('VALES')).\\\r\n",
+							"                                        when(f.instr(f.col('FORMAPG'),'iFood') > 0, f.lit('IFOOD')).\\\r\n",
+							"                                        when(f.instr(f.col('FORMAPG'),'Cheque') > 0, f.lit('DINHEIRO')).\\\r\n",
+							"                                        when(f.instr(f.col('FORMAPG'),'PIX') > 0, f.lit('PIX')))    \r\n",
 							"print(f'Historico Pedidos: {df1.count()}')"
 						],
 						"outputs": [],
@@ -4103,6 +4102,23 @@
 			},
 			"dependsOn": [],
 			"location": "eastus2"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 16')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "dbControle"
+				},
+				"content": {
+					"metadata": {
+						"language": "sql"
+					}
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
 		}
 	]
 }
