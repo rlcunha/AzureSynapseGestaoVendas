@@ -794,6 +794,75 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/ddl_Create_ControleVersao')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "dbControle"
+				},
+				"content": {
+					"query": "-- dbControle.dbo.ControleVersao definition\n\n-- Drop table\n\n-- DROP TABLE dbControle.dbo.ControleVersao;\n\nCREATE TABLE dbControle.dbo.ControleVersao (\n\tid int IDENTITY(1,1) NOT NULL,\n\tnomeArquivo varchar(64) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,\n\tdtUltimaMod datetime NULL,\n\tdtIngestao datetime NULL,\n\tdtFechamento varchar(8) COLLATE SQL_Latin1_General_CP1_CI_AS NULL\n);",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ddl_create_proc_controle_versao')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "dbControle"
+				},
+				"content": {
+					"query": "create proc Proc_Controle_Versao\n   @nomeArquivo varchar(64),\n   @dtUltimaMod Datetime,\n   @dtFechamento  varchar(8)  \nAs\n   Insert into dbo.ControleVersao (\n      nomeArquivo,\n      dtIngestao,\n      dtUltimaMod,\n      dtFechamento\n   )\n   Values\n   (\n      @nomeArquivo,\n      getdate(),\n      @dtUltimaMod,\n      @dtFechamento\n   );\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dml_exec_proc_controle_versao')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "dbControle"
+				},
+				"content": {
+					"query": "USE [dbControle]\nGO\n\nDECLARE\t@return_value int\n\nEXEC\t@return_value = [dbo].[Proc_Controle_Versao]\n\nSELECT\t'Return Value' = @return_value\n\nGO",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Notebook 1')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
@@ -1571,7 +1640,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "d55d9f26-cbc4-4460-809e-ba03383b7e7b"
+						"spark.autotune.trackingId": "1d84318f-0ed7-4f6f-a497-3eee2e082025"
 					}
 				},
 				"metadata": {
@@ -1596,7 +1665,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1776,7 +1846,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "fdacf2f3-3242-4442-8a33-6940f70db216"
+						"spark.autotune.trackingId": "56068acf-3c84-4632-9ccb-d09276f05049"
 					}
 				},
 				"metadata": {
@@ -1801,8 +1871,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -4102,23 +4171,6 @@
 			},
 			"dependsOn": [],
 			"location": "eastus2"
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 16')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"folder": {
-					"name": "dbControle"
-				},
-				"content": {
-					"metadata": {
-						"language": "sql"
-					}
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
 		}
 	]
 }
