@@ -5,6 +5,9 @@
 		"workspaceName": {
 			"value": "wkssyngestao"
 		},
+		"ls_azure_databricks_accessToken": {
+			"value": ""
+		},
 		"ls_sagestaoloja_accountKey": {
 			"value": ""
 		},
